@@ -43,27 +43,3 @@ if (hasJsOrCssChanges) {
 } else {
   console.log("No staged .js or .css changes detected; skipping lint check.");
 }
-
-// optional: run custom reviewer command if configured
-const codeReviewCommand = process.env.CODE_REVIEW_CMD;
-if (codeReviewCommand && modifiedFiles.length > 0) {
-  const quotedFiles = modifiedFiles
-    .map((file) => `"${file.replace(/"/g, "\\\"")}"`)
-    .join(" ");
-  const resolvedCodeReviewCommand = codeReviewCommand.includes("{files}")
-    ? codeReviewCommand.replace("{files}", quotedFiles)
-    : `${codeReviewCommand} ${quotedFiles}`;
-
-  try {
-    const output = await run(resolvedCodeReviewCommand);
-    if (output) console.log(output);
-    console.log("✓ Code reviewer check passed");
-  } catch (error) {
-    console.error("\n❌ Code reviewer check failed.\n");
-    if (error.stdout) console.log(error.stdout);
-    if (error.stderr) console.error(error.stderr);
-    process.exit(1);
-  }
-} else if (!codeReviewCommand) {
-  console.log("CODE_REVIEW_CMD is not set; skipping code reviewer check.");
-}

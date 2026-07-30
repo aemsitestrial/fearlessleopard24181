@@ -1,4 +1,4 @@
-version: 1
+version: 2
 
 indices:
   pages:
@@ -18,5 +18,5 @@ indices:
         select: head > meta[name="description"]
         value: attribute(el, "content")
       title:
-        select: head > title
-        value: text(el)
+        select: head > meta[property="og:title"]
+        value: attribute(el, "content")

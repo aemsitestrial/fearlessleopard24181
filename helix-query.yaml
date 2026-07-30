@@ -3,9 +3,9 @@ version: 1
 indices:
   pages:
     include:
-      - '/**'
+      - "/**"
     exclude:
-      - '/**.json'
+      - "/**.json"
     target: /query-index.json
     properties:
       lastModified:
@@ -14,3 +14,9 @@ indices:
       robots:
         select: head > meta[name="robots"]
         value: attribute(el, "content")
+      description:
+        select: head > meta[name="description"]
+        value: attribute(el, "content")
+      title:
+        select: head > title
+        value: text(el)

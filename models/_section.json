@@ -53,6 +53,7 @@
         "fragment",
         "teaser",
         "video",
+        "accordion",
         "hero-carousel",
         "hero-blade"
       ]

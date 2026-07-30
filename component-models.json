@@ -142,6 +142,69 @@
     ]
   },
   {
+    "id": "accordion-item",
+    "fields": [
+      {
+        "component": "richtext",
+        "name": "summary",
+        "label": "Summary",
+        "description": "The visible trigger text shown when the item is collapsed.",
+        "valueType": "string",
+        "required": true
+      },
+      {
+        "component": "richtext",
+        "name": "body",
+        "label": "Body",
+        "description": "The content revealed when the item is expanded.",
+        "valueType": "string",
+        "required": true
+      }
+    ]
+  },
+  {
+    "id": "badge-item",
+    "fields": [
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "label",
+        "label": "Label",
+        "description": "The text displayed inside the badge.",
+        "required": true
+      },
+      {
+        "component": "select",
+        "valueType": "string",
+        "name": "variant",
+        "label": "Variant",
+        "description": "Visual style of the badge.",
+        "options": [
+          {
+            "name": "Primary",
+            "value": "primary"
+          },
+          {
+            "name": "Success",
+            "value": "success"
+          },
+          {
+            "name": "Neutral",
+            "value": "neutral"
+          },
+          {
+            "name": "Warning",
+            "value": "warning"
+          },
+          {
+            "name": "Danger",
+            "value": "danger"
+          }
+        ]
+      }
+    ]
+  },
+  {
     "id": "card",
     "fields": [
       {

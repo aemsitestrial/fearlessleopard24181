@@ -18,8 +18,21 @@
       "fragment",
       "teaser",
       "video",
+      "accordion",
       "hero-carousel",
       "hero-blade"
+    ]
+  },
+  {
+    "id": "accordion",
+    "components": [
+      "accordion-item"
+    ]
+  },
+  {
+    "id": "badge",
+    "components": [
+      "badge-item"
     ]
   },
   {

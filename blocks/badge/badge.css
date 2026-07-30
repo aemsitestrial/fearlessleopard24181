@@ -1,0 +1,22 @@
+.badge-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-xsmall, 4px);
+  align-items: center;
+}
+
+/* Pierce shadow DOM: inherit project font stack */
+.badge sl-badge::part(base) {
+  font-family: inherit;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  font-size: 0.75rem;
+}
+
+/* Brand primary colour via CSS custom properties */
+.badge sl-badge[variant='primary'] {
+  --sl-color-primary-600: var(--color-brand, #da1020);
+  --sl-color-primary-50: rgb(218 16 32 / 10%);
+  --sl-color-primary-200: rgb(218 16 32 / 30%);
+}

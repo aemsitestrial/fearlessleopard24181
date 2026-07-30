@@ -1,0 +1,82 @@
+.accordion {
+  max-width: var(--content-max-width, 1200px);
+  margin: 0 auto;
+  padding: 0 var(--spacing-medium, 24px);
+}
+
+/* Remove Shoelace default card border and radius */
+.accordion sl-details::part(base) {
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
+/* Top border on first item; bottom border on all items */
+.accordion sl-details:first-of-type {
+  border-top: 1px solid var(--color-border, #e0e0e0);
+}
+
+.accordion sl-details {
+  border-bottom: 1px solid var(--color-border, #e0e0e0);
+}
+
+/* Trigger row */
+.accordion sl-details::part(header) {
+  padding: var(--spacing-medium, 16px) 0;
+  background: transparent;
+  border: none;
+  gap: var(--spacing-small, 8px);
+}
+
+.accordion sl-details::part(header):hover {
+  background: transparent;
+  color: var(--color-brand, #da1020);
+}
+
+/* Expand/collapse chevron */
+.accordion sl-details::part(summary-icon) {
+  color: var(--color-brand, #da1020);
+  transition: rotate 0.25s ease;
+}
+
+/* Body panel */
+.accordion sl-details::part(content) {
+  padding: 0 0 var(--spacing-medium, 16px);
+}
+
+/* Summary slot content */
+.accordion .accordion-summary {
+  font-size: var(--body-font-size-m, 1rem);
+  font-weight: 600;
+  color: inherit;
+}
+
+.accordion .accordion-summary p {
+  margin: 0;
+}
+
+/* Body slot content */
+.accordion .accordion-body p {
+  margin: 0 0 var(--spacing-small, 8px);
+  font-size: var(--body-font-size-m, 1rem);
+  color: var(--text-color, #333);
+}
+
+.accordion .accordion-body p:last-child {
+  margin-bottom: 0;
+}
+
+.accordion .accordion-body a {
+  color: var(--color-brand, #da1020);
+}
+
+.accordion .accordion-body a:hover {
+  text-decoration: underline;
+}
+
+@media (width >= 900px) {
+  .accordion {
+    padding: 0 var(--spacing-large, 48px);
+  }
+}

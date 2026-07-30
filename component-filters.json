@@ -19,16 +19,11 @@
       "teaser",
       "video",
       "accordion",
+      "alert",
+      "badge",
       "hero-carousel",
       "hero-blade",
-      "badge",
-      "accordion"
-    ]
-  },
-  {
-    "id": "accordion",
-    "components": [
-      "accordion-item"
+      "search"
     ]
   },
   {

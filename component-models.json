@@ -142,23 +142,58 @@
     ]
   },
   {
-    "id": "accordion-item",
+    "id": "alert",
     "fields": [
       {
-        "component": "richtext",
-        "name": "summary",
-        "label": "Summary",
-        "description": "The visible trigger text shown when the item is collapsed.",
+        "component": "select",
         "valueType": "string",
-        "required": true
+        "name": "classes",
+        "label": "Variant",
+        "description": "Visual style and semantic meaning of the alert.",
+        "options": [
+          {
+            "name": "Primary (Info)",
+            "value": "primary"
+          },
+          {
+            "name": "Success",
+            "value": "success"
+          },
+          {
+            "name": "Neutral",
+            "value": "neutral"
+          },
+          {
+            "name": "Warning",
+            "value": "warning"
+          },
+          {
+            "name": "Danger",
+            "value": "danger"
+          }
+        ]
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "icon",
+        "label": "Icon",
+        "description": "Shoelace icon name (e.g. info-circle, check2-circle, exclamation-triangle, x-octagon). Leave blank to use the variant default."
       },
       {
         "component": "richtext",
-        "name": "body",
-        "label": "Body",
-        "description": "The content revealed when the item is expanded.",
         "valueType": "string",
+        "name": "message",
+        "label": "Message",
+        "description": "Alert content — supports bold, links, and lists.",
         "required": true
+      },
+      {
+        "component": "checkbox",
+        "valueType": "boolean",
+        "name": "closable",
+        "label": "Closable",
+        "description": "Shows a close button that dismisses the alert."
       }
     ]
   },
@@ -201,6 +236,20 @@
             "value": "danger"
           }
         ]
+      },
+      {
+        "component": "checkbox",
+        "valueType": "boolean",
+        "name": "pill",
+        "label": "Pill",
+        "description": "Draws the badge with rounded pill-style edges."
+      },
+      {
+        "component": "checkbox",
+        "valueType": "boolean",
+        "name": "pulse",
+        "label": "Pulse",
+        "description": "Animates the badge with a pulsating effect to draw attention."
       }
     ]
   },
@@ -335,6 +384,18 @@
         "value": "",
         "label": "Text",
         "valueType": "string"
+      }
+    ]
+  },
+  {
+    "id": "search",
+    "fields": [
+      {
+        "component": "aem-content",
+        "valueType": "string",
+        "name": "source",
+        "label": "Data Source",
+        "description": "Link to the query-index JSON file. Defaults to /query-index.json when left empty."
       }
     ]
   },

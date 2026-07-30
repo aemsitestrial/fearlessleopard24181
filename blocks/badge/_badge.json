@@ -58,6 +58,20 @@
             { "name": "Warning", "value": "warning" },
             { "name": "Danger", "value": "danger" }
           ]
+        },
+        {
+          "component": "checkbox",
+          "valueType": "boolean",
+          "name": "pill",
+          "label": "Pill",
+          "description": "Draws the badge with rounded pill-style edges."
+        },
+        {
+          "component": "checkbox",
+          "valueType": "boolean",
+          "name": "pulse",
+          "label": "Pulse",
+          "description": "Animates the badge with a pulsating effect to draw attention."
         }
       ]
     }

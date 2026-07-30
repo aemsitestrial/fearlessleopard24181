@@ -54,8 +54,11 @@
         "teaser",
         "video",
         "accordion",
+        "alert",
+        "badge",
         "hero-carousel",
-        "hero-blade"
+        "hero-blade",
+        "search"
       ]
     }
   ]

@@ -1,0 +1,30 @@
+.alert sl-alert {
+  display: block;
+}
+
+/* Pierce shadow DOM: alert structure */
+.alert sl-alert::part(base) {
+  border-radius: var(--border-radius-medium, 4px);
+  font-family: inherit;
+}
+
+.alert sl-alert::part(icon) {
+  font-size: 1.25rem;
+}
+
+.alert sl-alert::part(message) {
+  font-family: inherit;
+  font-size: var(--body-font-size-m, 1rem);
+}
+
+.alert sl-alert::part(close-button__base) {
+  color: inherit;
+}
+
+/* Brand primary colour */
+.alert sl-alert[variant='primary'] {
+  --sl-color-primary-600: var(--color-brand, #da1020);
+  --sl-color-primary-100: rgb(218 16 32 / 10%);
+  --sl-color-primary-200: rgb(218 16 32 / 20%);
+  --sl-color-primary-300: rgb(218 16 32 / 30%);
+}

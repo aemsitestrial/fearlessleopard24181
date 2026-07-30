@@ -1,0 +1,55 @@
+{
+  "definitions": [
+    {
+      "title": "Hero Blade",
+      "id": "hero-blade",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block",
+            "template": {
+              "name": "Hero Blade",
+              "model": "hero-blade",
+              "image": "",
+              "imageAlt": "",
+              "text": "<h1>Enter a headline</h1><p>Supporting body text goes here.</p><p class=\"button-container\"><a href=\"/\">Get started</a></p>"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "hero-blade",
+      "fields": [
+        {
+          "component": "reference",
+          "valueType": "string",
+          "name": "image",
+          "label": "Background Image",
+          "description": "Full-bleed background image for the blade. Use a wide, landscape-oriented image (recommended: 1600×560 px or larger).",
+          "multi": false,
+          "required": true
+        },
+        {
+          "component": "text",
+          "valueType": "string",
+          "name": "imageAlt",
+          "label": "Background Image Alt Text",
+          "description": "Describe the background image for screen readers. Leave blank if the image is purely decorative.",
+          "value": ""
+        },
+        {
+          "component": "richtext",
+          "name": "text",
+          "label": "Content",
+          "description": "Optional eyebrow line (plain paragraph before the heading), headline (h1 or h2), body copy, and CTA button link(s).",
+          "valueType": "string",
+          "required": true
+        }
+      ]
+    }
+  ],
+  "filters": []
+}

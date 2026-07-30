@@ -19,4 +19,21 @@ module.exports = {
     'linebreak-style': ['error', 'unix'], // enforce unix linebreaks
     'no-param-reassign': [2, { props: false }], // allow modifying properties of param
   },
+  overrides: [
+    {
+      files: ['**/*.stories.js', '**/*.test.js', 'test/**', 'vitest.config.js'],
+      rules: {
+        'import/no-extraneous-dependencies': 'off',
+        'import/no-unresolved': 'off',
+      },
+    },
+    {
+      files: ['.storybook/**'],
+      env: { node: true, browser: false },
+      rules: {
+        'import/no-extraneous-dependencies': 'off',
+        'import/no-unresolved': 'off',
+      },
+    },
+  ],
 };

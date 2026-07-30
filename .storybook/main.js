@@ -1,7 +1,4 @@
-import { fileURLToPath } from 'node:url';
-import path from 'node:path';
-
-const __dirname = fileURLToPath(new URL('.', import.meta.url));
+const path = require('path');
 
 /** @type { import('@storybook/html-vite').StorybookConfig } */
 const config = {
@@ -25,4 +22,4 @@ const config = {
   },
 };
 
-export default config;
+module.exports = config;

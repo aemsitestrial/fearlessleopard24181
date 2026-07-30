@@ -190,6 +190,66 @@
     ]
   },
   {
+    "id": "hero-blade",
+    "fields": [
+      {
+        "component": "reference",
+        "valueType": "string",
+        "name": "image",
+        "label": "Background Image",
+        "description": "Full-bleed background image for the blade. Use a wide, landscape-oriented image (recommended: 1600×560 px or larger).",
+        "multi": false,
+        "required": true
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "imageAlt",
+        "label": "Background Image Alt Text",
+        "description": "Describe the background image for screen readers. Leave blank if the image is purely decorative.",
+        "value": ""
+      },
+      {
+        "component": "richtext",
+        "name": "text",
+        "label": "Content",
+        "description": "Optional eyebrow line (plain paragraph before the heading), headline (h1 or h2), body copy, and CTA button link(s).",
+        "valueType": "string",
+        "required": true
+      }
+    ]
+  },
+  {
+    "id": "hero-carousel-slide",
+    "fields": [
+      {
+        "component": "reference",
+        "valueType": "string",
+        "name": "image",
+        "label": "Background Image",
+        "description": "Full-bleed background image for this slide. Use a wide, landscape image (recommended: 1600×560 px or larger).",
+        "multi": false,
+        "required": true
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "imageAlt",
+        "label": "Background Image Alt Text",
+        "description": "Describe the background image for screen readers. Leave blank if purely decorative.",
+        "value": ""
+      },
+      {
+        "component": "richtext",
+        "name": "text",
+        "label": "Slide Content",
+        "description": "Headline (h1 or h2), body copy, and one or two CTA button links.",
+        "valueType": "string",
+        "required": true
+      }
+    ]
+  },
+  {
     "id": "hero",
     "fields": [
       {
@@ -271,6 +331,26 @@
         "name": "textContent_ctaText",
         "label": "CTA label",
         "valueType": "string"
+      }
+    ]
+  },
+  {
+    "id": "video",
+    "fields": [
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "videoUrl",
+        "label": "YouTube URL",
+        "description": "Paste a YouTube URL (youtube.com/watch?v=… or youtu.be/…)",
+        "required": true
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "caption",
+        "label": "Caption",
+        "description": "Optional caption displayed below the video"
       }
     ]
   }

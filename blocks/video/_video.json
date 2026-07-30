@@ -1,0 +1,44 @@
+{
+  "definitions": [
+    {
+      "title": "Video",
+      "id": "video",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block",
+            "template": {
+              "name": "Video",
+              "model": "video",
+              "videoUrl": "https://www.youtube.com/watch?v=",
+              "caption": ""
+            }
+          }
+        }
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "video",
+      "fields": [
+        {
+          "component": "text",
+          "valueType": "string",
+          "name": "videoUrl",
+          "label": "YouTube URL",
+          "description": "Paste a YouTube URL (youtube.com/watch?v=… or youtu.be/…)",
+          "required": true
+        },
+        {
+          "component": "text",
+          "valueType": "string",
+          "name": "caption",
+          "label": "Caption",
+          "description": "Optional caption displayed below the video"
+        }
+      ]
+    }
+  ],
+  "filters": []
+}

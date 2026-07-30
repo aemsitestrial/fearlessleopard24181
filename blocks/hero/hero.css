@@ -5,26 +5,15 @@
 
 .hero {
   position: relative;
-  padding: var(--section-padding-vertical) 24px;
-  min-height: 420px;
-  display: flex;
-  align-items: center;
-}
-
-.hero > div {
-  max-width: var(--content-max-width);
-  margin-left: auto;
-  margin-right: auto;
-  width: 100%;
+  padding: 40px 24px;
+  min-height: 300px;
 }
 
 .hero h1 {
-  color: var(--text-on-dark-color);
-}
-
-.hero p {
-  color: var(--text-on-dark-color);
-  font-size: var(--body-font-size-m);
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  color: var(--background-color);
 }
 
 .hero picture {

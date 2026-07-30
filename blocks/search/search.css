@@ -18,7 +18,6 @@
   color: var(--text-color);
   font-size: var(--body-font-size-s);
   transition: border-color 0.2s;
-  scroll-margin-top: calc(var(--nav-height, 64px) + 16px);
 }
 
 .search .search-box input:hover {
@@ -44,7 +43,6 @@
   background-color: transparent;
   color: currentcolor;
   cursor: pointer;
-  scroll-margin-top: calc(var(--nav-height, 64px) + 16px);
 }
 
 .search ul.search-results > li > a:hover,
@@ -65,7 +63,6 @@
 .search ul.search-results > li .search-result-title a {
   color: currentcolor;
   text-decoration: none;
-  scroll-margin-top: calc(var(--nav-height, 64px) + 16px);
 }
 
 .search ul.search-results > li p {
@@ -110,13 +107,11 @@
 
 .search.minimal ul.search-results > li .search-result-title a {
   color: var(--link-color);
-  scroll-margin-top: calc(var(--nav-height, 64px) + 16px);
 }
 
 /* stylelint-disable no-descending-specificity */
 .search.minimal ul.search-results > li > a {
   background-color: unset;
-  scroll-margin-top: calc(var(--nav-height, 64px) + 16px);
 }
 
 .search.minimal ul.search-results > li > a:hover a,

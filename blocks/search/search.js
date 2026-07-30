@@ -2,7 +2,7 @@ import {
   createOptimizedPicture,
   decorateIcons,
 } from '../../scripts/aem.js';
-import fetchPlaceholders from '../../scripts/placeholders.js';
+import { fetchPlaceholders } from '../../scripts/placeholders.js';
 
 const searchParams = new URLSearchParams(window.location.search);
 
@@ -38,14 +38,18 @@ function highlightTextElements(terms, elements) {
       }
     });
 
-    if (!matches.length) return;
+    if (!matches.length) {
+      return;
+    }
 
     matches.sort((a, b) => a.offset - b.offset);
     let currentIndex = 0;
     const fragment = matches.reduce((acc, { offset, term }) => {
       if (offset < currentIndex) return acc;
       const textBefore = textContent.substring(currentIndex, offset);
-      if (textBefore) acc.appendChild(document.createTextNode(textBefore));
+      if (textBefore) {
+        acc.appendChild(document.createTextNode(textBefore));
+      }
       const markedTerm = document.createElement('mark');
       markedTerm.textContent = term;
       acc.appendChild(markedTerm);
@@ -53,7 +57,9 @@ function highlightTextElements(terms, elements) {
       return acc;
     }, document.createDocumentFragment());
     const textAfter = textContent.substring(currentIndex);
-    if (textAfter) fragment.appendChild(document.createTextNode(textAfter));
+    if (textAfter) {
+      fragment.appendChild(document.createTextNode(textAfter));
+    }
     element.innerHTML = '';
     element.appendChild(fragment);
   });
@@ -171,7 +177,9 @@ function filterData(searchTerms, data) {
       if (minIdx < idx) minIdx = idx;
     });
 
-    if (minIdx >= 0) foundInMeta.push({ minIdx, result });
+    if (minIdx >= 0) {
+      foundInMeta.push({ minIdx, result });
+    }
   });
 
   return [
@@ -204,9 +212,6 @@ function searchResultsContainer(block) {
   const results = document.createElement('ul');
   results.className = 'search-results';
   results.dataset.h = findNextHeading(block);
-  results.setAttribute('role', 'status');
-  results.setAttribute('aria-live', 'polite');
-  results.setAttribute('aria-atomic', true);
   return results;
 }
 
@@ -223,9 +228,7 @@ function searchInput(block, config) {
     handleSearch(e, block, config);
   });
 
-  input.addEventListener('keyup', (e) => {
-    if (e.code === 'Escape') clearSearch(block);
-  });
+  input.addEventListener('keyup', (e) => { if (e.code === 'Escape') { clearSearch(block); } });
 
   return input;
 }
@@ -239,13 +242,17 @@ function searchIcon() {
 function searchBox(block, config) {
   const box = document.createElement('div');
   box.classList.add('search-box');
-  box.append(searchIcon(), searchInput(block, config));
+  box.append(
+    searchIcon(),
+    searchInput(block, config),
+  );
+
   return box;
 }
 
 export default async function decorate(block) {
   const placeholders = await fetchPlaceholders();
-  const source = block.querySelector('a[href]') ? block.querySelector('a[href]').href : '/query-index.json';
+  const source = block.querySelector('a[href]')?.href || `${window.hlx.codeBasePath}/query-index.json`;
   block.innerHTML = '';
   block.append(
     searchBox(block, { source, placeholders }),

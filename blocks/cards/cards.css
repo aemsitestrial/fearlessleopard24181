@@ -4,30 +4,16 @@
   padding: 0;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(257px, 1fr));
-  grid-gap: 24px;
+  gap: 24px;
 }
 
 .cards > ul > li {
   border: 1px solid #dadada;
-  border-radius: 4px;
   background-color: var(--background-color);
-  overflow: hidden;
 }
 
 .cards .cards-card-body {
-  margin: 24px;
-}
-
-.cards .cards-card-body p:first-child strong {
-  font-family: var(--heading-font-family);
-  font-weight: var(--heading-font-weight);
-  font-size: var(--heading-font-size-s);
-  color: var(--text-strong-color);
-}
-
-.cards .cards-card-body a {
-  color: var(--link-color);
-  font-weight: var(--heading-font-weight);
+  margin: 16px;
 }
 
 .cards .cards-card-image {

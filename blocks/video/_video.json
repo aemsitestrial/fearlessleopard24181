@@ -10,8 +10,7 @@
             "template": {
               "name": "Video",
               "model": "video",
-              "videoUrl": "https://www.youtube.com/watch?v=",
-              "caption": ""
+              "filter": "video"
             }
           }
         }
@@ -23,22 +22,50 @@
       "id": "video",
       "fields": [
         {
-          "component": "text",
+          "component": "aem-content",
           "valueType": "string",
-          "name": "videoUrl",
-          "label": "YouTube URL",
-          "description": "Paste a YouTube URL (youtube.com/watch?v=… or youtu.be/…)",
-          "required": true
+          "name": "uri",
+          "label": "Video"
+        },
+        {
+          "component": "multiselect",
+          "name": "classes",
+          "value": "",
+          "label": "Options",
+          "valueType": "string",
+          "options": [
+            {
+              "name": "Auto Play",
+              "children": [
+                {
+                  "name": "AutoPlay",
+                  "value": "autoplay"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "component": "reference",
+          "valueType": "string",
+          "name": "placeholder_image",
+          "label": "Placeholder Image",
+          "multi": true
         },
         {
           "component": "text",
           "valueType": "string",
-          "name": "caption",
-          "label": "Caption",
-          "description": "Optional caption displayed below the video"
+          "name": "placeholder_imageAlt",
+          "value": "",
+          "label": "Placeholder Image Alt Text"
         }
       ]
     }
   ],
-  "filters": []
+  "filters": [
+    {
+      "id": "video",
+      "components": []
+    }
+  ]
 }

@@ -222,10 +222,17 @@ function toggleSearch(els, force) {
  * @param {string} source URL of the query-index feed to search against
  * @returns {Promise<HTMLElement>} the search container element
  */
+const LOCALE_INDEX = { fr: '/fr/query-index.json' };
+
+function getLocaleIndex() {
+  const locale = window.location.pathname.split('/').filter(Boolean)[0];
+  return LOCALE_INDEX[locale] || '/query-index.json';
+}
+
 export default async function buildGnavSearch(source) {
   const placeholders = await fetchPlaceholders();
   const config = {
-    source: source || `${window.hlx.codeBasePath}/query-index.json`,
+    source: source || getLocaleIndex(),
     placeholder: placeholders.searchPlaceholder || 'Search',
     noResults: placeholders.searchNoResults || 'No results found.',
   };

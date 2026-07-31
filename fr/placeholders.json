@@ -1,0 +1,13 @@
+{
+  "data": [
+    { "Key": "carousel", "Text": "Carrousel" },
+    { "Key": "carousel-slide-controls", "Text": "Contrôles du carrousel" },
+    { "Key": "previous-slide", "Text": "Diapositive précédente" },
+    { "Key": "next-slide", "Text": "Diapositive suivante" },
+    { "Key": "show-slide", "Text": "Afficher la diapositive" },
+    { "Key": "of", "Text": "sur" },
+    { "Key": "search-placeholder", "Text": "Rechercher..." },
+    { "Key": "search-no-results", "Text": "Aucun résultat trouvé." },
+    { "Key": "breadcrumbs-home-label", "Text": "Accueil" }
+  ]
+}

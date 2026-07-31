@@ -142,7 +142,7 @@
                 "template": {
                   "name": "Article Feed",
                   "model": "article-feed",
-                  "feed": "/query-index.json",
+                  "feed": "/en/query-index.json",
                   "tags": "",
                   "limit": "12"
                 }

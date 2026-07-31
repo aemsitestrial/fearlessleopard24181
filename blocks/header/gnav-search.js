@@ -226,7 +226,7 @@ const LOCALE_INDEX = { fr: '/fr/query-index.json' };
 
 function getLocaleIndex() {
   const locale = window.location.pathname.split('/').filter(Boolean)[0];
-  return LOCALE_INDEX[locale] || '/query-index.json';
+  return LOCALE_INDEX[locale] || '/en/query-index.json';
 }
 
 export default async function buildGnavSearch(source) {

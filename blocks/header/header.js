@@ -200,7 +200,7 @@ async function buildBreadcrumbs() {
  */
 export default async function decorate(block) {
   // Language root detection and path adjustment
-  const supportedLocales = ['en', 'es', 'fr'];
+  const supportedLocales = ['en', 'fr'];
   const pathParts = window.location.pathname.split('/').filter(Boolean);
   let langRoot = '';
   if (pathParts.length > 0 && supportedLocales.includes(pathParts[0])) {
@@ -211,6 +211,7 @@ export default async function decorate(block) {
   if (langRoot && !navPath.startsWith(`${langRoot}/`)) {
     navPath = `${langRoot}${navPath}`;
   }
+  console.log('navpath', navPath);
   const fragment = await loadFragment(navPath);
 
   // decorate nav DOM

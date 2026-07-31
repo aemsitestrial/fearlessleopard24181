@@ -7,7 +7,7 @@ import { loadFragment } from '../fragment/fragment.js';
  */
 export default async function decorate(block) {
   // Language root detection and path adjustment
-  const supportedLocales = ['en', 'es', 'fr'];
+  const supportedLocales = ['en', 'fr'];
   const pathParts = window.location.pathname.split('/').filter(Boolean);
   let langRoot = '';
   if (pathParts.length > 0 && supportedLocales.includes(pathParts[0])) {
@@ -21,6 +21,8 @@ export default async function decorate(block) {
   if (langRoot && !footerPath.startsWith(`${langRoot}/`)) {
     footerPath = `${langRoot}${footerPath}`;
   }
+
+    console.log('footerpath', footerPath);
   const fragment = await loadFragment(footerPath);
 
   // decorate footer DOM

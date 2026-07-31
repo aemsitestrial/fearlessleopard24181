@@ -24,7 +24,9 @@
       "table",
       "text",
       "title",
-      "video"
+      "video",
+      "badge",
+      "hero-carousel"
     ]
   },
   {

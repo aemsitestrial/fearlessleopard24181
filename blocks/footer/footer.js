@@ -6,10 +6,12 @@ import { loadFragment } from '../fragment/fragment.js';
  * @param {Element} block The footer block element
  */
 export default async function decorate(block) {
-  // Language root detection and path adjustment
-  const supportedLocales = ['en', 'es', 'fr'];
+  // Language root detection and path adjustment.
+  // English is the default locale and is served at the site root (no /en
+  // prefix), so langRoot defaults to '' and is only set for non-root locales.
+  const supportedLocales = ['es', 'fr'];
   const pathParts = window.location.pathname.split('/').filter(Boolean);
-  let langRoot = '/en';
+  let langRoot = '';
   if (pathParts.length > 0 && supportedLocales.includes(pathParts[0])) {
     langRoot = `/${pathParts[0]}`;
   }

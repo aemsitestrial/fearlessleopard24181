@@ -3,6 +3,7 @@ import {
   decorateIcons,
 } from '../../scripts/aem.js';
 import { fetchPlaceholders } from '../../scripts/placeholders.js';
+import { getLangRoot } from '../../scripts/scripts.js';
 
 const searchParams = new URLSearchParams(window.location.search);
 
@@ -263,7 +264,7 @@ function searchBox(block, config) {
 }
 
 export default async function decorate(block) {
-  const placeholders = await fetchPlaceholders();
+  const placeholders = await fetchPlaceholders(getLangRoot() || 'default');
   const source = block.querySelector('a[href]')?.href || `${window.hlx.codeBasePath}${getLocaleIndex()}`;
   block.innerHTML = '';
   block.append(

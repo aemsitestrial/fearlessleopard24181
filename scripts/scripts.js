@@ -99,6 +99,11 @@ function a11yLinks(main) {
  * Decorates the main element.
  * @param {Element} main The main element
  */
+export function getLangRoot() {
+  const [locale] = window.location.pathname.split('/').filter(Boolean);
+  return ['es', 'fr'].includes(locale) ? `/${locale}` : '';
+}
+
 // eslint-disable-next-line import/prefer-default-export
 export function decorateMain(main) {
   // hopefully forward compatible button decoration

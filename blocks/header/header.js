@@ -2,6 +2,7 @@ import { getMetadata } from '../../scripts/aem.js';
 import { fetchPlaceholders } from '../../scripts/placeholders.js';
 import { loadFragment } from '../fragment/fragment.js';
 import buildGnavSearch from './gnav-search.js';
+import { getLangRoot } from '../../scripts/scripts.js';
 
 // media query match that indicates mobile/tablet width
 const isDesktop = window.matchMedia('(min-width: 900px)');
@@ -151,7 +152,7 @@ async function buildBreadcrumbsFromNavTree(nav, currentUrl) {
     crumbs.unshift({ title: getMetadata('og:title'), url: currentUrl });
   }
 
-  const placeholders = await fetchPlaceholders();
+  const placeholders = await fetchPlaceholders(langRoot || 'default');
   const homePlaceholder = placeholders.breadcrumbsHomeLabel || 'Home';
 
   crumbs.unshift({ title: homePlaceholder, url: homeUrl });
@@ -199,15 +200,7 @@ async function buildBreadcrumbs() {
  * @param {Element} block The header block element
  */
 export default async function decorate(block) {
-  // Language root detection and path adjustment.
-  // English is the default locale and is served at the site root (no /en
-  // prefix), so langRoot defaults to '' and is only set for non-root locales.
-  const supportedLocales = ['es', 'fr'];
-  const pathParts = window.location.pathname.split('/').filter(Boolean);
-  let langRoot = '';
-  if (pathParts.length > 0 && supportedLocales.includes(pathParts[0])) {
-    langRoot = `/${pathParts[0]}`;
-  }
+  const langRoot = getLangRoot();
   const navMeta = getMetadata('nav');
   let navPath = navMeta ? new URL(navMeta, window.location).pathname : '/nav';
   if (langRoot && !navPath.startsWith(`${langRoot}/`)) {

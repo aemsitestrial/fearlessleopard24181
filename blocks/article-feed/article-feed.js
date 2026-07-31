@@ -1,5 +1,6 @@
 import { createOptimizedPicture, readBlockConfig } from '../../scripts/aem.js';
 import { fetchPlaceholders } from '../../scripts/placeholders.js';
+import { getLangRoot } from '../../scripts/scripts.js';
 
 const DEFAULT_PAGE_SIZE = 12;
 
@@ -148,7 +149,7 @@ function renderCard(record) {
 
 export default async function decorate(block) {
   const config = readBlockConfig(block);
-  const placeholders = await fetchPlaceholders();
+  const placeholders = await fetchPlaceholders(getLangRoot() || 'default');
 
   const source = config.feed || config.source
     ? new URL(config.feed || config.source, window.location).pathname

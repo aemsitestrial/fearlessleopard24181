@@ -498,3 +498,56 @@ header nav .nav-tools .gnav-search-highlight {
   color: inherit;
   font-weight: 700;
 }
+
+/* mobile: single-column list with compact horizontal cards */
+@media (width < 900px) {
+  header nav .nav-tools .gnav-search-bar {
+    padding: 12px 16px 20px;
+  }
+
+  header nav .nav-tools .gnav-search-results ul {
+    display: block;
+    gap: 0;
+    margin: 12px 0 0;
+  }
+
+  header nav .nav-tools .gnav-search-results li + li {
+    margin-top: 12px;
+  }
+
+  header nav .nav-tools .article-card {
+    display: grid;
+    grid-template-columns: 96px 1fr;
+    gap: 12px;
+    align-items: start;
+    height: auto;
+    padding: 8px;
+  }
+
+  /* image-less results collapse to a single text column */
+  header nav .nav-tools .article-card:not(:has(.article-card-image)) {
+    grid-template-columns: 1fr;
+  }
+
+  header nav .nav-tools .article-card-image {
+    aspect-ratio: 1 / 1;
+  }
+
+  header nav .nav-tools .article-card-category {
+    margin: 0 0 4px;
+  }
+
+  header nav .nav-tools .article-card-body h3 {
+    margin: 0 0 4px;
+    -webkit-line-clamp: 2;
+  }
+
+  /* keep the mobile row compact: drop the description, keep title + date */
+  header nav .nav-tools .article-card-description {
+    display: none;
+  }
+
+  header nav .nav-tools .article-card-date {
+    font-size: 11px;
+  }
+}

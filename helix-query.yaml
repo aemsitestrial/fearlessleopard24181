@@ -10,10 +10,27 @@ indices:
         select: head > meta[name="author"]
         value: |
           attribute(el, 'content')
+      lastModified:
+        select: none
+        value: parseTimestamp(headers["last-modified"], "ddd, DD MMM YYYY hh:mm:ss GMT")
+      robots:
+        select: head > meta[name="robots"]
+        value: attribute(el, "content")
+      description:
+        select: head > meta[name="description"]
+        value: attribute(el, "content")
       title:
-        select: main h1:first-of-type
-        value: |
-          textContent(el)
+        select: head > meta[property="og:title"]
+        value: attribute(el, "content")
+      image:
+        select: head > meta[property="og:image"]
+        value: attribute(el, "content")
+      tags:
+        select: head > meta[name="keywords"]
+        value: attribute(el, "content")
+      date:
+        select: head > meta[name="published-time"]
+        value: attribute(el, "content")
   french:
     <<: *default
     include:

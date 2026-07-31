@@ -6,7 +6,7 @@ indices:
       - /fr
       - /fr/**
       - /snippets/**
-    target: /query-index.json
+    target: /en/query-index.json
     properties:
       author:
         select: head > meta[name="author"]

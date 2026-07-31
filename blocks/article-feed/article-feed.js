@@ -3,6 +3,18 @@ import { fetchPlaceholders } from '../../scripts/placeholders.js';
 
 const DEFAULT_PAGE_SIZE = 12;
 
+const LOCALE_INDEX = { fr: '/fr/query-index.json' };
+
+/**
+ * Resolve the locale-scoped query-index feed for the current page.
+ * English content is served at the site root and indexed at /en/query-index.json.
+ * @returns {string} pathname of the query-index feed for the active locale
+ */
+function getLocaleIndex() {
+  const locale = window.location.pathname.split('/').filter(Boolean)[0];
+  return LOCALE_INDEX[locale] || '/en/query-index.json';
+}
+
 /**
  * Fetch all rows from the query-index feed, following pagination.
  * @param {string} source URL of the query-index.json feed
@@ -140,7 +152,7 @@ export default async function decorate(block) {
 
   const source = config.feed || config.source
     ? new URL(config.feed || config.source, window.location).pathname
-    : `${window.hlx.codeBasePath}/query-index.json`;
+    : `${window.hlx.codeBasePath}${getLocaleIndex()}`;
 
   const tags = (() => {
     const raw = config.tags || config.tag || '';

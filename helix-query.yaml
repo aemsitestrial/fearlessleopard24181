@@ -1,12 +1,41 @@
-version: 1.1
+version: 1.2
 
 indices:
-  pages:
+  english: &default
     include:
-      - "/**"
+      - /en/**
     exclude:
-      - "/**.json"
+      - /en/snippets/**
     target: /query-index.json
+    properties:
+      lastModified:
+        select: none
+        value: parseTimestamp(headers["last-modified"], "ddd, DD MMM YYYY hh:mm:ss GMT")
+      robots:
+        select: head > meta[name="robots"]
+        value: attribute(el, "content")
+      description:
+        select: head > meta[name="description"]
+        value: attribute(el, "content")
+      title:
+        select: head > meta[property="og:title"]
+        value: attribute(el, "content")
+      image:
+        select: head > meta[property="og:image"]
+        value: attribute(el, "content")
+      tags:
+        select: head > meta[name="keywords"]
+        value: attribute(el, "content")
+      date:
+        select: head > meta[name="published-time"]
+        value: attribute(el, "content")
+  french:
+    <<: *default
+    include:
+      - /fr/**
+    exclude:
+      - /fr/snippets/**
+    target: /fr/query-index.json
     properties:
       lastModified:
         select: none

@@ -1,5 +1,5 @@
-import { createOptimizedPicture } from "../../scripts/aem.js";
-import { fetchPlaceholders } from "../../scripts/placeholders.js";
+import { createOptimizedPicture } from '../../scripts/aem.js';
+import { fetchPlaceholders } from '../../scripts/placeholders.js';
 
 const SEARCH_ICON = `<svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" focusable="false">
   <path d="M14 2A8 8 0 0 0 7.4 14.5L2.4 19.4a1.5 1.5 0 0 0 2.1 2.1L9.5 16.6A8 8 0 1 0 14 2Zm0 14.1A6.1 6.1 0 1 1 20.1 10 6.1 6.1 0 0 1 14 16.1Z"></path>
@@ -34,7 +34,7 @@ function filterData(searchTerms, data) {
   const inMeta = [];
 
   data.forEach((result) => {
-    const title = (result.title || "").toLowerCase();
+    const title = (result.title || '').toLowerCase();
     let minIdx = -1;
     searchTerms.forEach((term) => {
       const idx = title.indexOf(term);
@@ -46,8 +46,8 @@ function filterData(searchTerms, data) {
       return;
     }
 
-    const meta =
-      `${result.title || ""} ${result.description || ""} ${result.path.split("/").pop()} ${result.tags.split(",").pop()}`.toLowerCase();
+    const meta = `${result.title || ''} ${result.description || ''} ${result.path.split('/').pop()} ${(result.tags || '').split(',').join(' ')}`.toLowerCase();
+
     searchTerms.forEach((term) => {
       const idx = meta.indexOf(term);
       if (idx < 0) return;
@@ -90,14 +90,13 @@ function highlight(text, terms) {
         document.createTextNode(text.substring(cursor, start)),
       );
     }
-    const mark = document.createElement("mark");
-    mark.className = "gnav-search-highlight";
+    const mark = document.createElement('mark');
+    mark.className = 'gnav-search-highlight';
     mark.textContent = text.substring(start, end);
     fragment.appendChild(mark);
     cursor = end;
   });
-  if (cursor < text.length)
-    fragment.appendChild(document.createTextNode(text.substring(cursor)));
+  if (cursor < text.length) fragment.appendChild(document.createTextNode(text.substring(cursor)));
   return fragment;
 }
 
@@ -105,15 +104,15 @@ function highlight(text, terms) {
  * Format an epoch-day or unix-seconds date value into MM-DD-YYYY.
  */
 function formatDate(value) {
-  if (!value) return "";
+  if (!value) return '';
   const num = Number(value);
-  if (Number.isNaN(num)) return "";
+  if (Number.isNaN(num)) return '';
   // helix query-index stores dates as days since 1899-12-30 (spreadsheet epoch)
   const ms = num < 100000 ? (num - 25569) * 86400000 : num * 1000;
   const d = new Date(ms);
-  if (Number.isNaN(d.getTime())) return "";
-  const mm = String(d.getMonth() + 1).padStart(2, "0");
-  const dd = String(d.getDate()).padStart(2, "0");
+  if (Number.isNaN(d.getTime())) return '';
+  const mm = String(d.getMonth() + 1).padStart(2, '0');
+  const dd = String(d.getDate()).padStart(2, '0');
   return `${mm}-${dd}-${d.getFullYear()}`;
 }
 
@@ -121,50 +120,50 @@ function formatDate(value) {
  * Build a single result list item as an article card.
  */
 function renderResult(result, terms) {
-  const li = document.createElement("li");
-  const a = document.createElement("a");
-  a.className = "article-card";
+  const li = document.createElement('li');
+  const a = document.createElement('a');
+  a.className = 'article-card';
   a.href = result.path;
 
   if (result.image) {
-    const imageWrap = document.createElement("div");
-    imageWrap.className = "article-card-image";
+    const imageWrap = document.createElement('div');
+    imageWrap.className = 'article-card-image';
     imageWrap.append(
-      createOptimizedPicture(result.image, result.imageAlt || "", false, [
-        { width: "750" },
+      createOptimizedPicture(result.image, result.imageAlt || '', false, [
+        { width: '750' },
       ]),
     );
     a.append(imageWrap);
   }
 
-  const body = document.createElement("div");
-  body.className = "article-card-body";
+  const body = document.createElement('div');
+  body.className = 'article-card-body';
 
   const category = Array.isArray(result.tags) ? result.tags[0] : result.tags;
   if (category) {
-    const cat = document.createElement("p");
-    cat.className = "article-card-category";
-    const catLink = document.createElement("a");
+    const cat = document.createElement('p');
+    cat.className = 'article-card-category';
+    const catLink = document.createElement('a');
     catLink.textContent = category;
     cat.append(catLink);
     body.append(cat);
   }
 
-  const h3 = document.createElement("h3");
-  h3.append(highlight(result.title || "", terms));
+  const h3 = document.createElement('h3');
+  h3.append(highlight(result.title || '', terms));
   body.append(h3);
 
   if (result.description) {
-    const desc = document.createElement("p");
-    desc.className = "article-card-description";
+    const desc = document.createElement('p');
+    desc.className = 'article-card-description';
     desc.append(highlight(result.description, terms));
     body.append(desc);
   }
 
   const date = formatDate(result.date);
   if (date) {
-    const dateEl = document.createElement("p");
-    dateEl.className = "article-card-date";
+    const dateEl = document.createElement('p');
+    dateEl.className = 'article-card-date';
     dateEl.textContent = date;
     body.append(dateEl);
   }
@@ -179,21 +178,21 @@ function renderResult(result, terms) {
  */
 async function runSearch(value, els, config) {
   const { resultsList } = els;
-  resultsList.innerHTML = "";
+  resultsList.innerHTML = '';
   const query = value.trim().toLowerCase();
   if (query.length < 3) {
-    els.input.classList.remove("gnav-search-input--isPopulated");
+    els.input.classList.remove('gnav-search-input--isPopulated');
     return;
   }
-  els.input.classList.add("gnav-search-input--isPopulated");
+  els.input.classList.add('gnav-search-input--isPopulated');
 
   const terms = query.split(/\s+/).filter(Boolean);
   const data = await fetchIndex(config.source);
   const results = filterData(terms, data);
 
   if (!results.length) {
-    const li = document.createElement("li");
-    li.className = "gnav-search-no-results";
+    const li = document.createElement('li');
+    li.className = 'gnav-search-no-results';
     li.textContent = config.noResults;
     resultsList.append(li);
     return;
@@ -206,16 +205,15 @@ async function runSearch(value, els, config) {
  */
 function toggleSearch(els, force) {
   const { container, button, input } = els;
-  const willOpen =
-    force !== undefined ? force : !container.classList.contains("is-open");
-  container.classList.toggle("is-open", willOpen);
-  button.setAttribute("aria-expanded", willOpen ? "true" : "false");
-  button.setAttribute("aria-label", willOpen ? "Close" : "Search");
+  const willOpen = force !== undefined ? force : !container.classList.contains('is-open');
+  container.classList.toggle('is-open', willOpen);
+  button.setAttribute('aria-expanded', willOpen ? 'true' : 'false');
+  button.setAttribute('aria-label', willOpen ? 'Close' : 'Search');
   if (willOpen) {
     input.focus();
   } else {
-    input.value = "";
-    els.resultsList.innerHTML = "";
+    input.value = '';
+    els.resultsList.innerHTML = '';
   }
 }
 
@@ -228,37 +226,37 @@ export default async function buildGnavSearch(source) {
   const placeholders = await fetchPlaceholders();
   const config = {
     source: source || `${window.hlx.codeBasePath}/query-index.json`,
-    placeholder: placeholders.searchPlaceholder || "Search",
-    noResults: placeholders.searchNoResults || "No results found.",
+    placeholder: placeholders.searchPlaceholder || 'Search',
+    noResults: placeholders.searchNoResults || 'No results found.',
   };
 
-  const container = document.createElement("div");
-  container.className = "gnav-search";
+  const container = document.createElement('div');
+  container.className = 'gnav-search';
 
-  const button = document.createElement("button");
-  button.className = "gnav-search-button";
-  button.setAttribute("aria-label", "Search");
-  button.setAttribute("aria-expanded", "false");
-  button.setAttribute("aria-controls", "gnav-search-bar");
+  const button = document.createElement('button');
+  button.className = 'gnav-search-button';
+  button.setAttribute('aria-label', 'Search');
+  button.setAttribute('aria-expanded', 'false');
+  button.setAttribute('aria-controls', 'gnav-search-bar');
   button.innerHTML = SEARCH_ICON;
 
-  const bar = document.createElement("aside");
-  bar.id = "gnav-search-bar";
-  bar.className = "gnav-search-bar";
+  const bar = document.createElement('aside');
+  bar.id = 'gnav-search-bar';
+  bar.className = 'gnav-search-bar';
 
-  const field = document.createElement("div");
-  field.className = "gnav-search-field";
+  const field = document.createElement('div');
+  field.className = 'gnav-search-field';
   field.innerHTML = SEARCH_ICON;
 
-  const input = document.createElement("input");
-  input.className = "gnav-search-input";
+  const input = document.createElement('input');
+  input.className = 'gnav-search-input';
   input.placeholder = config.placeholder;
-  input.setAttribute("aria-label", config.placeholder);
+  input.setAttribute('aria-label', config.placeholder);
   field.append(input);
 
-  const resultsWrap = document.createElement("div");
-  resultsWrap.className = "gnav-search-results";
-  const resultsList = document.createElement("ul");
+  const resultsWrap = document.createElement('div');
+  resultsWrap.className = 'gnav-search-results';
+  const resultsList = document.createElement('ul');
   resultsWrap.append(resultsList);
 
   bar.append(field, resultsWrap);
@@ -271,17 +269,15 @@ export default async function buildGnavSearch(source) {
     resultsList,
   };
 
-  button.addEventListener("click", () => toggleSearch(els));
-  input.addEventListener("input", (e) =>
-    runSearch(e.target.value, els, config),
-  );
-  input.addEventListener("keyup", (e) => {
-    if (e.code === "Escape") toggleSearch(els, false);
+  button.addEventListener('click', () => toggleSearch(els));
+  input.addEventListener('input', (e) => runSearch(e.target.value, els, config));
+  input.addEventListener('keyup', (e) => {
+    if (e.code === 'Escape') toggleSearch(els, false);
   });
-  document.addEventListener("click", (e) => {
+  document.addEventListener('click', (e) => {
     if (
-      container.classList.contains("is-open") &&
-      !container.contains(e.target)
+      container.classList.contains('is-open')
+      && !container.contains(e.target)
     ) {
       toggleSearch(els, false);
     }

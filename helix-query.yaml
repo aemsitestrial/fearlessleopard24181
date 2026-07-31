@@ -3,6 +3,7 @@ indices:
     include:
       - /**
     exclude:
+      - /fr
       - /fr/**
       - /snippets/**
     target: /query-index.json

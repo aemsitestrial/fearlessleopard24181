@@ -6,6 +6,7 @@ import { getLangRoot } from '../../scripts/scripts.js';
 
 // media query match that indicates mobile/tablet width
 const isDesktop = window.matchMedia('(min-width: 900px)');
+const langRoot = getLangRoot();
 
 function closeOnEscape(e) {
   if (e.code === 'Escape') {
@@ -200,7 +201,6 @@ async function buildBreadcrumbs() {
  * @param {Element} block The header block element
  */
 export default async function decorate(block) {
-  const langRoot = getLangRoot();
   const navMeta = getMetadata('nav');
   let navPath = navMeta ? new URL(navMeta, window.location).pathname : '/nav';
   if (langRoot && !navPath.startsWith(`${langRoot}/`)) {

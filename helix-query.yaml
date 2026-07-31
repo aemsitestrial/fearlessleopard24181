@@ -1,9 +1,10 @@
 indices:
   english: &default
     include:
-      - /en/**
+      - /**
     exclude:
-      - /en/snippets/**
+      - /fr/**
+      - /snippets/**
     target: /query-index.json
     properties:
       author:

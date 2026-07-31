@@ -3,58 +3,38 @@ version: 1.2
 indices:
   english: &default
     include:
-      - /en/**
+      - /en/publish/*/*/*/*
     exclude:
-      - /en/snippets/**
-    target: /query-index.json
+      - "**/Document.*"
+    target: /en/query-index.xlsx
     properties:
-      lastModified:
-        select: none
-        value: parseTimestamp(headers["last-modified"], "ddd, DD MMM YYYY hh:mm:ss GMT")
-      robots:
-        select: head > meta[name="robots"]
-        value: attribute(el, "content")
-      description:
-        select: head > meta[name="description"]
-        value: attribute(el, "content")
       title:
         select: head > meta[property="og:title"]
-        value: attribute(el, "content")
+        value: |
+          attribute(el, 'content')
+      date:
+        select: head > meta[name="publication-date"]
+        value: |
+          dateValue(attribute(el, 'content'), 'MM-DD-YYYY')
       image:
         select: head > meta[property="og:image"]
-        value: attribute(el, "content")
+        value: |
+          match(attribute(el, 'content'), 'https:\/\/[^/]+(\/.*)')
+      imageAlt:
+        select: head > meta[property="og:image:alt"]
+        value: |
+          attribute(el, 'content')
+      description:
+        select: head > meta[name="description"]
+        value: |
+          attribute(el, 'content')
       tags:
-        select: head > meta[name="keywords"]
-        value: attribute(el, "content")
-      date:
-        select: head > meta[name="published-time"]
-        value: attribute(el, "content")
+        select: head > meta[property="article:tag"]
+        values: |
+          attribute(el, 'content')
+
   french:
     <<: *default
     include:
-      - /fr/**
-    exclude:
-      - /fr/snippets/**
-    target: /fr/query-index.json
-    properties:
-      lastModified:
-        select: none
-        value: parseTimestamp(headers["last-modified"], "ddd, DD MMM YYYY hh:mm:ss GMT")
-      robots:
-        select: head > meta[name="robots"]
-        value: attribute(el, "content")
-      description:
-        select: head > meta[name="description"]
-        value: attribute(el, "content")
-      title:
-        select: head > meta[property="og:title"]
-        value: attribute(el, "content")
-      image:
-        select: head > meta[property="og:image"]
-        value: attribute(el, "content")
-      tags:
-        select: head > meta[name="keywords"]
-        value: attribute(el, "content")
-      date:
-        select: head > meta[name="published-time"]
-        value: attribute(el, "content")
+      - /fr/publish/*/*/*/*
+    target: /fr/query-index.xlsx

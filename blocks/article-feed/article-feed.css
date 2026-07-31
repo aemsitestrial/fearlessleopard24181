@@ -1,0 +1,122 @@
+.article-feed .article-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 24px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.article-feed .article-cards > li {
+  display: flex;
+}
+
+/* article card */
+.article-feed .article-card {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  border: 1px solid #e8e8e8;
+  border-radius: 4px;
+  overflow: hidden;
+  color: var(--text-color);
+  text-decoration: none;
+  background-color: var(--background-color);
+  transition: box-shadow 0.2s;
+}
+
+.article-feed .article-card:hover {
+  box-shadow: 0 4px 12px rgb(0 0 0 / 10%);
+}
+
+.article-feed .article-card-image {
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+}
+
+.article-feed .article-card-image img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.article-feed .article-card-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  padding: 16px;
+}
+
+.article-feed .article-card-category {
+  margin: 0 0 8px;
+  color: #686868;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.article-feed .article-card-body h3 {
+  display: -webkit-box;
+  margin: 0 0 12px;
+  color: var(--text-color);
+  font-size: var(--body-font-size-s);
+  font-weight: 700;
+  line-height: 1.3;
+  overflow: hidden;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
+.article-feed .article-card-description {
+  display: -webkit-box;
+  margin: 0 0 16px;
+  color: #444;
+  font-size: var(--body-font-size-xs);
+  font-weight: 400;
+  line-height: 1.5;
+  overflow: hidden;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
+.article-feed .article-card-date {
+  margin: auto 0 0;
+  color: #686868;
+  font-size: 13px;
+}
+
+/* load more button */
+.article-feed .article-feed-load-more {
+  display: block;
+  margin: 48px auto 0;
+  padding: 8px 20px;
+  border: 2px solid var(--text-color);
+  border-radius: 20px;
+  background: none;
+  color: var(--text-color);
+  font-family: var(--body-font-family);
+  font-size: var(--body-font-size-xs);
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.article-feed .article-feed-load-more:hover {
+  background-color: var(--text-color);
+  color: var(--background-color);
+}
+
+.article-feed .article-feed-empty {
+  color: var(--dark-color);
+  text-align: center;
+}
+
+/* mobile */
+@media (width < 600px) {
+  .article-feed .article-cards {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+}

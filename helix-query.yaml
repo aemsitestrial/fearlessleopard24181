@@ -1,4 +1,4 @@
-version: 1
+version: 1.1
 
 indices:
   pages:
@@ -19,4 +19,13 @@ indices:
         value: attribute(el, "content")
       title:
         select: head > meta[property="og:title"]
+        value: attribute(el, "content")
+      image:
+        select: head > meta[property="og:image"]
+        value: attribute(el, "content")
+      tags:
+        select: head > meta[name="keywords"]
+        value: attribute(el, "content")
+      date:
+        select: head > meta[name="published-time"]
         value: attribute(el, "content")

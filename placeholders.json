@@ -1,0 +1,13 @@
+{
+  "data": [
+    { "Key": "carousel", "Text": "Carousel" },
+    { "Key": "carousel-slide-controls", "Text": "Carousel Slide Controls" },
+    { "Key": "previous-slide", "Text": "Previous Slide" },
+    { "Key": "next-slide", "Text": "Next Slide" },
+    { "Key": "show-slide", "Text": "Show Slide" },
+    { "Key": "of", "Text": "of" },
+    { "Key": "search-placeholder", "Text": "Search... Test" },
+    { "Key": "search-no-results", "Text": "No results found." },
+    { "Key": "breadcrumbs-home-label", "Text": "Home" }
+  ]
+}

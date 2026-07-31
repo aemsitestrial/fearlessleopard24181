@@ -6,6 +6,18 @@ import { fetchPlaceholders } from '../../scripts/placeholders.js';
 
 const searchParams = new URLSearchParams(window.location.search);
 
+const LOCALE_INDEX = { fr: '/fr/query-index.json' };
+
+/**
+ * Resolve the locale-scoped query-index feed for the current page.
+ * English content is served at the site root and indexed at /en/query-index.json.
+ * @returns {string} pathname of the query-index feed for the active locale
+ */
+function getLocaleIndex() {
+  const locale = window.location.pathname.split('/').filter(Boolean)[0];
+  return LOCALE_INDEX[locale] || '/en/query-index.json';
+}
+
 function findNextHeading(el) {
   let preceedingEl = el.parentElement.previousElement || el.parentElement.parentElement;
   let h = 'H2';
@@ -252,7 +264,7 @@ function searchBox(block, config) {
 
 export default async function decorate(block) {
   const placeholders = await fetchPlaceholders();
-  const source = block.querySelector('a[href]')?.href || `${window.hlx.codeBasePath}/query-index.json`;
+  const source = block.querySelector('a[href]')?.href || `${window.hlx.codeBasePath}${getLocaleIndex()}`;
   block.innerHTML = '';
   block.append(
     searchBox(block, { source, placeholders }),

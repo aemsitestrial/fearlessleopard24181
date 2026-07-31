@@ -10,7 +10,7 @@
             "template": {
               "name": "Article Feed",
               "model": "article-feed",
-              "feed": "/en/query-index.json",
+              "feed": "",
               "tags": "",
               "limit": "12"
             }
@@ -28,7 +28,7 @@
           "valueType": "string",
           "name": "feed",
           "label": "Feed source",
-          "description": "Query index that supplies the articles (defaults to /query-index.json)"
+          "description": "Query index that supplies the articles (defaults to the locale index, e.g. /en/query-index.json or /fr/query-index.json)"
         },
         {
           "component": "text",

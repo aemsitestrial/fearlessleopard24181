@@ -3,6 +3,7 @@ indices:
     include:
       - /**
     exclude:
+      - /en
       - /fr
       - /fr/**
       - /snippets/**

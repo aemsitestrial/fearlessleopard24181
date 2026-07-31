@@ -5,17 +5,13 @@ indices:
     include:
       - /en/publish/*/*/*/*
     exclude:
-      - '**/Document.*'
+      - "**/Document.*"
     target: /en/query-index.xlsx
     properties:
-      author:
-        select: head > meta[name="author"]
+      title:
+        select: head > meta[property="og:title"]
         value: |
           attribute(el, 'content')
-      title:
-        select: main h1:first-of-type
-        value: |
-          textContent(el)
       date:
         select: head > meta[name="publication-date"]
         value: |
@@ -36,14 +32,6 @@ indices:
         select: head > meta[property="article:tag"]
         values: |
           attribute(el, 'content')
-      robots:
-        select: head > meta[name="robots"]
-        value: |
-          attribute(el, 'content')
-      lastModified:
-        select: none
-        value: |
-          parseTimestamp(headers['last-modified'], 'ddd, DD MMM YYYY hh:mm:ss GMT')
 
   french:
     <<: *default

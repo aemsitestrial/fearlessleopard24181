@@ -1,6 +1,7 @@
 import { getMetadata } from '../../scripts/aem.js';
 import { fetchPlaceholders } from '../../scripts/placeholders.js';
 import { loadFragment } from '../fragment/fragment.js';
+import buildGnavSearch from './gnav-search.js';
 
 // media query match that indicates mobile/tablet width
 const isDesktop = window.matchMedia('(min-width: 900px)');
@@ -218,10 +219,18 @@ export default async function decorate(block) {
 
   const navTools = nav.querySelector('.nav-tools');
   if (navTools) {
-    const search = navTools.querySelector('a[href*="search"]');
-    if (search && search.textContent === '') {
-      search.setAttribute('aria-label', 'Search');
+    // The nav-tools area may contain an authored search block or a plain link
+    // pointing at the query-index feed. Use it as the search source, then
+    // replace it with the gnav-search toggle + expandable search bar.
+    const authoredSearch = navTools.querySelector('.search, a[href*="query-index"], a[href*="search"]');
+    let source;
+    if (authoredSearch) {
+      const link = authoredSearch.matches('a') ? authoredSearch : authoredSearch.querySelector('a[href]');
+      if (link) source = new URL(link.getAttribute('href'), window.location).pathname;
+      authoredSearch.remove();
     }
+    const gnavSearch = await buildGnavSearch(source);
+    navTools.append(gnavSearch);
   }
 
   // hamburger for mobile

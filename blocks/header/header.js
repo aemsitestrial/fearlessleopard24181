@@ -200,7 +200,7 @@ async function buildBreadcrumbs() {
  */
 export default async function decorate(block) {
   // Language root detection and path adjustment
-  const supportedLocales = ['es', 'fr'];
+  const supportedLocales = ['en', 'es', 'fr'];
   const pathParts = window.location.pathname.split('/').filter(Boolean);
   let langRoot = '';
   if (pathParts.length > 0 && supportedLocales.includes(pathParts[0])) {

@@ -217,6 +217,32 @@
     ]
   },
   {
+    "id": "article-feed",
+    "fields": [
+      {
+        "component": "aem-content",
+        "valueType": "string",
+        "name": "feed",
+        "label": "Feed source",
+        "description": "Query index that supplies the articles (defaults to /query-index.json)"
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "tags",
+        "label": "Tags",
+        "description": "Comma-separated tags to filter by. Leave empty to show all articles."
+      },
+      {
+        "component": "number",
+        "valueType": "number",
+        "name": "limit",
+        "label": "Articles per page",
+        "value": "12"
+      }
+    ]
+  },
+  {
     "id": "badge-item",
     "fields": [
       {

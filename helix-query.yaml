@@ -23,11 +23,14 @@ indices:
       image:
         select: head > meta[property="og:image"]
         value: attribute(el, "content")
-      tags:
-        select: head > meta[name="keywords"]
+      imageAlt:
+        select: head > meta[property="og:image:alt"]
         value: attribute(el, "content")
+      tags:
+        select: head > meta[name="article:tag"]
+        values: attribute(el, "content")
       date:
-        select: head > meta[name="published-time"]
+        select: head > meta[name="publication-date"]
         value: attribute(el, "content")
   french:
     <<: *default
@@ -52,9 +55,12 @@ indices:
       image:
         select: head > meta[property="og:image"]
         value: attribute(el, "content")
-      tags:
-        select: head > meta[name="keywords"]
+      imageAlt:
+        select: head > meta[property="og:image:alt"]
         value: attribute(el, "content")
+      tags:
+        select: head > meta[name="article:tag"]
+        values: attribute(el, "content")
       date:
-        select: head > meta[name="published-time"]
+        select: head > meta[name="publication-date"]
         value: attribute(el, "content")

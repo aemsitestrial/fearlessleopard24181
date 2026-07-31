@@ -1,40 +1,23 @@
-version: 1.2
-
 indices:
   english: &default
     include:
-      - /en/publish/*/*/*/*
+      - /en/**
     exclude:
-      - "**/Document.*"
-    target: /en/query-index.xlsx
+      - /en/snippets/**
+    target: /query-index.json
     properties:
+      author:
+        select: head > meta[name="author"]
+        value: |
+          attribute(el, 'content')
       title:
-        select: head > meta[property="og:title"]
+        select: main h1:first-of-type
         value: |
-          attribute(el, 'content')
-      date:
-        select: head > meta[name="publication-date"]
-        value: |
-          dateValue(attribute(el, 'content'), 'MM-DD-YYYY')
-      image:
-        select: head > meta[property="og:image"]
-        value: |
-          match(attribute(el, 'content'), 'https:\/\/[^/]+(\/.*)')
-      imageAlt:
-        select: head > meta[property="og:image:alt"]
-        value: |
-          attribute(el, 'content')
-      description:
-        select: head > meta[name="description"]
-        value: |
-          attribute(el, 'content')
-      tags:
-        select: head > meta[property="article:tag"]
-        values: |
-          attribute(el, 'content')
-
+          textContent(el)
   french:
     <<: *default
     include:
-      - /fr/publish/*/*/*/*
-    target: /fr/query-index.xlsx
+      - /fr/**
+    exclude:
+      - /fr/snippets/**
+    target: /fr/query-index.json

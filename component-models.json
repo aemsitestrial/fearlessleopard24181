@@ -243,6 +243,27 @@
     ]
   },
   {
+    "id": "article-list",
+    "fields": [
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "query",
+        "label": "GraphQL query path",
+        "description": "Persisted query path, e.g. /graphql/execute.json/my-config/article-list",
+        "required": true
+      },
+      {
+        "component": "number",
+        "valueType": "number",
+        "name": "limit",
+        "label": "Max articles",
+        "value": "12",
+        "description": "Maximum number of articles to display (default 12)"
+      }
+    ]
+  },
+  {
     "id": "badge-item",
     "fields": [
       {

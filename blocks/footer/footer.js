@@ -1,20 +1,14 @@
-import { getMetadata } from '../../scripts/aem.js';
+import { getMetadata, loadCSS } from '../../scripts/aem.js';
 import { loadFragment } from '../fragment/fragment.js';
+import { getLangRoot } from '../../scripts/scripts.js';
 
 /**
  * loads and decorates the footer
  * @param {Element} block The footer block element
  */
 export default async function decorate(block) {
-  // Language root detection and path adjustment.
-  // English is the default locale and is served at the site root (no /en
-  // prefix), so langRoot defaults to '' and is only set for non-root locales.
-  const supportedLocales = ['es', 'fr'];
-  const pathParts = window.location.pathname.split('/').filter(Boolean);
-  let langRoot = '';
-  if (pathParts.length > 0 && supportedLocales.includes(pathParts[0])) {
-    langRoot = `/${pathParts[0]}`;
-  }
+  const langRoot = getLangRoot();
+
   // load footer as fragment
   const footerMeta = getMetadata('footer');
   let footerPath = footerMeta
@@ -29,6 +23,15 @@ export default async function decorate(block) {
   block.textContent = '';
   const footer = document.createElement('div');
   while (fragment.firstElementChild) footer.append(fragment.firstElementChild);
+
+  // append language selector
+  const langSel = document.createElement('div');
+  langSel.className = 'block lang-selector';
+  langSel.setAttribute('data-block-name', 'lang-selector');
+  footer.append(langSel);
+  await loadCSS(`${window.hlx.codeBasePath}/blocks/lang-selector/lang-selector.css`);
+  const { default: decorateLangSelector } = await import('../lang-selector/lang-selector.js');
+  decorateLangSelector(langSel);
 
   block.append(footer);
 }

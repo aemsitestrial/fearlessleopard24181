@@ -24,6 +24,15 @@ export default async function decorate(block) {
   const footer = document.createElement('div');
   while (fragment.firstElementChild) footer.append(fragment.firstElementChild);
 
+  // append state selector
+  const stateSel = document.createElement('div');
+  stateSel.className = 'block state-selector';
+  stateSel.setAttribute('data-block-name', 'state-selector');
+  footer.append(stateSel);
+  await loadCSS(`${window.hlx.codeBasePath}/blocks/state-selector/state-selector.css`);
+  const { default: decorateStateSelector } = await import('../state-selector/state-selector.js');
+  decorateStateSelector(stateSel);
+
   // append language selector
   const langSel = document.createElement('div');
   langSel.className = 'block lang-selector';

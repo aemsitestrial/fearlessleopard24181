@@ -573,6 +573,10 @@
     ]
   },
   {
+    "id": "state-selector",
+    "fields": []
+  },
+  {
     "id": "table",
     "fields": [
       {

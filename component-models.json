@@ -506,6 +506,10 @@
     ]
   },
   {
+    "id": "lang-selector",
+    "fields": []
+  },
+  {
     "id": "modal",
     "fields": [
       {

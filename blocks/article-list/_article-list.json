@@ -1,0 +1,45 @@
+{
+  "definitions": [
+    {
+      "title": "Article List",
+      "id": "article-list",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block",
+            "template": {
+              "name": "Article List",
+              "model": "article-list",
+              "query": "",
+              "limit": "12"
+            }
+          }
+        }
+      }
+    }
+  ],
+  "models": [
+    {
+      "id": "article-list",
+      "fields": [
+        {
+          "component": "text",
+          "valueType": "string",
+          "name": "query",
+          "label": "GraphQL query path",
+          "description": "Persisted query path, e.g. /graphql/execute.json/my-config/article-list",
+          "required": true
+        },
+        {
+          "component": "number",
+          "valueType": "number",
+          "name": "limit",
+          "label": "Max articles",
+          "value": "12",
+          "description": "Maximum number of articles to display (default 12)"
+        }
+      ]
+    }
+  ],
+  "filters": []
+}

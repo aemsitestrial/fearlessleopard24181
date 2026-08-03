@@ -1,13 +1,16 @@
 # Your Project's Title...
+
 Your project's description...
 
 ## Environments
-- Preview: https://main--{repo}--{owner}.aem.page/
-- Live: https://main--{repo}--{owner}.aem.live/
+
+- Preview: https://main--fearlessleopard24181--aemsitestrial.aem.page/
+- Live: https://main--fearlessleopard24181--aemsitestrial.aem.live/
 
 ## Documentation
 
 Before using the aem-block-collection, we recommand you to go through the documentation on https://www.aem.live/docs/ and more specifically:
+
 1. [Developer Tutorial](https://www.aem.live/developer/ue-tutorial)
 1. [Creating Blocks](https://www.aem.live/developer/universal-editor-blocks) and [Content Modelling](https://www.aem.live/developer/component-model-definitions)
 1. [The Anatomy of a Project](https://www.aem.live/developer/anatomy-of-a-project)

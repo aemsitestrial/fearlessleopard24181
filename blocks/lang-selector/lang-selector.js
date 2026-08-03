@@ -14,7 +14,7 @@ function buildLocaleHref(targetCode) {
   const localeParts = localeCodes.includes(parts[0]) ? parts.slice(1) : parts;
   const cleanPath = localeParts.length ? `/${localeParts.join('/')}` : '/';
 
-  return targetCode ? `/${targetCode}${cleanPath === '/' ? '' : cleanPath}` : cleanPath;
+  return targetCode ? `/${targetCode}${cleanPath === '/' ? '/' : cleanPath}` : cleanPath;
 }
 
 export default function decorate(block) {

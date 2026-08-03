@@ -37,12 +37,31 @@ function renderCard({ title, publishDate, body }) {
   return article;
 }
 
-async function fetchArticles(queryPath) {
+/**
+ * Resolve the persisted-query path to a fetchable URL. Persisted GraphQL
+ * queries are served by the AEM instance, not the EDS delivery origin, so a
+ * relative path must be prefixed with the AEM host when one is configured.
+ * @param {string} queryPath persisted query path or absolute URL
+ * @param {string} host optional AEM host, e.g. https://publish-xxx.adobeaemcloud.com
+ * @returns {string} absolute or origin-relative URL to fetch
+ */
+function resolveQueryUrl(queryPath, host) {
+  if (/^https?:\/\//i.test(queryPath)) return queryPath;
+  if (host) return new URL(queryPath, host).href;
+  return queryPath;
+}
+
+async function fetchArticles(queryUrl) {
   try {
-    const resp = await fetch(queryPath, { headers: { 'Content-Type': 'application/json' } });
+    const resp = await fetch(queryUrl, { headers: { 'Content-Type': 'application/json' } });
     if (!resp.ok) return [];
     const json = await resp.json();
-    return json?.data?.articleList?.items ?? [];
+    // AEM headless persisted queries wrap results under data.<model>.items.
+    const data = json?.data ?? {};
+    const list = data.articleList?.items
+      ?? Object.values(data).find((v) => Array.isArray(v?.items))?.items
+      ?? [];
+    return list;
   } catch {
     return [];
   }
@@ -51,6 +70,7 @@ async function fetchArticles(queryPath) {
 export default async function decorate(block) {
   const config = readBlockConfig(block);
   const queryPath = config.query || config['query-url'] || '';
+  const host = config.host || config.endpoint || '';
   const limit = parseInt(config.limit, 10) || DEFAULT_LIMIT;
 
   block.textContent = '';
@@ -63,7 +83,7 @@ export default async function decorate(block) {
     return;
   }
 
-  const items = await fetchArticles(queryPath);
+  const items = await fetchArticles(resolveQueryUrl(queryPath, host));
   const visible = items.slice(0, limit);
 
   if (!visible.length) {

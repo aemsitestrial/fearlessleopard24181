@@ -31,6 +31,13 @@
           "required": true
         },
         {
+          "component": "text",
+          "valueType": "string",
+          "name": "host",
+          "label": "AEM host (optional)",
+          "description": "Origin serving the persisted query, e.g. https://publish-p153710-e1614654.adobeaemcloud.com. Leave empty if the query is served from the same origin."
+        },
+        {
           "component": "number",
           "valueType": "number",
           "name": "limit",

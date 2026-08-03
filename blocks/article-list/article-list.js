@@ -6,7 +6,11 @@ function formatDate(iso) {
   if (!iso) return '';
   const d = new Date(iso);
   if (Number.isNaN(d.getTime())) return '';
-  return d.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
+  return d.toLocaleDateString(undefined, {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
 }
 
 function renderCard({ title, publishDate, body }) {
@@ -51,9 +55,21 @@ function resolveQueryUrl(queryPath, host) {
   return queryPath;
 }
 
+// Read the href or text from the first cell of a block row.
+// Used as a positional fallback when the block uses a single-column layout
+// (no key names in column 0) which readBlockConfig skips entirely.
+function cellValue(row) {
+  const cell = row?.children?.[0];
+  if (!cell) return '';
+  return cell.textContent.trim();
+}
+
 async function fetchArticles(queryUrl) {
   try {
-    const resp = await fetch(queryUrl, { headers: { 'Content-Type': 'application/json' } });
+    // GET request — no body, so Content-Type is omitted to avoid a CORS preflight.
+    // credentials:'include' sends the AEM session cookie cross-origin (requires
+    // Access-Control-Allow-Credentials:true on the AEM CORS policy).
+    const resp = await fetch(queryUrl, { credentials: 'include' });
     if (!resp.ok) return [];
     const json = await resp.json();
     // AEM headless persisted queries wrap results under data.<model>.items.
@@ -69,9 +85,16 @@ async function fetchArticles(queryUrl) {
 
 export default async function decorate(block) {
   const config = readBlockConfig(block);
-  const queryPath = config.query || config['query-url'] || '';
-  const host = config.host || config.endpoint || '';
-  const limit = parseInt(config.limit, 10) || DEFAULT_LIMIT;
+  const rows = [...block.children];
+
+  // readBlockConfig requires two-column rows (key | value). For single-column
+  // blocks — where each row contains only the value with no key — fall back to
+  // reading values positionally: row 0 = query, row 1 = host, row 2 = limit.
+  const singleCol = rows.length > 0 && rows[0].children.length === 1;
+  const queryPath = config.query || config['query-url'] || (singleCol ? cellValue(rows[0]) : '');
+  const host = config.host || config.endpoint || (singleCol ? cellValue(rows[1]) : '');
+  const positionalLimit = singleCol ? parseInt(cellValue(rows[2]), 10) : 0;
+  const limit = parseInt(config.limit, 10) || positionalLimit || DEFAULT_LIMIT;
 
   block.textContent = '';
 

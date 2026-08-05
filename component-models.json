@@ -20,6 +20,23 @@
         "name": "keywords",
         "multi": true,
         "label": "Keywords"
+      },
+      {
+        "component": "select",
+        "valueType": "string",
+        "name": "breadcrumbs",
+        "label": "Breadcrumbs",
+        "description": "Show the breadcrumb trail in the header on this page",
+        "options": [
+          {
+            "name": "Off",
+            "value": "false"
+          },
+          {
+            "name": "On",
+            "value": "true"
+          }
+        ]
       }
     ]
   },

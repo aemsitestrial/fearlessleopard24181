@@ -9,3 +9,4 @@ helix-importer-ui
 *.bak
 .idea
 .claude
+migration-work/navigation-validation/

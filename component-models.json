@@ -37,6 +37,13 @@
             "value": "true"
           }
         ]
+      },
+      {
+        "component": "number",
+        "valueType": "number",
+        "name": "nav-order",
+        "label": "Nav Order",
+        "description": "Position of this page in the auto-generated nav (lower shows first). Leave blank to sort alphabetically after ordered pages."
       }
     ]
   },

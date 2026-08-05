@@ -280,12 +280,13 @@ function normalizeBase(base) {
 
 /**
  * Build a nested nav tree from the query-index, limited to descendants of the
- * base path and to `maxDepth` levels below it. Items are sorted alphabetically
- * by title at every level.
- * @param {Array} rows query-index data rows ({ path, title })
+ * base path and to `maxDepth` levels below it. Items are ordered by their
+ * `nav-order` metadata (ascending; pages without it fall to the end), then
+ * alphabetically by title as a tiebreak, at every level.
+ * @param {Array} rows query-index data rows ({ path, title, navOrder })
  * @param {string} base delivery-relative base path
  * @param {number} maxDepth maximum menu depth below the base
- * @returns {Array} top-level nodes ({ path, title, children })
+ * @returns {Array} top-level nodes ({ path, title, order, children })
  */
 function buildAutoTree(rows, base, maxDepth) {
   const baseSegs = base === '/' ? [] : base.split('/').filter(Boolean);
@@ -293,7 +294,9 @@ function buildAutoTree(rows, base, maxDepth) {
   const ensure = (segs) => {
     const path = `/${segs.join('/')}`;
     if (!nodes.has(path)) {
-      nodes.set(path, { path, title: decodeURIComponent(segs[segs.length - 1]), children: [] });
+      nodes.set(path, {
+        path, title: decodeURIComponent(segs[segs.length - 1]), order: Infinity, children: [],
+      });
     }
     return nodes.get(path);
   };
@@ -308,7 +311,11 @@ function buildAutoTree(rows, base, maxDepth) {
     // ensure a node for this page and each of its ancestors within the base
     for (let i = baseSegs.length + 1; i <= segs.length; i += 1) {
       const node = ensure(segs.slice(0, i));
-      if (i === segs.length && row.title) node.title = row.title;
+      if (i === segs.length) {
+        if (row.title) node.title = row.title;
+        const order = parseFloat(row.navOrder);
+        if (Number.isFinite(order)) node.order = order;
+      }
     }
   });
 
@@ -325,7 +332,8 @@ function buildAutoTree(rows, base, maxDepth) {
   });
 
   const sortRec = (arr) => {
-    arr.sort((a, b) => a.title.localeCompare(b.title));
+    // nav-order ascending; equal/absent order falls back to alphabetical title.
+    arr.sort((a, b) => (a.order - b.order) || a.title.localeCompare(b.title));
     arr.forEach((n) => sortRec(n.children));
   };
   sortRec(topLevel);

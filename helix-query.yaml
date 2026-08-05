@@ -34,6 +34,9 @@ indices:
       date:
         select: head > meta[name="published-time"]
         value: attribute(el, "content")
+      navOrder:
+        select: head > meta[name="nav-order"]
+        value: attribute(el, "content")
   french:
     <<: *default
     include:

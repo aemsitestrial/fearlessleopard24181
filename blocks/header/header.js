@@ -85,10 +85,10 @@ function toggleMenu(nav, navSections, forceExpanded = null) {
   const button = nav.querySelector('.nav-hamburger button');
   document.body.style.overflowY = expanded || isDesktop.matches ? '' : 'hidden';
   nav.setAttribute('aria-expanded', expanded ? 'false' : 'true');
-  toggleAllNavSections(
-    navSections,
-    expanded || isDesktop.matches ? 'false' : 'true',
-  );
+  // Sub-menus always start collapsed; they open on tap (accordion) / click
+  // (desktop dropdown). This matches the Adobe Blog behavior where opening the
+  // mobile drawer does NOT auto-expand every section.
+  toggleAllNavSections(navSections, 'false');
   button.setAttribute(
     'aria-label',
     expanded ? 'Open navigation' : 'Close navigation',
@@ -197,6 +197,44 @@ async function buildBreadcrumbs() {
 }
 
 /**
+ * Wrap a nav section's dropdown content (the sub-menu <ul> plus any
+ * promotional block authored after it) into a single `.nav-drop-panel`
+ * container, so each open dropdown is one structural panel — matching the
+ * source. The copy, links, and images come from nav.plain.html; this only
+ * wraps and classifies the DOM the author provided.
+ * @param {Element} navSection the top-level nav <li>
+ */
+function decoratePanel(navSection) {
+  const submenu = navSection.querySelector(':scope > ul');
+  if (!submenu) return;
+
+  // Collect nodes that appear after the sub-menu list — these form the promo.
+  const promoNodes = [];
+  let sibling = submenu.nextElementSibling;
+  while (sibling) {
+    promoNodes.push(sibling);
+    sibling = sibling.nextElementSibling;
+  }
+
+  const panel = document.createElement('div');
+  panel.className = 'nav-drop-panel';
+  submenu.before(panel);
+  panel.append(submenu);
+
+  const hasImage = promoNodes.some((n) => n.querySelector('img'));
+  if (promoNodes.length && hasImage) {
+    const promo = document.createElement('div');
+    promo.className = 'nav-promo';
+    promoNodes.forEach((n) => promo.append(n));
+    // Style the last link in the promo as a button-like CTA.
+    const cta = promo.querySelector('p:last-of-type a');
+    if (cta) cta.classList.add('nav-promo-cta');
+    panel.append(promo);
+    navSection.classList.add('nav-drop-has-promo');
+  }
+}
+
+/**
  * loads and decorates the header, mainly the nav
  * @param {Element} block The header block element
  */
@@ -206,7 +244,10 @@ export default async function decorate(block) {
   if (langRoot && !navPath.startsWith(`${langRoot}/`)) {
     navPath = `${langRoot}${navPath}`;
   }
-  const fragment = await loadFragment(navPath);
+  // Dual-fetch: local aem-up serves the fragment under /content; DA/EDS serves
+  // it at the site root. Prefer the /content path, fall back to the root path.
+  const fragment = (await loadFragment(`/content${navPath}`))
+    || (await loadFragment(navPath));
 
   // decorate nav DOM
   block.textContent = '';
@@ -233,15 +274,21 @@ export default async function decorate(block) {
       .querySelectorAll(':scope .default-content-wrapper > ul > li')
       .forEach((navSection) => {
         if (navSection.querySelector('ul')) navSection.classList.add('nav-drop');
-        navSection.addEventListener('click', () => {
-          if (isDesktop.matches) {
-            const expanded = navSection.getAttribute('aria-expanded') === 'true';
-            toggleAllNavSections(navSections);
-            navSection.setAttribute(
-              'aria-expanded',
-              expanded ? 'false' : 'true',
-            );
-          }
+        // Wrap the sub-menu (+ any promo) into a single dropdown panel.
+        decoratePanel(navSection);
+        navSection.addEventListener('click', (e) => {
+          // Let clicks on real links inside the open panel navigate normally.
+          if (e.target.closest('.nav-drop-panel a')) return;
+          // Only dropdown items toggle; plain links navigate as usual.
+          if (!navSection.classList.contains('nav-drop')) return;
+          // The top-level item is a dropdown/accordion trigger on both desktop
+          // (click-to-open panel) and mobile (accordion expand): toggle instead
+          // of following its href.
+          e.preventDefault();
+          const expanded = navSection.getAttribute('aria-expanded') === 'true';
+          // Single-expand: collapse siblings, then toggle this one.
+          toggleAllNavSections(navSections);
+          navSection.setAttribute('aria-expanded', expanded ? 'false' : 'true');
         });
       });
     navSections
@@ -266,10 +313,25 @@ export default async function decorate(block) {
         ? authoredSearch
         : authoredSearch.querySelector('a[href]');
       if (link) source = new URL(link.getAttribute('href'), window.location).pathname;
-      authoredSearch.remove();
+      // Remove the whole authored wrapper (the <p> or button-container) so no
+      // stray "Search" text link is left behind.
+      (authoredSearch.closest('p, .button-container') || authoredSearch).remove();
     }
     const gnavSearch = await buildGnavSearch(source);
-    navTools.append(gnavSearch);
+    // Search sits first in the tools cluster (icon), before Sign In and the logo.
+    navTools.prepend(gnavSearch);
+
+    // Strip boilerplate button decoration and tag the remaining tools links so
+    // CSS can style Sign In and the Adobe logo consistently.
+    navTools.querySelectorAll('.button-container').forEach((c) => c.classList.remove('button-container'));
+    navTools.querySelectorAll('a[href]').forEach((a) => {
+      a.classList.remove('button');
+      if (a.querySelector('img')) {
+        a.classList.add('nav-tools-logo');
+      } else if (a.textContent.trim()) {
+        a.classList.add('nav-tools-link');
+      }
+    });
   }
 
   // hamburger for mobile

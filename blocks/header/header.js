@@ -234,6 +234,144 @@ function decoratePanel(navSection) {
   }
 }
 
+// Pages that should never appear as menu items when auto-generating the nav.
+const AUTO_NAV_EXCLUDE = /(^|\/)(nav|footer|draft|drafts|fragment|fragments|metadata|search|401|404|500)(\/|$)/i;
+
+/**
+ * Resolve which query-index feed to read for the current locale.
+ * @returns {string} path to the locale's query-index.json
+ */
+function localeQueryIndex() {
+  const [locale] = window.location.pathname.split('/').filter(Boolean);
+  return locale === 'fr' ? '/fr/query-index.json' : '/en/query-index.json';
+}
+
+/**
+ * Normalize a base path for auto-nav generation. Accepts both delivery paths
+ * (e.g. "/", "/blog") and AEM content-authoring paths (e.g.
+ * "/content/2026/31/site/en" or ".../en/blog"), reducing the latter to the
+ * delivery-relative path below the locale segment.
+ * @param {string} base the authored base path
+ * @returns {string} a delivery-relative base path (leading slash, no trailing)
+ */
+function normalizeBase(base) {
+  let b = (base || '/').trim();
+  if (b.startsWith('/content/')) {
+    const m = b.match(/\/(?:en|fr|es)(\/.*)?$/);
+    b = m && m[1] ? m[1] : '/';
+  }
+  if (!b.startsWith('/')) b = `/${b}`;
+  if (b.length > 1 && b.endsWith('/')) b = b.slice(0, -1);
+  return b;
+}
+
+/**
+ * Build a nested nav tree from the query-index, limited to descendants of the
+ * base path and to `maxDepth` levels below it. Items are sorted alphabetically
+ * by title at every level.
+ * @param {Array} rows query-index data rows ({ path, title })
+ * @param {string} base delivery-relative base path
+ * @param {number} maxDepth maximum menu depth below the base
+ * @returns {Array} top-level nodes ({ path, title, children })
+ */
+function buildAutoTree(rows, base, maxDepth) {
+  const baseSegs = base === '/' ? [] : base.split('/').filter(Boolean);
+  const nodes = new Map();
+  const ensure = (segs) => {
+    const path = `/${segs.join('/')}`;
+    if (!nodes.has(path)) {
+      nodes.set(path, { path, title: decodeURIComponent(segs[segs.length - 1]), children: [] });
+    }
+    return nodes.get(path);
+  };
+
+  rows.forEach((row) => {
+    const segs = (row.path || '').split('/').filter(Boolean);
+    // must sit under the base path
+    if (baseSegs.some((s, i) => segs[i] !== s)) return;
+    const relSegs = segs.slice(baseSegs.length);
+    if (relSegs.length < 1 || relSegs.length > maxDepth) return;
+    if (relSegs.some((s) => AUTO_NAV_EXCLUDE.test(s))) return;
+    // ensure a node for this page and each of its ancestors within the base
+    for (let i = baseSegs.length + 1; i <= segs.length; i += 1) {
+      const node = ensure(segs.slice(0, i));
+      if (i === segs.length && row.title) node.title = row.title;
+    }
+  });
+
+  const topLevel = [];
+  nodes.forEach((node) => {
+    const segs = node.path.split('/').filter(Boolean);
+    if (segs.length === baseSegs.length + 1) {
+      topLevel.push(node);
+    } else {
+      const parent = nodes.get(`/${segs.slice(0, -1).join('/')}`);
+      if (parent) parent.children.push(node);
+      else topLevel.push(node);
+    }
+  });
+
+  const sortRec = (arr) => {
+    arr.sort((a, b) => a.title.localeCompare(b.title));
+    arr.forEach((n) => sortRec(n.children));
+  };
+  sortRec(topLevel);
+  return topLevel;
+}
+
+/**
+ * Render a nav tree into a `.default-content-wrapper > ul` structure that
+ * matches the authored nav markup (so the existing dropdown/accordion
+ * decoration applies unchanged).
+ * @param {Array} topLevel top-level nodes from buildAutoTree
+ * @returns {Element} the default-content-wrapper element
+ */
+function renderNavTree(topLevel) {
+  const wrapper = document.createElement('div');
+  wrapper.className = 'default-content-wrapper';
+  const renderNodes = (menuNodes, parentUl) => {
+    menuNodes.forEach((node) => {
+      const li = document.createElement('li');
+      const p = document.createElement('p');
+      const a = document.createElement('a');
+      a.href = node.path;
+      a.title = node.title;
+      a.textContent = node.title;
+      p.append(a);
+      li.append(p);
+      if (node.children.length) {
+        const childUl = document.createElement('ul');
+        renderNodes(node.children, childUl);
+        li.append(childUl);
+      }
+      parentUl.append(li);
+    });
+  };
+  const ul = document.createElement('ul');
+  renderNodes(topLevel, ul);
+  wrapper.append(ul);
+  return wrapper;
+}
+
+/**
+ * Auto-generate the nav sections from the page tree under a base path.
+ * @param {string} base an authored base path (delivery or content form)
+ * @param {number} maxDepth maximum menu depth (default 3)
+ * @returns {Promise<Element|null>} a default-content-wrapper, or null on failure
+ */
+async function buildAutoNavSections(base, maxDepth = 3) {
+  let rows;
+  try {
+    const resp = await fetch(localeQueryIndex());
+    if (!resp.ok) return null;
+    rows = (await resp.json()).data || [];
+  } catch (e) {
+    return null;
+  }
+  const tree = buildAutoTree(rows, normalizeBase(base), maxDepth);
+  return tree.length ? renderNavTree(tree) : null;
+}
+
 /**
  * loads and decorates the header, mainly the nav
  * @param {Element} block The header block element
@@ -270,6 +408,18 @@ export default async function decorate(block) {
 
   const navSections = nav.querySelector('.nav-sections');
   if (navSections) {
+    // Hybrid auto-nav: when a `nav-auto` metadata (base path) is set, generate
+    // the menu tree from the published page hierarchy up to level 3 and use it
+    // in place of the authored menu. Brand and tools stay authored. Falls back
+    // to the authored menu if generation yields nothing.
+    const autoBase = getMetadata('nav-auto');
+    if (autoBase) {
+      const autoWrapper = await buildAutoNavSections(autoBase, 3);
+      if (autoWrapper) {
+        navSections.querySelector('.default-content-wrapper')?.remove();
+        navSections.append(autoWrapper);
+      }
+    }
     navSections
       .querySelectorAll(':scope .default-content-wrapper > ul > li')
       .forEach((navSection) => {

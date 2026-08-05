@@ -616,6 +616,36 @@
     ]
   },
   {
+    "id": "rich-text",
+    "fields": [
+      {
+        "component": "richtext",
+        "valueType": "string",
+        "name": "text",
+        "label": "Content",
+        "description": "Rich text content. In document authoring, images placed in this cell render inline. Follow an image paragraph with a single italicised line to use it as a caption.",
+        "required": true
+      },
+      {
+        "component": "multiselect",
+        "name": "classes",
+        "label": "Image placement",
+        "description": "Controls how the first image floats relative to the text on wider screens.",
+        "valueType": "string",
+        "options": [
+          {
+            "name": "Float image left",
+            "value": "image-left"
+          },
+          {
+            "name": "Float image right",
+            "value": "image-right"
+          }
+        ]
+      }
+    ]
+  },
+  {
     "id": "search",
     "fields": [
       {

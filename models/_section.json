@@ -64,7 +64,8 @@
         "badge",
         "hero-carousel",
         "article-list",
-        "image-link"
+        "image-link",
+        "rich-text"
       ]
     }
   ]

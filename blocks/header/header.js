@@ -247,21 +247,34 @@ function localeQueryIndex() {
 }
 
 /**
- * Normalize a base path for auto-nav generation. Accepts both delivery paths
- * (e.g. "/", "/blog") and AEM content-authoring paths (e.g.
- * "/content/2026/31/site/en" or ".../en/blog"), reducing the latter to the
- * delivery-relative path below the locale segment.
+ * Normalize a base path for auto-nav generation and align it to the CURRENT
+ * page's locale. Accepts delivery paths (e.g. "/", "/blog") and AEM
+ * content-authoring paths (e.g. "/content/2026/31/site/en" or ".../en/blog").
+ *
+ * Delivery paths are locale-prefixed differently per locale (English maps to
+ * the root — "/about-us" — while French keeps its prefix — "/fr/about-us").
+ * So we reduce the input to the locale-agnostic sub-path (below its locale
+ * segment) and re-apply the current page's `langRoot`, so the base matches the
+ * delivery paths in that locale's query-index.
  * @param {string} base the authored base path
- * @returns {string} a delivery-relative base path (leading slash, no trailing)
+ * @returns {string} a delivery-relative base path for the current locale
  */
 function normalizeBase(base) {
   let b = (base || '/').trim();
   if (b.startsWith('/content/')) {
+    // AEM content path: keep only the part below its /en|/fr|/es segment.
     const m = b.match(/\/(?:en|fr|es)(\/.*)?$/);
     b = m && m[1] ? m[1] : '/';
+  } else {
+    // Delivery path: strip any leading known locale prefix to get the sub-path.
+    const m = b.match(/^\/(?:en|fr|es)(\/.*)?$/);
+    if (m) b = m[1] || '/';
   }
   if (!b.startsWith('/')) b = `/${b}`;
   if (b.length > 1 && b.endsWith('/')) b = b.slice(0, -1);
+  // Re-apply the current page's locale root so the base lines up with the
+  // locale-specific delivery paths (en pages are unprefixed; fr pages keep /fr).
+  if (langRoot) b = b === '/' ? langRoot : `${langRoot}${b}`;
   return b;
 }
 

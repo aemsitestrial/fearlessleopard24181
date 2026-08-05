@@ -83,6 +83,46 @@ function buildAutoBlocks() {
   }
 }
 
+/**
+ * Wraps a picture in an anchor when the Image component's optional link field
+ * (`imageLink`) has been authored. In xwalk projects the core image component
+ * renders only a <picture>; the authored link is delivered as a separate,
+ * empty-text link (its href differs from its text) sitting alongside the
+ * picture in the same default-content wrapper. This moves the picture into that
+ * anchor so the image becomes clickable.
+ * @param {Element} main The container element
+ */
+function decorateLinkedImages(main) {
+  main.querySelectorAll('picture').forEach((picture) => {
+    // Only default-content images (skip pictures already handled by blocks).
+    if (picture.closest('[class][data-block-status], .block')) return;
+
+    const wrapper = picture.closest('p, div');
+    if (!wrapper) return;
+
+    // The authored link lives as a sibling within the same wrapper (or the
+    // wrapper's parent for the default-content <p> layout).
+    const scope = wrapper.parentElement || wrapper;
+    const candidate = [...scope.querySelectorAll('a[href]')].find(
+      (a) => !a.querySelector('picture, img') && !a.textContent.trim(),
+    );
+    if (!candidate) return;
+
+    // Move the picture into the anchor and drop the now-empty link paragraph.
+    candidate.textContent = '';
+    candidate.append(picture);
+    candidate.classList.remove('button');
+    const linkWrapper = candidate.closest('p, div');
+    if (linkWrapper && linkWrapper !== wrapper) {
+      linkWrapper.classList.remove('button-container');
+      wrapper.replaceWith(candidate);
+      if (!linkWrapper.textContent.trim() && !linkWrapper.querySelector('picture, img')) {
+        linkWrapper.remove();
+      }
+    }
+  });
+}
+
 function a11yLinks(main) {
   const links = main.querySelectorAll('a');
   links.forEach((link) => {
@@ -109,6 +149,8 @@ export function decorateMain(main) {
   // hopefully forward compatible button decoration
   decorateButtons(main);
   decorateIcons(main);
+  // wrap images that have an authored optional link
+  decorateLinkedImages(main);
   buildAutoBlocks(main);
   decorateSections(main);
   decorateBlocks(main);

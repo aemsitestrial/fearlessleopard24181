@@ -36,6 +36,16 @@
         "component": "text",
         "name": "imageAlt",
         "label": "Alt Text"
+      },
+      {
+        "component": "aem-content",
+        "name": "imageLink",
+        "label": "Link (optional)"
+      },
+      {
+        "component": "text",
+        "name": "imageLinkTitle",
+        "label": "Link Title (optional)"
       }
     ]
   },

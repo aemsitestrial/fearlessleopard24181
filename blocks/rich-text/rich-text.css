@@ -1,0 +1,74 @@
+.rich-text {
+  box-sizing: border-box;
+  max-width: var(--content-max-width, 860px);
+  margin-inline: auto;
+}
+
+.rich-text-content {
+  /* Images inline within richtext */
+  picture,
+  img {
+    display: block;
+    max-width: 100%;
+    height: auto;
+  }
+
+  /* Standalone figure (image promoted from <p>) */
+  .rich-text-figure {
+    margin-inline: 0;
+    margin-block: var(--spacing-medium, 1.5rem);
+  }
+
+  .rich-text-figure figcaption {
+    font-size: var(--font-size-small, 0.875rem);
+    color: var(--color-text-secondary, #666);
+    margin-top: 0.5rem;
+  }
+
+  /* Float variants — author adds "image left" or "image right" block option */
+  .rich-text-figure.float-left {
+    float: left;
+    margin-right: var(--spacing-medium, 1.5rem);
+    max-width: 50%;
+  }
+
+  .rich-text-figure.float-right {
+    float: right;
+    margin-left: var(--spacing-medium, 1.5rem);
+    max-width: 50%;
+  }
+
+  /* Clearfix */
+  &::after {
+    content: '';
+    display: table;
+    clear: both;
+  }
+}
+
+/* Float variants from block class */
+.rich-text.image-left .rich-text-figure,
+.rich-text.image-right .rich-text-figure {
+  margin-block: 0.25rem;
+}
+
+.rich-text.image-left .rich-text-figure {
+  float: left;
+  margin-right: var(--spacing-medium, 1.5rem);
+  max-width: 50%;
+}
+
+.rich-text.image-right .rich-text-figure {
+  float: right;
+  margin-left: var(--spacing-medium, 1.5rem);
+  max-width: 50%;
+}
+
+@media (width <= 600px) {
+  .rich-text.image-left .rich-text-figure,
+  .rich-text.image-right .rich-text-figure {
+    float: none;
+    max-width: 100%;
+    margin-inline: 0;
+  }
+}

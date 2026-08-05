@@ -1,0 +1,21 @@
+.image-link {
+  display: block;
+  line-height: 0;
+}
+
+.image-link a {
+  display: block;
+  line-height: 0;
+}
+
+.image-link picture,
+.image-link img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+.image-link a:focus-visible {
+  outline: 2px solid var(--color-focus, #0072cc);
+  outline-offset: 2px;
+}

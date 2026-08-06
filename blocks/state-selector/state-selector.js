@@ -1,61 +1,81 @@
+import { getLangRoot, getLocale } from '../../scripts/scripts.js';
+
 const STORAGE_KEY = 'xcel-selected-state';
 const FILL = '#C8102E';
 
+// `code` is the URL segment used in the /{state}/{locale}/... content paths.
+// Keep in sync with SITE_STATES in scripts/scripts.js and the helix-query.yaml
+// per-state indices.
 const STATES = [
   {
     name: 'Colorado',
-    href: '/colorado',
+    code: 'co',
     svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 140"><rect x="5" y="5" width="190" height="130" fill="${FILL}"/></svg>`,
   },
   {
     name: 'Michigan',
-    href: '/michigan',
+    code: 'mi',
     svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><polygon points="5,8 118,8 118,30 80,36 5,28" fill="${FILL}"/><polygon points="80,36 100,30 115,38 132,28 145,40 152,58 158,80 155,105 140,128 115,145 88,152 60,148 38,135 20,112 18,85 26,62 44,44 68,36" fill="${FILL}"/></svg>`,
   },
   {
     name: 'Minnesota',
-    href: '/minnesota',
+    code: 'mn',
     svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 230"><polygon points="38,5 54,5 54,22 160,22 170,48 170,102 158,132 170,162 170,225 18,225 18,5" fill="${FILL}"/></svg>`,
   },
   {
     name: 'New Mexico',
-    href: '/new-mexico',
+    code: 'nm',
     svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 215"><polygon points="5,5 195,5 195,190 60,190 60,210 5,210" fill="${FILL}"/></svg>`,
   },
   {
     name: 'North Dakota',
-    href: '/north-dakota',
+    code: 'nd',
     svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 130"><rect x="5" y="5" width="190" height="120" fill="${FILL}"/></svg>`,
   },
   {
     name: 'South Dakota',
-    href: '/south-dakota',
+    code: 'sd',
     svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 135"><polygon points="5,5 195,5 195,92 138,92 130,120 110,132 82,120 74,92 5,92" fill="${FILL}"/></svg>`,
   },
   {
     name: 'Texas',
-    href: '/texas',
+    code: 'tx',
     svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><polygon points="5,5 70,5 70,48 195,48 185,82 188,108 175,138 162,168 145,185 118,195 95,198 62,185 35,162 8,148 8,98 5,58 5,5" fill="${FILL}"/></svg>`,
   },
   {
     name: 'Wisconsin',
-    href: '/wisconsin',
+    code: 'wi',
     svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 220"><polygon points="55,5 92,5 108,18 142,22 160,44 165,72 158,95 175,112 170,135 148,152 125,168 112,195 95,215 72,215 50,202 30,178 20,150 16,120 28,95 16,70 22,48 42,28" fill="${FILL}"/></svg>`,
   },
 ];
 
+/**
+ * Build the URL for the current page in the given state, preserving the current
+ * locale and the sub-path below the state/locale root. English defaults when the
+ * current URL has no locale segment. E.g. on "/tx/en/about-us", Colorado ->
+ * "/co/en/about-us".
+ * @param {string} code the target state code (e.g. "co")
+ * @returns {string} the state-scoped href
+ */
+function buildStateHref(code) {
+  const langRoot = getLangRoot(); // e.g. "/tx/en", "/fr", or ""
+  const rest = window.location.pathname.slice(langRoot.length) || '/';
+  const locale = getLocale() || 'en';
+  return `/${code}/${locale}${rest === '/' ? '/' : rest}`;
+}
+
 function getSavedState() {
   try {
     const saved = localStorage.getItem(STORAGE_KEY);
-    return STATES.find((s) => s.href === saved) ?? null;
+    return STATES.find((s) => s.code === saved) ?? null;
   } catch {
     return null;
   }
 }
 
-function saveState(href) {
+function saveState(code) {
   try {
-    localStorage.setItem(STORAGE_KEY, href);
+    localStorage.setItem(STORAGE_KEY, code);
   } catch { /* storage unavailable */ }
 }
 
@@ -99,8 +119,9 @@ function openModal(trigger) {
   const list = document.createElement('ul');
   list.className = 'state-selector-list';
 
-  STATES.forEach(({ name, href, svg }) => {
+  STATES.forEach(({ name, code, svg }) => {
     const li = document.createElement('li');
+    const href = buildStateHref(code);
     const a = document.createElement('a');
     a.href = href;
     a.className = 'state-selector-item';
@@ -119,7 +140,7 @@ function openModal(trigger) {
 
     a.addEventListener('click', (e) => {
       e.preventDefault();
-      saveState(href);
+      saveState(code);
       close();
       trigger.textContent = name;
       window.location.href = href;

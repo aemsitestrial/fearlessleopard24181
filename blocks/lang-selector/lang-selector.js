@@ -1,24 +1,24 @@
-import { getLangRoot } from '../../scripts/scripts.js';
+import { getLangRoot, getLocale, getState } from '../../scripts/scripts.js';
 
-// EN is the default (no prefix). Add locales here to extend the list.
+// Content lives under /{state}/{locale}/..., so every locale is an explicit
+// path segment. Add locales here to extend the list.
 const LOCALES = [
-  { code: '', label: 'English', lang: 'en' },
+  { code: 'en', label: 'English', lang: 'en' },
   { code: 'fr', label: 'Français', lang: 'fr' },
 ];
 
+// Build the URL for the current page in a different locale, preserving the
+// leading state segment (e.g. /tx) and the sub-path below the state/locale root.
 function buildLocaleHref(targetCode) {
-  const path = window.location.pathname;
-  const parts = path.split('/').filter(Boolean);
-  const localeCodes = LOCALES.map((l) => l.code).filter(Boolean);
-
-  const localeParts = localeCodes.includes(parts[0]) ? parts.slice(1) : parts;
-  const cleanPath = localeParts.length ? `/${localeParts.join('/')}` : '/';
-
-  return targetCode ? `/${targetCode}${cleanPath === '/' ? '/' : cleanPath}` : cleanPath;
+  const langRoot = getLangRoot(); // e.g. "/tx/en", "/fr", or ""
+  const rest = window.location.pathname.slice(langRoot.length) || '/';
+  const state = getState(); // e.g. "tx" or ""
+  const statePrefix = state ? `/${state}` : '';
+  return `${statePrefix}/${targetCode}${rest === '/' ? '/' : rest}`;
 }
 
 export default function decorate(block) {
-  const currentCode = getLangRoot().replace('/', '');
+  const currentCode = getLocale();
 
   const nav = document.createElement('nav');
   nav.setAttribute('aria-label', 'Language selector');

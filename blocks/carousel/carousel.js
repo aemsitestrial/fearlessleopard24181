@@ -1,4 +1,4 @@
-import { moveInstrumentation, getLangRoot } from '../../scripts/scripts.js';
+import { moveInstrumentation, getLocaleRoot } from '../../scripts/scripts.js';
 import { fetchPlaceholders } from '../../scripts/placeholders.js';
 
 function updateActiveSlide(slide) {
@@ -97,7 +97,7 @@ export default async function decorate(block) {
   const rows = block.querySelectorAll(':scope > div');
   const isSingleSlide = rows.length < 2;
 
-  const placeholders = await fetchPlaceholders(getLangRoot() || 'default');
+  const placeholders = await fetchPlaceholders(getLocaleRoot() || 'default');
 
   block.setAttribute('role', 'region');
   block.setAttribute('aria-roledescription', placeholders.carousel || 'Carousel');

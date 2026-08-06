@@ -1,14 +1,18 @@
+# Content is organized as /{state}/{locale}/... (e.g. /tx/en/about-us) — the
+# state segment comes BEFORE the locale. Each state/locale gets its own
+# query-index so nav, search and feeds stay scoped to the visitor's state and
+# language. A global index feeds the sitemap. Keep the state/locale list in sync
+# with SITE_STATES/SITE_LOCALES in scripts/scripts.js and the state-selector.
 indices:
-  english: &default
+  # Global index across every state/locale — used by helix-sitemap.yaml.
+  all:
     include:
       - /**
     exclude:
-      - /en
-      - /fr
-      - /fr/**
       - /snippets/**
-    target: /en/query-index.json
-    properties:
+      - /**/snippets/**
+    target: /query-index.json
+    properties: &props
       author:
         select: head > meta[name="author"]
         value: |
@@ -37,10 +41,147 @@ indices:
       navOrder:
         select: head > meta[name="nav-order"]
         value: attribute(el, "content")
-  french:
-    <<: *default
+
+  # --- Colorado ---
+  co-en:
     include:
-      - /fr/**
+      - /co/en
+      - /co/en/**
     exclude:
-      - /fr/snippets/**
-    target: /fr/query-index.json
+      - /co/en/snippets/**
+    target: /co/en/query-index.json
+    properties: *props
+  co-fr:
+    include:
+      - /co/fr
+      - /co/fr/**
+    exclude:
+      - /co/fr/snippets/**
+    target: /co/fr/query-index.json
+    properties: *props
+
+  # --- Michigan ---
+  mi-en:
+    include:
+      - /mi/en
+      - /mi/en/**
+    exclude:
+      - /mi/en/snippets/**
+    target: /mi/en/query-index.json
+    properties: *props
+  mi-fr:
+    include:
+      - /mi/fr
+      - /mi/fr/**
+    exclude:
+      - /mi/fr/snippets/**
+    target: /mi/fr/query-index.json
+    properties: *props
+
+  # --- Minnesota ---
+  mn-en:
+    include:
+      - /mn/en
+      - /mn/en/**
+    exclude:
+      - /mn/en/snippets/**
+    target: /mn/en/query-index.json
+    properties: *props
+  mn-fr:
+    include:
+      - /mn/fr
+      - /mn/fr/**
+    exclude:
+      - /mn/fr/snippets/**
+    target: /mn/fr/query-index.json
+    properties: *props
+
+  # --- New Mexico ---
+  nm-en:
+    include:
+      - /nm/en
+      - /nm/en/**
+    exclude:
+      - /nm/en/snippets/**
+    target: /nm/en/query-index.json
+    properties: *props
+  nm-fr:
+    include:
+      - /nm/fr
+      - /nm/fr/**
+    exclude:
+      - /nm/fr/snippets/**
+    target: /nm/fr/query-index.json
+    properties: *props
+
+  # --- North Dakota ---
+  nd-en:
+    include:
+      - /nd/en
+      - /nd/en/**
+    exclude:
+      - /nd/en/snippets/**
+    target: /nd/en/query-index.json
+    properties: *props
+  nd-fr:
+    include:
+      - /nd/fr
+      - /nd/fr/**
+    exclude:
+      - /nd/fr/snippets/**
+    target: /nd/fr/query-index.json
+    properties: *props
+
+  # --- South Dakota ---
+  sd-en:
+    include:
+      - /sd/en
+      - /sd/en/**
+    exclude:
+      - /sd/en/snippets/**
+    target: /sd/en/query-index.json
+    properties: *props
+  sd-fr:
+    include:
+      - /sd/fr
+      - /sd/fr/**
+    exclude:
+      - /sd/fr/snippets/**
+    target: /sd/fr/query-index.json
+    properties: *props
+
+  # --- Texas ---
+  tx-en:
+    include:
+      - /tx/en
+      - /tx/en/**
+    exclude:
+      - /tx/en/snippets/**
+    target: /tx/en/query-index.json
+    properties: *props
+  tx-fr:
+    include:
+      - /tx/fr
+      - /tx/fr/**
+    exclude:
+      - /tx/fr/snippets/**
+    target: /tx/fr/query-index.json
+    properties: *props
+
+  # --- Wisconsin ---
+  wi-en:
+    include:
+      - /wi/en
+      - /wi/en/**
+    exclude:
+      - /wi/en/snippets/**
+    target: /wi/en/query-index.json
+    properties: *props
+  wi-fr:
+    include:
+      - /wi/fr
+      - /wi/fr/**
+    exclude:
+      - /wi/fr/snippets/**
+    target: /wi/fr/query-index.json
+    properties: *props

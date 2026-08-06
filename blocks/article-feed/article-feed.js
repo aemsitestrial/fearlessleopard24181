@@ -1,19 +1,16 @@
 import { createOptimizedPicture, readBlockConfig } from '../../scripts/aem.js';
 import { fetchPlaceholders } from '../../scripts/placeholders.js';
-import { getLangRoot } from '../../scripts/scripts.js';
+import { getLocaleRoot, getQueryIndexPath } from '../../scripts/scripts.js';
 
 const DEFAULT_PAGE_SIZE = 12;
 
-const LOCALE_INDEX = { fr: '/fr/query-index.json' };
-
 /**
- * Resolve the locale-scoped query-index feed for the current page.
- * English content is served at the site root and indexed at /en/query-index.json.
- * @returns {string} pathname of the query-index feed for the active locale
+ * Resolve the query-index feed scoped to the current page's state/locale
+ * (e.g. /tx/en/query-index.json).
+ * @returns {string} pathname of the query-index feed for the active state/locale
  */
 function getLocaleIndex() {
-  const locale = window.location.pathname.split('/').filter(Boolean)[0];
-  return LOCALE_INDEX[locale] || '/en/query-index.json';
+  return getQueryIndexPath();
 }
 
 /**
@@ -189,7 +186,7 @@ function buildCategories(records, configuredTags) {
 
 export default async function decorate(block) {
   const config = readBlockConfig(block);
-  const placeholders = await fetchPlaceholders(getLangRoot() || 'default');
+  const placeholders = await fetchPlaceholders(getLocaleRoot() || 'default');
 
   const source = config.feed || config.source
     ? new URL(config.feed || config.source, window.location).pathname

@@ -2,7 +2,7 @@ import { getMetadata } from '../../scripts/aem.js';
 import { fetchPlaceholders } from '../../scripts/placeholders.js';
 import { loadFragment } from '../fragment/fragment.js';
 import buildGnavSearch from './gnav-search.js';
-import { getLangRoot } from '../../scripts/scripts.js';
+import { getLangRoot, getLocaleRoot, getQueryIndexPath } from '../../scripts/scripts.js';
 
 // media query match that indicates mobile/tablet width
 const isDesktop = window.matchMedia('(min-width: 900px)');
@@ -153,7 +153,7 @@ async function buildBreadcrumbsFromNavTree(nav, currentUrl) {
     crumbs.unshift({ title: getMetadata('og:title'), url: currentUrl });
   }
 
-  const placeholders = await fetchPlaceholders(langRoot || 'default');
+  const placeholders = await fetchPlaceholders(getLocaleRoot() || 'default');
   const homePlaceholder = placeholders.breadcrumbsHomeLabel || 'Home';
 
   crumbs.unshift({ title: homePlaceholder, url: homeUrl });
@@ -238,12 +238,11 @@ function decoratePanel(navSection) {
 const AUTO_NAV_EXCLUDE = /(^|\/)(nav|footer|draft|drafts|fragment|fragments|metadata|search|401|404|500)(\/|$)/i;
 
 /**
- * Resolve which query-index feed to read for the current locale.
- * @returns {string} path to the locale's query-index.json
+ * Resolve which query-index feed to read for the current state/locale.
+ * @returns {string} path to the state/locale's query-index.json
  */
 function localeQueryIndex() {
-  const [locale] = window.location.pathname.split('/').filter(Boolean);
-  return locale === 'fr' ? '/fr/query-index.json' : '/en/query-index.json';
+  return getQueryIndexPath();
 }
 
 /**

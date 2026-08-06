@@ -3,13 +3,14 @@
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(257px, 1fr));
+  grid-template-columns: var(--cards-grid-cols, repeat(auto-fill, minmax(257px, 1fr)));
   gap: 24px;
 }
 
 .cards > ul > li {
   border: 1px solid #dadada;
   background-color: var(--background-color);
+  grid-column: span var(--card-colspan, 1);
 }
 
 .cards .cards-card-body {

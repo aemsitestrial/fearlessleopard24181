@@ -12,10 +12,9 @@
   background-color: var(--background-color);
 }
 
-/* Fixed column counts and per-card spans only apply on wider screens.
-   On mobile the grid keeps its single-column stacking so cards stay
-   readable. */
-@media (width >= 900px) {
+/* Fixed column counts and per-card spans apply from tablet up. On mobile
+   the grid keeps its single-column stacking so cards stay readable. */
+@media (width >= 600px) {
   .cards.cards-cols-2 > ul {
     grid-template-columns: repeat(2, 1fr);
   }

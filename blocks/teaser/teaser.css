@@ -102,118 +102,162 @@
     *  Add styling for the side-by-side variant
     **/
 
-    /* This evaluates to .block.teaser.side-by-side */
-    &.side-by-side-left {
-        /* Since this default teaser option doesn't have a style (such as `.default`), we use `all: initial` to reset styles rather than overriding individual styles. */
-        all: initial;
-        display: flex;
-        margin: auto;
-        max-width: 900px;
-
-        .image-wrapper {
-            all: initial;
-            flex: 2;
-            overflow: hidden;
-
-            * {
-                height: 100%;
-            }
-
-            .image {
-                object-fit: cover;
-                object-position: center;
-                width: 100%;
-                height: 100%;
-                transform: scale(1);
-                transition: transform 0.6s ease-in-out;
-
-                &.zoom {
-                    /* This option has a different zoom level than the default */
-                    transform: scale(1.5);
-                }
-            }
-        }
-
-        .content {
-            all: initial;
-            flex: 1;
-            background-color: #f5eee8;
-            padding: 3.5em 2em 2em;
-            font-size: 16px;
-            font-family: Roboto, sans-serif;
-            color: #333;
-            text-align: justify;
-            text-justify: auto;
-            hyphens: auto;
-
-            p.terms-and-conditions {
-                border: solid #333;
-                border-width: 0;
-                padding-left: 0;
-                text-align: left;
-            }
-        }
-
-        /* Media query for mobile devices */
-        @media (width <= 900px) {
-            flex-direction: column; /* Stack elements vertically on mobile */
-        }
-    }
-
+    /*
+    * Side-by-side variants styled to match the adobe.design "series" feature
+    * banners (https://adobe.design/ideas/). Values extracted from the source
+    * page's computed styles: full-width two-column layout on a transparent
+    * background, large display heading, body paragraph, and an outline/ghost
+    * CTA button. Mobile-first: stacked on small screens, side-by-side >= 900px.
+    *
+    * The authoring option "side-by-side left/right" is applied by Edge Delivery
+    * as the classes `.side-by-side` + `.left` / `.right`, so the shared layout
+    * targets `.side-by-side`; column order is switched via `.left` / `.right`
+    * below. The hyphenated forms are kept as fallbacks.
+    */
+    &.side-by-side,
+    &.side-by-side-left,
     &.side-by-side-right {
+        /* Reset the default (full-bleed hero) teaser treatment. */
         all: initial;
         display: flex;
-        flex-direction: row-reverse;
-        margin: auto;
-        max-width: 900px;
+        flex-direction: column; /* mobile: stacked */
+        gap: 24px;
+        margin: 48px 0;
+        box-sizing: border-box;
+        font-family: var(--body-font-family);
 
         .image-wrapper {
             all: initial;
-            flex: 2;
+            display: block;
             overflow: hidden;
 
             * {
-                height: 100%;
+                display: block;
             }
 
             .image {
+                width: 100%;
+                aspect-ratio: 2000 / 1500; /* 4:3, matches source feature image */
                 object-fit: cover;
                 object-position: center;
-                width: 100%;
-                height: 100%;
+                border-radius: 16px;
                 transform: scale(1);
                 transition: transform 0.6s ease-in-out;
 
                 &.zoom {
-                    transform: scale(1.5);
+                    transform: scale(1.05);
                 }
             }
         }
 
         .content {
             all: initial;
-            flex: 1;
-            background-color: #f5eee8;
-            padding: 3.5em 2em 2em;
-            font-size: 16px;
-            font-family: Roboto, sans-serif;
-            color: #333;
-            text-align: justify;
-            text-justify: auto;
-            hyphens: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: center;
+            background: transparent;
+            color: rgb(41 41 41);
+            font-family: var(--body-font-family);
+
+            .title {
+                font-family: var(--heading-font-family);
+                font-size: 28px; /* mobile heading size from source */
+                font-weight: 800;
+                line-height: 1.15;
+                color: rgb(41 41 41);
+                margin: 0 0 8px;
+            }
+
+            .title::after {
+                border-bottom: 0;
+            }
+
+            p {
+                font-size: 20px;
+                font-weight: 400;
+                line-height: 1.5;
+                color: rgb(41 41 41);
+                margin: 0;
+            }
 
             p.terms-and-conditions {
-                border: solid #333;
-                border-width: 0;
+                border: 0;
                 padding-left: 0;
                 text-align: left;
             }
+
+            a:hover {
+                text-decoration: underline;
+            }
+
+            /* Outline / ghost CTA button (source: .button--primary-outline). */
+            .button-container {
+                margin: 24px 0 0;
+                padding: 0;
+
+                .button {
+                    display: inline-block;
+                    background-color: transparent;
+                    color: rgb(41 41 41);
+                    border: 2px solid rgb(0 0 0 / 84%);
+                    border-radius: 48px;
+                    padding: 10px 20px 11px;
+                    margin: 0;
+                    font-family: var(--body-font-family);
+                    font-size: 18px;
+                    font-weight: 700;
+                    line-height: 1.3;
+                    text-transform: none;
+                    text-decoration: none;
+                    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+                }
+
+                .button:hover,
+                .button:focus {
+                    background-color: rgb(0 0 0 / 9%);
+                    border-color: rgb(0 0 0 / 93%);
+                    color: rgb(19 19 19);
+                    text-decoration: none;
+                }
+            }
         }
 
-        @media (width <= 900px) {
-            flex-direction: column;
+        /* Desktop: two equal columns with a 64px gutter. */
+        @media (width >= 900px) {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            column-gap: 64px;
+            align-items: center;
+
+            .content .title {
+                font-size: 58px;
+            }
         }
     }
+
+    /* stylelint-disable no-descending-specificity -- order overrides intentionally
+       follow the shared .content / .image-wrapper rules above. */
+
+    /* Image on left, content on right. */
+    &.side-by-side.left,
+    &.side-by-side-left {
+        @media (width >= 900px) {
+            .image-wrapper { order: 1; }
+            .content { order: 2; }
+        }
+    }
+
+    /* Image on right, content on left (recommended for the series banners). */
+    &.side-by-side.right,
+    &.side-by-side-right {
+        @media (width >= 900px) {
+            .content { order: 1; }
+            .image-wrapper { order: 2; }
+        }
+    }
+
+    /* stylelint-enable no-descending-specificity */
 }
 
 /** Animations

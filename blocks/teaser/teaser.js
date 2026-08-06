@@ -49,16 +49,19 @@ export default function decorate(block) {
     }
   });
 
-  /* Conditional treatments for specific options */
-  if (
-    getOptions(block).includes('side-by-side-right')
-    || getOptions(block).includes('side-by-side-left')
-  ) {
+  /* Conditional treatments for specific options.
+   * The authoring model exposes the values "side-by-side left" / "side-by-side
+   * right", which Edge Delivery applies as the separate classes `side-by-side`
+   * + `left`/`right`. Detect the shared `side-by-side` token so the layout works
+   * regardless of whether the option arrives space- or hyphen-separated. */
+  const options = getOptions(block);
+  const isSideBySide = options.some((c) => c.startsWith('side-by-side'));
+  if (isSideBySide) {
     /* For side-by-side teasers, add the image-wrapper to a higher-level div to support CSS */
     block
       .querySelector(':scope > div:first-child')
       .classList.add('image-wrapper');
-  } else if (!getOptions(block)) {
+  } else if (options.length === 0) {
     /* For the default option, add the image-wrapper to the picture element to support CSS */
     block.querySelector('picture').classList.add('image-wrapper');
   }

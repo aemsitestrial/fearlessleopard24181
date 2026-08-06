@@ -61,6 +61,22 @@ function getTags(record) {
 }
 
 /**
+ * Return the original-cased tags of a record (for display labels).
+ */
+function getTagsRaw(record) {
+  const { tags } = record;
+  if (!tags) return [];
+  if (Array.isArray(tags)) return tags.map((t) => String(t).trim());
+  try {
+    const parsed = JSON.parse(tags);
+    if (Array.isArray(parsed)) return parsed.map((t) => String(t).trim());
+  } catch (e) {
+    // not JSON — fall through to comma split
+  }
+  return String(tags).split(',').map((t) => t.trim()).filter(Boolean);
+}
+
+/**
  * Filter records to those matching any of the configured tags, excluding
  * non-article paths and records flagged noindex.
  */
@@ -113,7 +129,7 @@ function renderCard(record) {
   const body = document.createElement('div');
   body.className = 'article-card-body';
 
-  const tags = getTags(record);
+  const tags = getTagsRaw(record);
   if (tags.length) {
     const [firstTag] = tags;
     const cat = document.createElement('p');
@@ -147,6 +163,30 @@ function renderCard(record) {
   return li;
 }
 
+/**
+ * Build the set of filter categories for the tab bar.
+ * Uses the author-configured tags when provided, otherwise derives the list
+ * from the tags present across the filtered article set (sorted, capped).
+ * @returns {Array<{label:string, value:string}>} category descriptors
+ */
+function buildCategories(records, configuredTags) {
+  const map = new Map();
+  if (configuredTags.length) {
+    configuredTags.forEach((t) => {
+      const value = t.toLowerCase().trim();
+      if (value && !map.has(value)) map.set(value, t.trim());
+    });
+  } else {
+    records.forEach((record) => {
+      getTagsRaw(record).forEach((raw) => {
+        const value = raw.toLowerCase().trim();
+        if (value && !map.has(value)) map.set(value, raw);
+      });
+    });
+  }
+  return [...map.entries()].map(([value, label]) => ({ value, label }));
+}
+
 export default async function decorate(block) {
   const config = readBlockConfig(block);
   const placeholders = await fetchPlaceholders(getLangRoot() || 'default');
@@ -165,22 +205,59 @@ export default async function decorate(block) {
 
   block.textContent = '';
 
-  const list = document.createElement('ul');
-  list.className = 'article-cards';
-  block.append(list);
-
   const data = await fetchFeed(source);
-  const filtered = filterFeed(data, tags)
+  // Base set: everything matching the block's tag scope (empty = all articles).
+  const baseSet = filterFeed(data, tags)
     .sort((a, b) => toTime(b.date || b.lastModified) - toTime(a.date || a.lastModified));
 
-  let shown = 0;
-  const renderPage = () => {
-    const next = filtered.slice(shown, shown + pageSize);
-    next.forEach((record) => list.append(renderCard(record)));
-    shown += next.length;
-  };
+  const categories = buildCategories(baseSet, tags);
 
-  if (!filtered.length) {
+  const list = document.createElement('ul');
+  list.className = 'article-cards';
+
+  // Filter tab bar — only rendered when there is more than one category to
+  // switch between (mirrors the source "Filter articles:" pill bar).
+  let filterBar;
+  let activeFilter = '';
+  if (categories.length > 1) {
+    filterBar = document.createElement('div');
+    filterBar.className = 'article-feed-filter';
+
+    const label = document.createElement('span');
+    label.className = 'article-feed-filter-label';
+    label.textContent = placeholders.filterArticles || 'Filter articles:';
+    filterBar.append(label);
+
+    const tablist = document.createElement('div');
+    tablist.className = 'article-feed-filter-list';
+    tablist.setAttribute('role', 'group');
+    tablist.setAttribute('aria-label', placeholders.filterOptions || 'Filter options');
+
+    const allBtn = document.createElement('button');
+    allBtn.type = 'button';
+    allBtn.className = 'article-feed-filter-button is-selected';
+    allBtn.dataset.filter = '';
+    allBtn.setAttribute('aria-pressed', 'true');
+    allBtn.textContent = placeholders.allArticles || 'All';
+    tablist.append(allBtn);
+
+    categories.forEach(({ value, label: catLabel }) => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'article-feed-filter-button';
+      btn.dataset.filter = value;
+      btn.setAttribute('aria-pressed', 'false');
+      btn.textContent = catLabel;
+      tablist.append(btn);
+    });
+
+    filterBar.append(tablist);
+    block.append(filterBar);
+  }
+
+  block.append(list);
+
+  if (!baseSet.length) {
     const empty = document.createElement('p');
     empty.className = 'article-feed-empty';
     empty.textContent = placeholders.articleFeedEmpty || 'No articles found.';
@@ -188,17 +265,49 @@ export default async function decorate(block) {
     return;
   }
 
+  let loadMore;
+  let shown = 0;
+  let current = baseSet;
+
+  const renderPage = () => {
+    const next = current.slice(shown, shown + pageSize);
+    next.forEach((record) => list.append(renderCard(record)));
+    shown += next.length;
+    if (loadMore) {
+      loadMore.hidden = shown >= current.length;
+    }
+  };
+
+  const applyFilter = (value) => {
+    activeFilter = value;
+    current = value
+      ? baseSet.filter((record) => getTags(record).includes(value))
+      : baseSet;
+    shown = 0;
+    list.textContent = '';
+    renderPage();
+  };
+
   renderPage();
 
-  if (shown < filtered.length) {
-    const loadMore = document.createElement('button');
-    loadMore.className = 'article-feed-load-more';
-    loadMore.type = 'button';
-    loadMore.textContent = placeholders.loadMoreArticles || 'Load more articles';
-    loadMore.addEventListener('click', () => {
-      renderPage();
-      if (shown >= filtered.length) loadMore.remove();
+  loadMore = document.createElement('button');
+  loadMore.className = 'article-feed-load-more';
+  loadMore.type = 'button';
+  loadMore.textContent = placeholders.loadMoreArticles || 'Load more';
+  loadMore.hidden = shown >= current.length;
+  loadMore.addEventListener('click', () => renderPage());
+  block.append(loadMore);
+
+  if (filterBar) {
+    filterBar.addEventListener('click', (e) => {
+      const btn = e.target.closest('.article-feed-filter-button');
+      if (!btn || btn.dataset.filter === activeFilter) return;
+      filterBar.querySelectorAll('.article-feed-filter-button').forEach((b) => {
+        const selected = b === btn;
+        b.classList.toggle('is-selected', selected);
+        b.setAttribute('aria-pressed', selected ? 'true' : 'false');
+      });
+      applyFilter(btn.dataset.filter);
     });
-    block.append(loadMore);
   }
 }

@@ -1,7 +1,71 @@
+/* ---------------------------------------------------------------------------
+ * Article Feed — visual design migrated from https://adobe.design/ideas/
+ * (filter pill bar + responsive card grid + "Load more" pill button)
+ * ------------------------------------------------------------------------- */
+
+/* filter pill bar */
+.article-feed .article-feed-filter {
+  margin: 24px 0;
+}
+
+.article-feed .article-feed-filter-label {
+  display: block;
+  margin: 0 0 8px;
+  color: var(--text-color);
+  font-family: var(--body-font-family);
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+.article-feed .article-feed-filter-list {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 8px;
+  padding: 8px 0 16px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.article-feed .article-feed-filter-list::-webkit-scrollbar {
+  display: none;
+}
+
+.article-feed .article-feed-filter-button {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 10px 16px;
+  border: none;
+  border-radius: 9px;
+  background-color: rgb(0 0 0 / 15%);
+  color: var(--text-color);
+  font-family: var(--body-font-family);
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1.25;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color 0.13s ease, color 0.13s ease;
+}
+
+.article-feed .article-feed-filter-button:hover,
+.article-feed .article-feed-filter-button:focus {
+  background-color: rgb(0 0 0 / 22%);
+}
+
+.article-feed .article-feed-filter-button.is-selected {
+  background-color: var(--text-color);
+  color: var(--light-color);
+}
+
+/* card grid */
 .article-feed .article-cards {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 24px;
+  grid-template-columns: 1fr;
+  gap: 16px;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -16,25 +80,29 @@
   display: flex;
   flex-direction: column;
   width: 100%;
-  border: 1px solid #e8e8e8;
-  border-radius: 4px;
+  border-radius: 16px;
   overflow: hidden;
-  color: var(--text-color);
+  color: #292929;
   text-decoration: none;
   background-color: var(--background-color);
-  transition: box-shadow 0.2s;
+  box-shadow: 0 1px 6px rgb(0 0 0 / 12%);
+  transition: box-shadow 0.2s ease;
 }
 
 .article-feed .article-card:hover {
-  box-shadow: 0 4px 12px rgb(0 0 0 / 10%);
+  color: #292929;
+  text-decoration: none;
+  box-shadow: 0 4px 16px rgb(0 0 0 / 18%);
 }
 
 .article-feed .article-card-image {
-  aspect-ratio: 16 / 9;
+  aspect-ratio: 4 / 3;
   overflow: hidden;
+  background-color: #f5f5f5;
 }
 
-.article-feed .article-card-image img {
+.article-feed .article-card-image img,
+.article-feed .article-card-image picture {
   display: block;
   width: 100%;
   height: 100%;
@@ -45,7 +113,7 @@
   display: flex;
   flex-direction: column;
   flex: 1 1 auto;
-  padding: 16px;
+  padding: 20px 16px;
 }
 
 .article-feed .article-card-category {
@@ -58,31 +126,24 @@
 }
 
 .article-feed .article-card-body h3 {
-  display: -webkit-box;
-  margin: 0 0 12px;
-  color: var(--text-color);
-  font-size: var(--body-font-size-s);
+  margin: 0 0 4px;
+  color: #292929;
+  font-family: var(--body-font-family);
+  font-size: 18px;
   font-weight: 700;
   line-height: 1.3;
-  overflow: hidden;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
 }
 
 .article-feed .article-card-description {
-  display: -webkit-box;
-  margin: 0 0 16px;
-  color: #444;
-  font-size: var(--body-font-size-xs);
+  margin: 0;
+  color: #292929;
+  font-size: 16px;
   font-weight: 400;
   line-height: 1.5;
-  overflow: hidden;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
 }
 
 .article-feed .article-card-date {
-  margin: auto 0 0;
+  margin: 12px 0 0;
   color: #686868;
   font-size: 13px;
 }
@@ -90,22 +151,30 @@
 /* load more button */
 .article-feed .article-feed-load-more {
   display: block;
-  margin: 48px auto 0;
-  padding: 8px 20px;
-  border: 2px solid var(--text-color);
-  border-radius: 20px;
-  background: none;
-  color: var(--text-color);
+  width: 100%;
+  margin: 32px 0;
+  padding: 10px 20px 11px;
+  border: none;
+  border-radius: 48px;
+  background-color: rgb(0 0 0 / 84%);
+  color: #fff;
   font-family: var(--body-font-family);
-  font-size: var(--body-font-size-xs);
-  font-weight: 500;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.3;
+  text-align: center;
   cursor: pointer;
-  transition: background-color 0.2s, color 0.2s;
+  transition: background-color 0.2s ease;
 }
 
-.article-feed .article-feed-load-more:hover {
-  background-color: var(--text-color);
-  color: var(--background-color);
+.article-feed .article-feed-load-more:hover,
+.article-feed .article-feed-load-more:focus {
+  background-color: rgb(0 0 0 / 93%);
+  color: #fff;
+}
+
+.article-feed .article-feed-load-more[hidden] {
+  display: none;
 }
 
 .article-feed .article-feed-empty {
@@ -113,10 +182,23 @@
   text-align: center;
 }
 
-/* mobile */
-@media (width < 600px) {
+/* tablet: 2 columns */
+@media (width >= 600px) {
   .article-feed .article-cards {
-    grid-template-columns: 1fr;
-    gap: 16px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 24px;
+  }
+}
+
+/* desktop: 4 columns, wider row gap, auto-width centered load-more */
+@media (width >= 900px) {
+  .article-feed .article-cards {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 54px 24px;
+  }
+
+  .article-feed .article-feed-load-more {
+    width: auto;
+    margin: 64px auto;
   }
 }

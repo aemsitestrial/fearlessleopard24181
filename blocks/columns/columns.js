@@ -13,6 +13,11 @@ export default function decorate(block) {
           picWrapper.classList.add('columns-img-col');
         }
       }
+
+      const colspan = parseInt(col.dataset.colspan, 10);
+      if (colspan > 1) {
+        col.style.setProperty('--col-span', colspan);
+      }
     });
   });
 }

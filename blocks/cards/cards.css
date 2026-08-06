@@ -7,31 +7,34 @@
   gap: 24px;
 }
 
-/* fixed column counts (authored via the Columns option) */
-.cards.cards-cols-2 > ul {
-  grid-template-columns: repeat(2, 1fr);
-}
-
-.cards.cards-cols-3 > ul {
-  grid-template-columns: repeat(3, 1fr);
-}
-
-.cards.cards-cols-4 > ul {
-  grid-template-columns: repeat(4, 1fr);
-}
-
 .cards > ul > li {
   border: 1px solid #dadada;
   background-color: var(--background-color);
 }
 
-/* per-card column span (authored via the Column span option) */
-.cards > ul > li.cards-card-span-2 {
-  grid-column: span 2;
-}
+/* Fixed column counts and per-card spans only apply on wider screens.
+   On mobile the grid keeps its single-column stacking so cards stay
+   readable. */
+@media (width >= 900px) {
+  .cards.cards-cols-2 > ul {
+    grid-template-columns: repeat(2, 1fr);
+  }
 
-.cards > ul > li.cards-card-span-3 {
-  grid-column: span 3;
+  .cards.cards-cols-3 > ul {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  .cards.cards-cols-4 > ul {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .cards > ul > li.cards-card-span-2 {
+    grid-column: span 2;
+  }
+
+  .cards > ul > li.cards-card-span-3 {
+    grid-column: span 3;
+  }
 }
 
 .cards .cards-card-body {

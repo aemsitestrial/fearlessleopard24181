@@ -89,5 +89,22 @@ describe('cards block', () => {
       decorate(block);
       expect(block.querySelector('ul > li')).toBeNull();
     });
+
+    it('carries a card span class onto the generated <li>', () => {
+      const block = buildBlock([{ title: 'A' }, { title: 'B' }]);
+      block.children[0].classList.add('cards-card-span-2');
+      decorate(block);
+      const [first, second] = block.querySelectorAll('ul > li');
+      expect(first.classList.contains('cards-card-span-2')).toBe(true);
+      expect(second.classList.contains('cards-card-span-2')).toBe(false);
+    });
+
+    it('does not add unrelated row classes to the <li>', () => {
+      const block = buildBlock([{ title: 'A' }]);
+      block.children[0].classList.add('some-other-class');
+      decorate(block);
+      const li = block.querySelector('ul > li');
+      expect(li.classList.contains('some-other-class')).toBe(false);
+    });
   });
 });

@@ -3,14 +3,35 @@
   margin: 0;
   padding: 0;
   display: grid;
-  grid-template-columns: var(--cards-grid-cols, repeat(auto-fill, minmax(257px, 1fr)));
+  grid-template-columns: repeat(auto-fill, minmax(257px, 1fr));
   gap: 24px;
+}
+
+/* fixed column counts (authored via the Columns option) */
+.cards.cards-cols-2 > ul {
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.cards.cards-cols-3 > ul {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.cards.cards-cols-4 > ul {
+  grid-template-columns: repeat(4, 1fr);
 }
 
 .cards > ul > li {
   border: 1px solid #dadada;
   background-color: var(--background-color);
-  grid-column: span var(--card-colspan, 1);
+}
+
+/* per-card column span (authored via the Column span option) */
+.cards > ul > li.cards-card-span-2 {
+  grid-column: span 2;
+}
+
+.cards > ul > li.cards-card-span-3 {
+  grid-column: span 3;
 }
 
 .cards .cards-card-body {

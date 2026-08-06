@@ -364,12 +364,29 @@
     "id": "cards",
     "fields": [
       {
-        "component": "text",
-        "valueType": "number",
-        "name": "columns",
+        "component": "select",
+        "name": "classes",
         "value": "",
         "label": "Columns",
-        "description": "Number of columns in the grid (leave empty for auto)"
+        "description": "Number of columns in the grid (Auto keeps the responsive layout)",
+        "options": [
+          {
+            "name": "Auto (responsive)",
+            "value": ""
+          },
+          {
+            "name": "2 columns",
+            "value": "cards-cols-2"
+          },
+          {
+            "name": "3 columns",
+            "value": "cards-cols-3"
+          },
+          {
+            "name": "4 columns",
+            "value": "cards-cols-4"
+          }
+        ]
       }
     ]
   },
@@ -397,12 +414,25 @@
         "valueType": "string"
       },
       {
-        "component": "text",
-        "valueType": "number",
-        "name": "colspan",
+        "component": "select",
+        "name": "classes",
         "value": "",
-        "label": "Colspan",
-        "description": "Number of grid columns this card spans (leave empty for default 1)"
+        "label": "Column span",
+        "description": "Number of grid columns this card spans (needs a fixed column count on the Cards block)",
+        "options": [
+          {
+            "name": "1 column (default)",
+            "value": ""
+          },
+          {
+            "name": "Span 2 columns",
+            "value": "cards-card-span-2"
+          },
+          {
+            "name": "Span 3 columns",
+            "value": "cards-card-span-3"
+          }
+        ]
       }
     ]
   },

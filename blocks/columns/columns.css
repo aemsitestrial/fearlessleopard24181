@@ -27,7 +27,7 @@
   }
 
   .columns > div > div {
-    flex: 1;
+    flex: var(--col-span, 1);
     order: unset;
   }
 }

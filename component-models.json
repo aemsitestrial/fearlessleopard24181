@@ -407,6 +407,19 @@
     ]
   },
   {
+    "id": "column",
+    "fields": [
+      {
+        "component": "text",
+        "valueType": "number",
+        "name": "colspan",
+        "value": "",
+        "label": "Colspan",
+        "description": "Number of columns this cell spans (leave empty for default 1)"
+      }
+    ]
+  },
+  {
     "id": "embed",
     "fields": [
       {

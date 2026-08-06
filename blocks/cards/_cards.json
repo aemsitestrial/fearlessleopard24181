@@ -9,7 +9,8 @@
             "resourceType": "core/franklin/components/block/v1/block",
             "template": {
               "name": "Cards",
-              "filter": "cards"
+              "filter": "cards",
+              "model": "cards"
             }
           }
         }
@@ -33,6 +34,19 @@
   ],
   "models": [
     {
+      "id": "cards",
+      "fields": [
+        {
+          "component": "text",
+          "valueType": "number",
+          "name": "columns",
+          "value": "",
+          "label": "Columns",
+          "description": "Number of columns in the grid (leave empty for auto)"
+        }
+      ]
+    },
+    {
       "id": "card",
       "fields": [
         {
@@ -47,13 +61,21 @@
           "valueType": "string",
           "name": "imageAlt",
           "label": "Alt"
-        },        
+        },
         {
           "component": "richtext",
           "name": "text",
           "value": "",
           "label": "Text",
           "valueType": "string"
+        },
+        {
+          "component": "text",
+          "valueType": "number",
+          "name": "colspan",
+          "value": "",
+          "label": "Colspan",
+          "description": "Number of grid columns this card spans (leave empty for default 1)"
         }
       ]
     }

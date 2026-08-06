@@ -361,6 +361,19 @@
     ]
   },
   {
+    "id": "cards",
+    "fields": [
+      {
+        "component": "text",
+        "valueType": "number",
+        "name": "columns",
+        "value": "",
+        "label": "Columns",
+        "description": "Number of columns in the grid (leave empty for auto)"
+      }
+    ]
+  },
+  {
     "id": "card",
     "fields": [
       {
@@ -382,6 +395,14 @@
         "value": "",
         "label": "Text",
         "valueType": "string"
+      },
+      {
+        "component": "text",
+        "valueType": "number",
+        "name": "colspan",
+        "value": "",
+        "label": "Colspan",
+        "description": "Number of grid columns this card spans (leave empty for default 1)"
       }
     ]
   },

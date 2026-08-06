@@ -8,10 +8,23 @@ export default function decorate(block) {
     const li = document.createElement('li');
     moveInstrumentation(row, li);
 
-    // carry the card's span option (authored via the "classes" field) onto the <li>
-    row.classList.forEach((cls) => {
-      if (cls.startsWith('cards-card-span-')) li.classList.add(cls);
-    });
+    // The per-card "classes" option is emitted as a trailing text cell for
+    // container items (e.g. "card, cards-card-span-2"), not as a class on the
+    // row. Read the span from there, apply it to the <li>, and drop the cell so
+    // its raw text is not shown as card content. The cell holds only option
+    // tokens (each "card" or "cards-card-span-N"), so it never matches real
+    // card body content.
+    const optionsCell = row.lastElementChild;
+    if (optionsCell && !optionsCell.querySelector('picture, img')) {
+      const tokens = optionsCell.textContent.split(',').map((t) => t.trim()).filter(Boolean);
+      const isOptions = tokens.length > 0
+        && tokens.every((t) => t === 'card' || /^cards-card-span-\d+$/.test(t));
+      if (isOptions) {
+        const span = tokens.find((t) => /^cards-card-span-\d+$/.test(t));
+        if (span) li.classList.add(span);
+        optionsCell.remove();
+      }
+    }
 
     while (row.firstElementChild) li.append(row.firstElementChild);
     [...li.children].forEach((div) => {

@@ -2,7 +2,7 @@ import { describe, it, expect } from 'vitest';
 import decorate from './cards.js';
 
 function buildCard({
-  title = 'Card Title', body = 'Card body.', imgSrc = '', imgAlt = '',
+  title = 'Card Title', body = 'Card body.', imgSrc = '', imgAlt = '', options = '',
 } = {}) {
   const row = document.createElement('div');
 
@@ -20,6 +20,14 @@ function buildCard({
   const bodyCell = document.createElement('div');
   bodyCell.innerHTML = `<p><strong>${title}</strong></p><p>${body}</p>`;
   row.append(bodyCell);
+
+  // AEM emits the per-card "classes" option as a trailing text-only cell,
+  // e.g. "card, cards-card-span-2".
+  if (options) {
+    const optionsCell = document.createElement('div');
+    optionsCell.textContent = options;
+    row.append(optionsCell);
+  }
 
   return row;
 }
@@ -90,21 +98,40 @@ describe('cards block', () => {
       expect(block.querySelector('ul > li')).toBeNull();
     });
 
-    it('carries a card span class onto the generated <li>', () => {
-      const block = buildBlock([{ title: 'A' }, { title: 'B' }]);
-      block.children[0].classList.add('cards-card-span-2');
+    it('applies the span class from the options cell onto the <li>', () => {
+      const block = buildBlock([
+        { title: 'A', options: 'card, cards-card-span-2' },
+        { title: 'B', options: 'card' },
+      ]);
       decorate(block);
       const [first, second] = block.querySelectorAll('ul > li');
       expect(first.classList.contains('cards-card-span-2')).toBe(true);
       expect(second.classList.contains('cards-card-span-2')).toBe(false);
     });
 
-    it('does not add unrelated row classes to the <li>', () => {
-      const block = buildBlock([{ title: 'A' }]);
-      block.children[0].classList.add('some-other-class');
+    it('removes the options cell so its text is not shown as card content', () => {
+      const block = buildBlock([{ title: 'A', options: 'card, cards-card-span-2' }]);
       decorate(block);
       const li = block.querySelector('ul > li');
-      expect(li.classList.contains('some-other-class')).toBe(false);
+      expect(li.textContent).not.toContain('cards-card-span-2');
+      expect(li.querySelector('.cards-card-body')).not.toBeNull();
+    });
+
+    it('keeps the card body when there is no options cell', () => {
+      const block = buildBlock([{ title: 'Solo', body: 'Keep me.' }]);
+      decorate(block);
+      const li = block.querySelector('ul > li');
+      expect(li.textContent).toContain('Keep me.');
+      expect(li.querySelector('.cards-card-body')).not.toBeNull();
+    });
+
+    it('does not treat a text-only card body as an options cell', () => {
+      // a "no image" card whose only cell is body text must not be removed
+      const block = buildBlock([{ title: 'Text only', body: 'Real content.' }]);
+      block.children[0].querySelector('div').innerHTML = 'Real content.';
+      decorate(block);
+      const li = block.querySelector('ul > li');
+      expect(li.textContent).toContain('Real content.');
     });
   });
 });

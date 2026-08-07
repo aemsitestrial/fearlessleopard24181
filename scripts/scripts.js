@@ -138,7 +138,18 @@ function a11yLinks(main) {
 // Content is organized as /{state}/{locale}/... (e.g. /tx/en/about-us), so the
 // state segment now comes BEFORE the locale. Keep these lists in sync with the
 // state-selector options and the indices defined in helix-query.yaml.
-export const SITE_STATES = ['co', 'mi', 'mn', 'nm', 'nd', 'sd', 'tx', 'wi'];
+export const STATES = [
+  { name: 'Colorado', code: 'co' },
+  { name: 'Michigan', code: 'mi' },
+  { name: 'Minnesota', code: 'mn' },
+  { name: 'New Mexico', code: 'nm' },
+  { name: 'North Dakota', code: 'nd' },
+  { name: 'South Dakota', code: 'sd' },
+  { name: 'Texas', code: 'tx' },
+  { name: 'Wisconsin', code: 'wi' },
+];
+
+export const SITE_STATES = STATES.map((s) => s.code);
 export const SITE_LOCALES = ['en', 'fr', 'es'];
 
 /**

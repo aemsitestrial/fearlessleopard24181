@@ -1,6 +1,23 @@
 import { getMetadata, loadCSS } from '../../scripts/aem.js';
 import { loadFragment } from '../fragment/fragment.js';
-import { getLangRoot } from '../../scripts/scripts.js';
+import { getLangRoot, getLocale, STATES } from '../../scripts/scripts.js';
+
+function getSavedStateName() {
+  try {
+    const code = localStorage.getItem('xcel-selected-state');
+    return code ? (STATES.find((s) => s.code === code)?.name ?? null) : null;
+  } catch {
+    return null;
+  }
+}
+
+const PIN_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="18" height="18" aria-hidden="true">
+  <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+</svg>`;
+
+const ARROW_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="18" height="18" aria-hidden="true">
+  <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6z"/>
+</svg>`;
 
 /**
  * loads and decorates the footer
@@ -8,6 +25,7 @@ import { getLangRoot } from '../../scripts/scripts.js';
  */
 export default async function decorate(block) {
   const langRoot = getLangRoot();
+  const locale = getLocale() || 'en';
 
   // load footer as fragment
   const footerMeta = getMetadata('footer');
@@ -24,14 +42,18 @@ export default async function decorate(block) {
   const footer = document.createElement('div');
   while (fragment.firstElementChild) footer.append(fragment.firstElementChild);
 
-  // append state selector
-  const stateSel = document.createElement('div');
-  stateSel.className = 'block state-selector';
-  stateSel.setAttribute('data-block-name', 'state-selector');
-  footer.append(stateSel);
-  await loadCSS(`${window.hlx.codeBasePath}/blocks/state-selector/state-selector.css`);
-  const { default: decorateStateSelector } = await import('../state-selector/state-selector.js');
-  decorateStateSelector(stateSel);
+  // state selector link
+  const stateName = getSavedStateName() || 'Select your state';
+  const stateLink = document.createElement('a');
+  stateLink.href = `/${locale}/state-selector`;
+  stateLink.className = 'footer-state-selector';
+  stateLink.setAttribute('aria-label', `Service area: ${stateName}. Change service area.`);
+  stateLink.innerHTML = `
+    <span class="footer-state-selector-pin">${PIN_SVG}</span>
+    <span class="footer-state-selector-label">${stateName}</span>
+    <span class="footer-state-selector-arrow">${ARROW_SVG}</span>
+  `;
+  footer.append(stateLink);
 
   // append language selector
   const langSel = document.createElement('div');

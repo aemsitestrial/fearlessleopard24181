@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <sitemap>
+    <loc>https://www.DOMAIN.com/co/sitemap.xml</loc>
+  </sitemap>
+  <sitemap>
+    <loc>https://www.DOMAIN.com/mi/sitemap.xml</loc>
+  </sitemap>
+  <sitemap>
+    <loc>https://www.DOMAIN.com/mn/sitemap.xml</loc>
+  </sitemap>
+  <sitemap>
+    <loc>https://www.DOMAIN.com/nm/sitemap.xml</loc>
+  </sitemap>
+  <sitemap>
+    <loc>https://www.DOMAIN.com/nd/sitemap.xml</loc>
+  </sitemap>
+  <sitemap>
+    <loc>https://www.DOMAIN.com/sd/sitemap.xml</loc>
+  </sitemap>
+  <sitemap>
+    <loc>https://www.DOMAIN.com/tx/sitemap.xml</loc>
+  </sitemap>
+  <sitemap>
+    <loc>https://www.DOMAIN.com/wi/sitemap.xml</loc>
+  </sitemap>
+</sitemapindex>

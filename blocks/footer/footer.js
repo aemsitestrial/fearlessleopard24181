@@ -30,18 +30,27 @@ export default async function decorate(block) {
 
   // load footer as fragment
   const footerMeta = getMetadata('footer');
-  let footerPath = footerMeta
+  const basePath = footerMeta
     ? new URL(footerMeta, window.location).pathname
     : '/footer';
-  if (langRoot && !footerPath.startsWith(`${langRoot}/`)) {
-    footerPath = `${langRoot}${footerPath}`;
-  }
-  const fragment = await loadFragment(footerPath);
+  const footerPath = langRoot && !basePath.startsWith(`${langRoot}/`)
+    ? `${langRoot}${basePath}`
+    : basePath;
+  // Prefer the state/locale-scoped footer, then fall back to the root-level
+  // footer for state-agnostic pages (e.g. the state-selector landing page)
+  // that have no /{state}/{locale} prefix.
+  const fragment = (await loadFragment(footerPath))
+    || (footerPath !== basePath && await loadFragment(basePath));
 
   // decorate footer DOM
   block.textContent = '';
   const footer = document.createElement('div');
-  while (fragment.firstElementChild) footer.append(fragment.firstElementChild);
+  // A missing footer fragment must not abort the block: the state and language
+  // selectors below still need to render (they are the only controls on the
+  // state-selector page).
+  if (fragment) {
+    while (fragment.firstElementChild) footer.append(fragment.firstElementChild);
+  }
 
   // state selector link
   const stateName = getSavedStateName() || 'Select your state';

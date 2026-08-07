@@ -79,6 +79,9 @@ function toggleAllNavSections(sections, expanded = false) {
  * @param {*} forceExpanded Optional param to force nav expand behavior when not null
  */
 function toggleMenu(nav, navSections, forceExpanded = null) {
+  // No nav sections (e.g. a header with no authored nav fragment): nothing to
+  // toggle, and the section-querying below would otherwise throw.
+  if (!navSections) return;
   const expanded = forceExpanded !== null
     ? !forceExpanded
     : nav.getAttribute('aria-expanded') === 'true';
@@ -398,18 +401,28 @@ async function buildAutoNavSections(base, maxDepth = 3) {
  */
 export default async function decorate(block) {
   const navMeta = getMetadata('nav');
-  let navPath = navMeta ? new URL(navMeta, window.location).pathname : '/nav';
-  if (langRoot && !navPath.startsWith(`${langRoot}/`)) {
-    navPath = `${langRoot}${navPath}`;
-  }
-
-  const fragment = await loadFragment(navPath);
+  const basePath = navMeta ? new URL(navMeta, window.location).pathname : '/nav';
+  const navPath = langRoot && !basePath.startsWith(`${langRoot}/`)
+    ? `${langRoot}${basePath}`
+    : basePath;
+  // Dual-fetch: local aem-up serves the fragment under /content; DA/EDS serves
+  // it at the site root. Prefer the /content path, fall back to the root path.
+  // Also fall back to the root-level nav for state-agnostic pages (e.g. the
+  // state-selector landing page) that have no /{state}/{locale} prefix.
+  const fragment = (await loadFragment(`/content${navPath}`))
+    || (await loadFragment(navPath))
+    || (navPath !== basePath && (
+      (await loadFragment(`/content${basePath}`)) || (await loadFragment(basePath))
+    ));
 
   // decorate nav DOM
   block.textContent = '';
   const nav = document.createElement('nav');
   nav.id = 'nav';
-  while (fragment.firstElementChild) nav.append(fragment.firstElementChild);
+  // A missing nav fragment must not abort header decoration.
+  if (fragment) {
+    while (fragment.firstElementChild) nav.append(fragment.firstElementChild);
+  }
 
   const classes = ['brand', 'sections', 'tools'];
   classes.forEach((c, i) => {
@@ -418,7 +431,7 @@ export default async function decorate(block) {
   });
 
   const navBrand = nav.querySelector('.nav-brand');
-  const brandLink = navBrand.querySelector('.button');
+  const brandLink = navBrand?.querySelector('.button');
   if (brandLink) {
     brandLink.className = '';
     brandLink.closest('.button-container').className = '';

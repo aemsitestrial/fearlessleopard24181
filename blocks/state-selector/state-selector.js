@@ -1,68 +1,17 @@
-import { getLangRoot, getLocale } from '../../scripts/scripts.js';
+import { getLocale } from '../../scripts/scripts.js';
 
 const STORAGE_KEY = 'xcel-selected-state';
-const FILL = '#C8102E';
 
-// `code` is the URL segment used in the /{state}/{locale}/... content paths.
-// Keep in sync with SITE_STATES in scripts/scripts.js and the helix-query.yaml
-// per-state indices.
 const STATES = [
-  {
-    name: 'Colorado',
-    code: 'co',
-    svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 140"><rect x="5" y="5" width="190" height="130" fill="${FILL}"/></svg>`,
-  },
-  {
-    name: 'Michigan',
-    code: 'mi',
-    svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><polygon points="5,8 118,8 118,30 80,36 5,28" fill="${FILL}"/><polygon points="80,36 100,30 115,38 132,28 145,40 152,58 158,80 155,105 140,128 115,145 88,152 60,148 38,135 20,112 18,85 26,62 44,44 68,36" fill="${FILL}"/></svg>`,
-  },
-  {
-    name: 'Minnesota',
-    code: 'mn',
-    svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 230"><polygon points="38,5 54,5 54,22 160,22 170,48 170,102 158,132 170,162 170,225 18,225 18,5" fill="${FILL}"/></svg>`,
-  },
-  {
-    name: 'New Mexico',
-    code: 'nm',
-    svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 215"><polygon points="5,5 195,5 195,190 60,190 60,210 5,210" fill="${FILL}"/></svg>`,
-  },
-  {
-    name: 'North Dakota',
-    code: 'nd',
-    svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 130"><rect x="5" y="5" width="190" height="120" fill="${FILL}"/></svg>`,
-  },
-  {
-    name: 'South Dakota',
-    code: 'sd',
-    svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 135"><polygon points="5,5 195,5 195,92 138,92 130,120 110,132 82,120 74,92 5,92" fill="${FILL}"/></svg>`,
-  },
-  {
-    name: 'Texas',
-    code: 'tx',
-    svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><polygon points="5,5 70,5 70,48 195,48 185,82 188,108 175,138 162,168 145,185 118,195 95,198 62,185 35,162 8,148 8,98 5,58 5,5" fill="${FILL}"/></svg>`,
-  },
-  {
-    name: 'Wisconsin',
-    code: 'wi',
-    svg: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 220"><polygon points="55,5 92,5 108,18 142,22 160,44 165,72 158,95 175,112 170,135 148,152 125,168 112,195 95,215 72,215 50,202 30,178 20,150 16,120 28,95 16,70 22,48 42,28" fill="${FILL}"/></svg>`,
-  },
+  { name: 'Colorado', code: 'co' },
+  { name: 'Michigan', code: 'mi' },
+  { name: 'Minnesota', code: 'mn' },
+  { name: 'New Mexico', code: 'nm' },
+  { name: 'North Dakota', code: 'nd' },
+  { name: 'South Dakota', code: 'sd' },
+  { name: 'Texas', code: 'tx' },
+  { name: 'Wisconsin', code: 'wi' },
 ];
-
-/**
- * Build the URL for the current page in the given state, preserving the current
- * locale and the sub-path below the state/locale root. English defaults when the
- * current URL has no locale segment. E.g. on "/tx/en/about-us", Colorado ->
- * "/co/en/about-us".
- * @param {string} code the target state code (e.g. "co")
- * @returns {string} the state-scoped href
- */
-function buildStateHref(code) {
-  const langRoot = getLangRoot(); // e.g. "/tx/en", "/fr", or ""
-  const rest = window.location.pathname.slice(langRoot.length) || '/';
-  const locale = getLocale() || 'en';
-  return `/${code}/${locale}${rest === '/' ? '/' : rest}`;
-}
 
 function getSavedState() {
   try {
@@ -73,108 +22,15 @@ function getSavedState() {
   }
 }
 
-function saveState(code) {
-  try {
-    localStorage.setItem(STORAGE_KEY, code);
-  } catch { /* storage unavailable */ }
-}
-
-function openModal(trigger) {
-  const titleId = 'state-selector-modal-title';
-
-  const overlay = document.createElement('div');
-  overlay.className = 'state-selector-overlay';
-  overlay.setAttribute('role', 'dialog');
-  overlay.setAttribute('aria-modal', 'true');
-  overlay.setAttribute('aria-labelledby', titleId);
-  overlay.tabIndex = -1;
-
-  const dialog = document.createElement('div');
-  dialog.className = 'state-selector-dialog';
-
-  const header = document.createElement('div');
-  header.className = 'state-selector-header';
-
-  const title = document.createElement('h2');
-  title.className = 'state-selector-title';
-  title.id = titleId;
-  title.textContent = 'Select Your State';
-
-  const closeBtn = document.createElement('button');
-  closeBtn.className = 'state-selector-close';
-  closeBtn.type = 'button';
-  closeBtn.setAttribute('aria-label', 'Close');
-  closeBtn.innerHTML = '&times;';
-
-  header.append(title, closeBtn);
-
-  const ctrl = new AbortController();
-
-  const close = () => {
-    overlay.remove();
-    ctrl.abort();
-    trigger.focus();
-  };
-
-  const list = document.createElement('ul');
-  list.className = 'state-selector-list';
-
-  STATES.forEach(({ name, code, svg }) => {
-    const li = document.createElement('li');
-    const href = buildStateHref(code);
-    const a = document.createElement('a');
-    a.href = href;
-    a.className = 'state-selector-item';
-
-    const mapDiv = document.createElement('div');
-    mapDiv.className = 'state-selector-map';
-    mapDiv.innerHTML = svg;
-
-    const label = document.createElement('span');
-    label.className = 'state-selector-label';
-    label.textContent = name;
-
-    a.append(mapDiv, label);
-    li.append(a);
-    list.append(li);
-
-    a.addEventListener('click', (e) => {
-      e.preventDefault();
-      saveState(code);
-      close();
-      trigger.textContent = name;
-      window.location.href = href;
-    });
-  });
-
-  dialog.append(header, list);
-  overlay.append(dialog);
-  document.body.append(overlay);
-
-  closeBtn.addEventListener('click', close);
-  overlay.addEventListener('click', (e) => {
-    if (e.target === overlay) close();
-  });
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') close();
-  }, { signal: ctrl.signal });
-
-  closeBtn.focus();
-}
-
 export default function decorate(block) {
+  const triggerLabel = block.querySelector('div')?.textContent.trim() || 'Select your state';
+  const locale = getLocale() || 'en';
   const saved = getSavedState();
 
   const trigger = document.createElement('a');
-  trigger.href = '#';
+  trigger.href = `/${locale}/state-selector`;
   trigger.className = 'state-selector-trigger';
-  trigger.setAttribute('aria-haspopup', 'dialog');
-  trigger.textContent = saved ? saved.name : 'Select your state';
-
-  trigger.addEventListener('click', (e) => {
-    e.preventDefault();
-    openModal(trigger);
-  });
+  trigger.textContent = saved ? saved.name : triggerLabel;
 
   block.textContent = '';
   block.append(trigger);

@@ -764,7 +764,16 @@
   },
   {
     "id": "state-selector",
-    "fields": []
+    "fields": [
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "triggerLabel",
+        "value": "Select your state",
+        "label": "Trigger Label",
+        "description": "Text shown on the footer link when no state has been selected."
+      }
+    ]
   },
   {
     "id": "table",

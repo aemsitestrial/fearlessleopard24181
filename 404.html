@@ -4,6 +4,27 @@
 <head>
   <title>Page not found</title>
   <script type="text/javascript">
+    // Home redirect: there is no root home page — all content lives under
+    // /{state}/... So when a visitor hits the site root, send them to their
+    // selected state's home, or to the state selector if none is saved yet.
+    // The state selector, after a pick with no return param, lands on the
+    // state home — so a stateless visitor still ends up on the right home.
+    // Runs before the 404 UI renders to avoid a flash. Only the home path is
+    // redirected; genuine deep 404s still show the error page below.
+    // Keep the STATES list in sync with scripts/constants.js SITE_STATES.
+    (function () {
+      var p = window.location.pathname;
+      if (p === '/' || p === '/index' || p === '/en' || p === '/en/') {
+        var STATES = ['co', 'mi', 'mn', 'nm', 'nd', 'sd', 'tx', 'wi'];
+        var saved = null;
+        try { saved = localStorage.getItem('xcel-selected-state'); } catch (e) { saved = null; }
+        if (saved && STATES.indexOf(saved) !== -1) {
+          window.location.replace('/' + saved + '/');
+        } else {
+          window.location.replace('/state-selector');
+        }
+      }
+    }());
     window.isErrorPage = true;
     window.errorCode = '404';
   </script>

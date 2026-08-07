@@ -1,6 +1,6 @@
 import { getMetadata, loadCSS } from '../../scripts/aem.js';
 import { loadFragment } from '../fragment/fragment.js';
-import { getLangRoot, getLocale } from '../../scripts/scripts.js';
+import { getLangRoot } from '../../scripts/scripts.js';
 import { STATES, STORAGE_KEY } from '../../scripts/constants.js';
 
 function getSavedStateName() {
@@ -26,7 +26,7 @@ const ARROW_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" f
  */
 export default async function decorate(block) {
   const langRoot = getLangRoot();
-  const locale = getLocale() || 'en';
+  // const locale = getLocale() || 'en';
 
   // load footer as fragment
   const footerMeta = getMetadata('footer');
@@ -46,7 +46,7 @@ export default async function decorate(block) {
   // state selector link
   const stateName = getSavedStateName() || 'Select your state';
   const stateLink = document.createElement('a');
-  stateLink.href = `/${locale}/state-selector`;
+  stateLink.href = '/state-selector';
   stateLink.className = 'footer-state-selector';
   stateLink.setAttribute('aria-label', `Service area: ${stateName}. Change service area.`);
   stateLink.innerHTML = `

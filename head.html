@@ -1,5 +1,23 @@
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <meta name="nav-auto" content="/content/2026/31/fearlessleopard24181/en"/>
+<!-- State guard: hide page synchronously before module scripts load to prevent flash.
+     Keep the STATES list in sync with scripts/constants.js SITE_STATES. -->
+<script>
+  (function () {
+    var STATES = ['co', 'mi', 'mn', 'nm', 'nd', 'sd', 'tx', 'wi'];
+    var segs = location.pathname.split('/').filter(Boolean);
+    if (!location.pathname.startsWith('/state-selector') && STATES.indexOf(segs[0]) !== -1) {
+      try {
+        var saved = localStorage.getItem('xcel-selected-state');
+        if (!saved || STATES.indexOf(saved) === -1 || saved !== segs[0]) {
+          document.documentElement.style.visibility = 'hidden';
+        }
+      } catch (e) {
+        document.documentElement.style.visibility = 'hidden';
+      }
+    }
+  }());
+</script>
 <script src="/scripts/aem.js" type="module"></script>
 <script src="/scripts/scripts.js" type="module"></script>
 <link rel="stylesheet" href="/styles/styles.css"/>

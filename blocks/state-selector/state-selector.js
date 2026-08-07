@@ -1,6 +1,5 @@
-import { getLocale, STATES } from '../../scripts/scripts.js';
-
-const STORAGE_KEY = 'xcel-selected-state';
+import { getLocale } from '../../scripts/scripts.js';
+import { STATES, STORAGE_KEY } from '../../scripts/constants.js';
 
 function getSavedState() {
   try {
@@ -47,6 +46,17 @@ export default async function decorate(block) {
       link.href = `/${state.code}/${locale}/`;
       link.className = 'state-selector-link';
       link.setAttribute('aria-label', state.name);
+
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        localStorage.setItem(STORAGE_KEY, state.code);
+        const raw = new URLSearchParams(window.location.search).get('return');
+        if (raw && raw.startsWith('/') && !raw.startsWith('//')) {
+          window.location.href = `/${state.code}${raw}`;
+        } else {
+          window.location.href = `/${state.code}/${locale}/`;
+        }
+      });
 
       const svgEl = await loadSVG(state.code);
       if (svgEl) {

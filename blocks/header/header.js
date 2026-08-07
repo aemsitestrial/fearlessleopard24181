@@ -402,10 +402,8 @@ export default async function decorate(block) {
   if (langRoot && !navPath.startsWith(`${langRoot}/`)) {
     navPath = `${langRoot}${navPath}`;
   }
-  // Dual-fetch: local aem-up serves the fragment under /content; DA/EDS serves
-  // it at the site root. Prefer the /content path, fall back to the root path.
-  const fragment = (await loadFragment(`/content${navPath}`))
-    || (await loadFragment(navPath));
+
+  const fragment = await loadFragment(navPath);
 
   // decorate nav DOM
   block.textContent = '';

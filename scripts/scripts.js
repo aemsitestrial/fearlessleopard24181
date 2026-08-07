@@ -13,6 +13,7 @@ import {
   loadCSS,
 } from './aem.js';
 import enforceStateSelection from './state-guard.js';
+import injectStructuredData from './seo.js';
 import { STATES, SITE_STATES, SITE_LOCALES } from './constants.js';
 
 export { STATES, SITE_STATES, SITE_LOCALES };
@@ -226,7 +227,9 @@ export function decorateMain(main) {
  * @param {Element} doc The container element
  */
 async function loadEager(doc) {
-  document.documentElement.lang = 'en';
+  // Reflect the page's language on <html> so crawlers and assistive tech get the
+  // correct locale. French pages live at /{state}/fr/...; everything else is English.
+  document.documentElement.lang = getLocale() === 'fr' ? 'fr' : 'en';
   decorateTemplateAndTheme();
   if (getMetadata('breadcrumbs').toLowerCase() === 'true') {
     doc.body.dataset.breadcrumbs = true;
@@ -262,8 +265,12 @@ async function loadLazy(doc) {
   const element = hash ? doc.getElementById(hash.substring(1)) : false;
   if (hash && element) element.scrollIntoView();
 
-  loadHeader(doc.querySelector('header'));
+  const headerLoaded = loadHeader(doc.querySelector('header'));
   loadFooter(doc.querySelector('footer'));
+
+  // Emit schema.org JSON-LD once the header has rendered, so the brand name is
+  // available. Kept off the critical path — it never blocks lazy loading.
+  headerLoaded.then(injectStructuredData).catch(() => {});
 
   loadCSS(`${window.hlx.codeBasePath}/styles/lazy-styles.css`);
   loadFonts();

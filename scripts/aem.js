@@ -640,9 +640,14 @@ async function loadFooter(footer) {
  */
 async function waitForFirstImage(section) {
   const lcpCandidate = section.querySelector('img');
+  // The first image is the likely LCP element: load it eagerly and give it high
+  // fetch priority so it is not deprioritised behind other requests (improves LCP).
+  if (lcpCandidate) {
+    lcpCandidate.setAttribute('loading', 'eager');
+    lcpCandidate.setAttribute('fetchpriority', 'high');
+  }
   await new Promise((resolve) => {
     if (lcpCandidate && !lcpCandidate.complete) {
-      lcpCandidate.setAttribute('loading', 'eager');
       lcpCandidate.addEventListener('load', resolve);
       lcpCandidate.addEventListener('error', resolve);
     } else {

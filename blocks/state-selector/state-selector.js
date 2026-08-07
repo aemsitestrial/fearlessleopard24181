@@ -25,6 +25,9 @@ async function loadSVG(code) {
 export default async function decorate(block) {
   const heading = block.querySelector('div')?.textContent.trim() || 'Select a Service Area to Explore';
   const locale = getLocale() || 'en';
+  // English is delivered locale-less (/{state}/...); other locales keep their
+  // prefix (/{state}/fr/...). Mirrors getLangRoot()/getLocaleRoot() and paths.json.
+  const localePath = locale === 'en' ? '' : `/${locale}`;
   const saved = getSavedState();
 
   block.textContent = '';
@@ -43,7 +46,7 @@ export default async function decorate(block) {
       if (saved?.code === state.code) li.classList.add('state-selector-card-selected');
 
       const link = document.createElement('a');
-      link.href = `/${state.code}/${locale}/`;
+      link.href = `/${state.code}${localePath}/`;
       link.className = 'state-selector-link';
       link.setAttribute('aria-label', state.name);
 
@@ -54,7 +57,7 @@ export default async function decorate(block) {
         if (raw && raw.startsWith('/') && !raw.startsWith('//')) {
           window.location.href = `/${state.code}${raw}`;
         } else {
-          window.location.href = `/${state.code}/${locale}/`;
+          window.location.href = `/${state.code}${localePath}/`;
         }
       });
 

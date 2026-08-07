@@ -1,4 +1,19 @@
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
+<!-- Legacy URL redirect: English is now delivered locale-less (/{state}/... instead
+     of /{state}/en/...). Strip a redundant "en" segment right after a state code so
+     old links keep working. French (/{state}/fr/...) is left untouched. Runs first,
+     synchronously, so it happens before the state guard and before any render.
+     Keep the STATES list in sync with scripts/constants.js SITE_STATES. -->
+<script>
+  (function () {
+    var STATES = ['co', 'mi', 'mn', 'nm', 'nd', 'sd', 'tx', 'wi'];
+    var segs = location.pathname.split('/').filter(Boolean);
+    if (STATES.indexOf(segs[0]) !== -1 && segs[1] === 'en') {
+      segs.splice(1, 1);
+      location.replace('/' + segs.join('/') + location.search + location.hash);
+    }
+  }());
+</script>
 <!-- State guard: hide page synchronously before module scripts load to prevent flash.
      Keep the STATES list in sync with scripts/constants.js SITE_STATES. -->
 <script>

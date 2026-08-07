@@ -31,7 +31,8 @@
       "article-list",
       "image-link",
       "rich-text",
-      "state-selector"
+      "state-selector",
+      "blog-list"
     ]
   },
   {

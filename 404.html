@@ -4,20 +4,23 @@
 <head>
   <title>Page not found</title>
   <script type="text/javascript">
-    // Home redirect (client-side fallback): there is no root home page — all
-    // content lives under /{state}/... A server-level 301 redirects the root to
-    // /state-selector?from=home (see the redirects sheet + paths.json), but this
-    // fallback still applies on hosts/paths the server rule doesn't cover, and
-    // sends a returning visitor straight to their saved state home. Stateless
-    // visitors go to the selector with ?from=home (the selector only auto-hops
-    // when from=home + a saved state exist, so this stays consistent with the
-    // server rule). Runs before the 404 UI renders to avoid a flash. Only the
-    // home path redirects; genuine deep 404s still show the error page below.
-    // Keep the STATES list in sync with scripts/constants.js SITE_STATES.
+    // Home + bare-state redirects (client-side fallback). Two related 404s are
+    // rescued here, both ideally handled by published redirects-sheet rules but
+    // covered here for hosts/paths the server rule doesn't reach. Runs before
+    // the 404 UI renders to avoid a flash. Keep STATES in sync with
+    // scripts/constants.js SITE_STATES.
     (function () {
+      var STATES = ['co', 'mi', 'mn', 'nm', 'nd', 'sd', 'tx', 'wi'];
       var p = window.location.pathname;
+
+      // 1) Site root: there is no root home page — all content lives under
+      //    /{state}/... A server-level 301 sends the root to
+      //    /state-selector?from=home. A returning visitor with a saved state is
+      //    forwarded straight to their state home (something the server rule
+      //    can't do); stateless visitors go to the selector with ?from=home (it
+      //    only auto-hops when from=home + a saved state exist, so this stays
+      //    consistent with the server rule).
       if (p === '/' || p === '/index' || p === '/en' || p === '/en/') {
-        var STATES = ['co', 'mi', 'mn', 'nm', 'nd', 'sd', 'tx', 'wi'];
         var saved = null;
         try { saved = localStorage.getItem('xcel-selected-state'); } catch (e) { saved = null; }
         if (saved && STATES.indexOf(saved) !== -1) {
@@ -25,6 +28,20 @@
         } else {
           window.location.replace('/state-selector?from=home');
         }
+        return;
+      }
+
+      // 2) Bare state home: a state home is the folder index at "/{state}/";
+      //    the bare "/{state}" resolves to a separate top-level doc that doesn't
+      //    exist, so it 404s. Forward the bare form to the canonical
+      //    trailing-slash home (server equivalent: redirects-sheet rule
+      //    Source "/{state}" -> "/{state}/"). Only an exact single "/{state}"
+      //    segment matches — genuine deep 404s (e.g. /tx/does-not-exist) still
+      //    show the error page below.
+      var segs = p.split('/').filter(Boolean);
+      if (segs.length === 1 && STATES.indexOf(segs[0]) !== -1) {
+        window.location.replace('/' + segs[0] + '/' + window.location.search + window.location.hash);
+        return;
       }
     }());
     window.isErrorPage = true;

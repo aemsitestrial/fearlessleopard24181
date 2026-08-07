@@ -65,7 +65,8 @@
         "hero-carousel",
         "article-list",
         "image-link",
-        "rich-text"
+        "rich-text",
+        "state-selector"
       ]
     }
   ]

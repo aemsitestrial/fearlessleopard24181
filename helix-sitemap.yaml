@@ -1,5 +1,6 @@
 sitemaps:
   co:
+    origin: https://main--fearlessleopard24181--aemsitestrial.aem.live
     lastmod: YYYY-MM-DD
     default: en
     languages:
@@ -14,6 +15,7 @@ sitemaps:
         alternate: /co/fr/{path}
 
   mi:
+    origin: https://main--fearlessleopard24181--aemsitestrial.aem.live
     lastmod: YYYY-MM-DD
     default: en
     languages:
@@ -28,6 +30,7 @@ sitemaps:
         alternate: /mi/fr/{path}
 
   mn:
+    origin: https://main--fearlessleopard24181--aemsitestrial.aem.live
     lastmod: YYYY-MM-DD
     default: en
     languages:
@@ -42,6 +45,7 @@ sitemaps:
         alternate: /mn/fr/{path}
 
   nm:
+    origin: https://main--fearlessleopard24181--aemsitestrial.aem.live
     lastmod: YYYY-MM-DD
     default: en
     languages:
@@ -56,6 +60,7 @@ sitemaps:
         alternate: /nm/fr/{path}
 
   nd:
+    origin: https://main--fearlessleopard24181--aemsitestrial.aem.live
     lastmod: YYYY-MM-DD
     default: en
     languages:
@@ -70,6 +75,7 @@ sitemaps:
         alternate: /nd/fr/{path}
 
   sd:
+    origin: https://main--fearlessleopard24181--aemsitestrial.aem.live
     lastmod: YYYY-MM-DD
     default: en
     languages:
@@ -84,6 +90,7 @@ sitemaps:
         alternate: /sd/fr/{path}
 
   tx:
+    origin: https://main--fearlessleopard24181--aemsitestrial.aem.live
     lastmod: YYYY-MM-DD
     default: en
     languages:
@@ -98,6 +105,7 @@ sitemaps:
         alternate: /tx/fr/{path}
 
   wi:
+    origin: https://main--fearlessleopard24181--aemsitestrial.aem.live
     lastmod: YYYY-MM-DD
     default: en
     languages:

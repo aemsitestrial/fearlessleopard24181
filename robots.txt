@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://www.DOMAIN.com/sitemap-index.xml
+Sitemap: https://main--fearlessleopard24181--aemsitestrial.aem.live/sitemap-index.xml

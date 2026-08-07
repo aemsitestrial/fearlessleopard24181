@@ -1,6 +1,6 @@
 import { getMetadata, loadCSS } from '../../scripts/aem.js';
 import { loadFragment } from '../fragment/fragment.js';
-import { getLangRoot } from '../../scripts/scripts.js';
+import { getLangRoot, getState } from '../../scripts/scripts.js';
 import { STATES, STORAGE_KEY } from '../../scripts/constants.js';
 
 function getSavedStateName() {
@@ -10,6 +10,26 @@ function getSavedStateName() {
   } catch {
     return null;
   }
+}
+
+/**
+ * Build the state-selector href for the footer "change service area" link,
+ * carrying a `return` param so the user comes back to the CURRENT page (under
+ * the newly chosen state) instead of the state home. Mirrors the return path
+ * that scripts/state-guard.js builds: drop the leading state segment so the
+ * selector can re-prefix it with the picked state. Any locale prefix, query
+ * string and hash are preserved.
+ * @returns {string} the /state-selector URL, with a return param when relevant
+ */
+function stateSelectorHref() {
+  const { pathname, search, hash } = window.location;
+  // Already on the selector: keep whatever return it already carries.
+  if (pathname.startsWith('/state-selector')) return `/state-selector${search}`;
+  const segs = pathname.split('/').filter(Boolean);
+  // Drop the leading state code (if present) — the selector re-adds the chosen one.
+  const rest = getState() ? segs.slice(1) : segs;
+  const returnPath = `/${rest.join('/')}${search}${hash}`;
+  return `/state-selector?return=${encodeURIComponent(returnPath)}`;
 }
 
 const PIN_SVG = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="18" height="18" aria-hidden="true">
@@ -55,7 +75,7 @@ export default async function decorate(block) {
   // state selector link
   const stateName = getSavedStateName() || 'Select your state';
   const stateLink = document.createElement('a');
-  stateLink.href = '/state-selector';
+  stateLink.href = stateSelectorHref();
   stateLink.className = 'footer-state-selector';
   stateLink.setAttribute('aria-label', `Service area: ${stateName}. Change service area.`);
   stateLink.innerHTML = `

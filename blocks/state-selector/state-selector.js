@@ -30,6 +30,17 @@ export default async function decorate(block) {
   const localePath = locale === 'en' ? '' : `/${locale}`;
   const saved = getSavedState();
 
+  // The site root has no home page and is 301-redirected to this selector with
+  // ?from=home. A server redirect can't read the saved state, so restore the
+  // state-aware behaviour here: a returning visitor with a saved state is sent
+  // straight to their state home instead of being made to pick again. Gated on
+  // from=home so the footer "change service area" link (no from=home) always
+  // shows the selector. No saved state -> fall through and render the grid.
+  if (saved && new URLSearchParams(window.location.search).get('from') === 'home') {
+    window.location.replace(`/${saved.code}${localePath}/`);
+    return;
+  }
+
   block.textContent = '';
 
   const h2 = document.createElement('h2');

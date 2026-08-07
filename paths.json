@@ -29,7 +29,8 @@
     "/content/2026/31/fearlessleopard24181/wi/fr/:/wi/fr",
     "/content/dam/2026/31/fearlessleopard24181/:/assets",
     "/content/2026/31/fearlessleopard24181/configuration:/.helix/config.json",
-    "/content/2026/31/fearlessleopard24181/metadata:/metadata.json"
+    "/content/2026/31/fearlessleopard24181/metadata:/metadata.json",
+    "/content/2026/31/fearlessleopard24181/redirects:/redirects.json"
   ],
   "includes": [
     "/content/2026/31/fearlessleopard24181/",

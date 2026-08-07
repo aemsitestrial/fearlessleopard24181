@@ -4,13 +4,15 @@
 <head>
   <title>Page not found</title>
   <script type="text/javascript">
-    // Home redirect: there is no root home page — all content lives under
-    // /{state}/... So when a visitor hits the site root, send them to their
-    // selected state's home, or to the state selector if none is saved yet.
-    // The state selector, after a pick with no return param, lands on the
-    // state home — so a stateless visitor still ends up on the right home.
-    // Runs before the 404 UI renders to avoid a flash. Only the home path is
-    // redirected; genuine deep 404s still show the error page below.
+    // Home redirect (client-side fallback): there is no root home page — all
+    // content lives under /{state}/... A server-level 301 redirects the root to
+    // /state-selector?from=home (see the redirects sheet + paths.json), but this
+    // fallback still applies on hosts/paths the server rule doesn't cover, and
+    // sends a returning visitor straight to their saved state home. Stateless
+    // visitors go to the selector with ?from=home (the selector only auto-hops
+    // when from=home + a saved state exist, so this stays consistent with the
+    // server rule). Runs before the 404 UI renders to avoid a flash. Only the
+    // home path redirects; genuine deep 404s still show the error page below.
     // Keep the STATES list in sync with scripts/constants.js SITE_STATES.
     (function () {
       var p = window.location.pathname;
@@ -21,7 +23,7 @@
         if (saved && STATES.indexOf(saved) !== -1) {
           window.location.replace('/' + saved + '/');
         } else {
-          window.location.replace('/state-selector');
+          window.location.replace('/state-selector?from=home');
         }
       }
     }());

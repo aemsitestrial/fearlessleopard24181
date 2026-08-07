@@ -39,6 +39,13 @@
         ]
       },
       {
+        "component": "text",
+        "valueType": "string",
+        "name": "nav-auto",
+        "label": "Nav Auto Base Path",
+        "description": "When set, the navigation menu is auto-generated from the page tree under this content path (e.g. /content/2026/31/fearlessleopard24181/en). Leave blank to use the authored nav fragment."
+      },
+      {
         "component": "number",
         "valueType": "number",
         "name": "nav-order",

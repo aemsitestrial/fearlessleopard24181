@@ -1,10 +1,11 @@
 import { getMetadata, loadCSS } from '../../scripts/aem.js';
 import { loadFragment } from '../fragment/fragment.js';
-import { getLangRoot, getLocale, STATES } from '../../scripts/scripts.js';
+import { getLangRoot, getLocale } from '../../scripts/scripts.js';
+import { STATES, STORAGE_KEY } from '../../scripts/constants.js';
 
 function getSavedStateName() {
   try {
-    const code = localStorage.getItem('xcel-selected-state');
+    const code = localStorage.getItem(STORAGE_KEY);
     return code ? (STATES.find((s) => s.code === code)?.name ?? null) : null;
   } catch {
     return null;

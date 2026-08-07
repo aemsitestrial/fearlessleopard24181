@@ -12,6 +12,10 @@ import {
   loadSections,
   loadCSS,
 } from './aem.js';
+import enforceStateSelection from './state-guard.js';
+import { STATES, SITE_STATES, SITE_LOCALES } from './constants.js';
+
+export { STATES, SITE_STATES, SITE_LOCALES };
 
 /**
  * Moves all the attributes from a given elmenet to another given element.
@@ -136,21 +140,8 @@ function a11yLinks(main) {
 }
 
 // Content is organized as /{state}/{locale}/... (e.g. /tx/en/about-us), so the
-// state segment now comes BEFORE the locale. Keep these lists in sync with the
-// state-selector options and the indices defined in helix-query.yaml.
-export const STATES = [
-  { name: 'Colorado', code: 'co' },
-  { name: 'Michigan', code: 'mi' },
-  { name: 'Minnesota', code: 'mn' },
-  { name: 'New Mexico', code: 'nm' },
-  { name: 'North Dakota', code: 'nd' },
-  { name: 'South Dakota', code: 'sd' },
-  { name: 'Texas', code: 'tx' },
-  { name: 'Wisconsin', code: 'wi' },
-];
-
-export const SITE_STATES = STATES.map((s) => s.code);
-export const SITE_LOCALES = ['en', 'fr', 'es'];
+// state segment now comes BEFORE the locale. STATES, SITE_STATES, and SITE_LOCALES
+// are defined in ./constants.js and re-exported above for backwards compatibility.
 
 /**
  * Resolve the localized content root for the current page under the
@@ -294,4 +285,7 @@ async function loadPage() {
   loadDelayed();
 }
 
-loadPage();
+if (!enforceStateSelection()) {
+  document.documentElement.style.visibility = '';
+  loadPage();
+}

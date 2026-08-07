@@ -409,10 +409,9 @@ export default async function decorate(block) {
   // it at the site root. Prefer the /content path, fall back to the root path.
   // Also fall back to the root-level nav for state-agnostic pages (e.g. the
   // state-selector landing page) that have no /{state}/{locale} prefix.
-  const fragment = (await loadFragment(`/content${navPath}`))
-    || (await loadFragment(navPath))
+  const fragment = (await loadFragment(navPath))
     || (navPath !== basePath && (
-      (await loadFragment(`/content${basePath}`)) || (await loadFragment(basePath))
+      (await loadFragment(basePath))
     ));
 
   // decorate nav DOM

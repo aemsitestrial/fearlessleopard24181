@@ -1,9 +1,15 @@
 {
   "mappings": [
-    "/content/2026/31/fearlessleopard24181/:/",
     "/content/2026/31/fearlessleopard24181/en/:/",
-    "/content/2026/31/fearlessleopard24181/fr:/fr",
+    "/content/2026/31/fearlessleopard24181/fr/:/fr",
     "/content/2026/31/fearlessleopard24181/fr/:/fr/",
+    "/content/2026/31/fearlessleopard24181/tx/en/:/tx",
+    "/content/2026/31/fearlessleopard24181/tx/en/:/tx/",
+    "/content/2026/31/fearlessleopard24181/tx/fr/:/tx/fr",
+    "/content/2026/31/fearlessleopard24181/co/en/:/co",
+    "/content/2026/31/fearlessleopard24181/co/en/:/co/",
+    "/content/2026/31/fearlessleopard24181/co/fr/:/co/fr",
+    "/content/dam/2026/31/fearlessleopard24181/:/assets",
     "/content/2026/31/fearlessleopard24181/configuration:/.helix/config.json",
     "/content/2026/31/fearlessleopard24181/metadata:/metadata.json"
   ],

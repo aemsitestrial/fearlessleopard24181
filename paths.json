@@ -34,5 +34,9 @@
   "includes": [
     "/content/2026/31/fearlessleopard24181/",
     "/content/dam/2026/31/fearlessleopard24181/"
+  ],
+  "excludes": [
+    "/content/2026/31/fearlessleopard24181/**/drafts/**",
+    "/content/2026/31/fearlessleopard24181/**/snippets/**"
   ]
 }

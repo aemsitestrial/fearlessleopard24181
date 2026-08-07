@@ -1,5 +1,112 @@
 sitemaps:
-  default:
-    source: /query-index.json
-    destination: /sitemap.xml
+  co:
     lastmod: YYYY-MM-DD
+    default: en
+    languages:
+      en:
+        source: /co/query-index.json
+        destination: /co/sitemap.xml
+        hreflang: en
+      fr:
+        source: /co/fr/query-index.json
+        destination: /co/sitemap.xml
+        hreflang: fr
+        alternate: /co/fr/{path}
+
+  mi:
+    lastmod: YYYY-MM-DD
+    default: en
+    languages:
+      en:
+        source: /mi/query-index.json
+        destination: /mi/sitemap.xml
+        hreflang: en
+      fr:
+        source: /mi/fr/query-index.json
+        destination: /mi/sitemap.xml
+        hreflang: fr
+        alternate: /mi/fr/{path}
+
+  mn:
+    lastmod: YYYY-MM-DD
+    default: en
+    languages:
+      en:
+        source: /mn/query-index.json
+        destination: /mn/sitemap.xml
+        hreflang: en
+      fr:
+        source: /mn/fr/query-index.json
+        destination: /mn/sitemap.xml
+        hreflang: fr
+        alternate: /mn/fr/{path}
+
+  nm:
+    lastmod: YYYY-MM-DD
+    default: en
+    languages:
+      en:
+        source: /nm/query-index.json
+        destination: /nm/sitemap.xml
+        hreflang: en
+      fr:
+        source: /nm/fr/query-index.json
+        destination: /nm/sitemap.xml
+        hreflang: fr
+        alternate: /nm/fr/{path}
+
+  nd:
+    lastmod: YYYY-MM-DD
+    default: en
+    languages:
+      en:
+        source: /nd/query-index.json
+        destination: /nd/sitemap.xml
+        hreflang: en
+      fr:
+        source: /nd/fr/query-index.json
+        destination: /nd/sitemap.xml
+        hreflang: fr
+        alternate: /nd/fr/{path}
+
+  sd:
+    lastmod: YYYY-MM-DD
+    default: en
+    languages:
+      en:
+        source: /sd/query-index.json
+        destination: /sd/sitemap.xml
+        hreflang: en
+      fr:
+        source: /sd/fr/query-index.json
+        destination: /sd/sitemap.xml
+        hreflang: fr
+        alternate: /sd/fr/{path}
+
+  tx:
+    lastmod: YYYY-MM-DD
+    default: en
+    languages:
+      en:
+        source: /tx/query-index.json
+        destination: /tx/sitemap.xml
+        hreflang: en
+      fr:
+        source: /tx/fr/query-index.json
+        destination: /tx/sitemap.xml
+        hreflang: fr
+        alternate: /tx/fr/{path}
+
+  wi:
+    lastmod: YYYY-MM-DD
+    default: en
+    languages:
+      en:
+        source: /wi/query-index.json
+        destination: /wi/sitemap.xml
+        hreflang: en
+      fr:
+        source: /wi/fr/query-index.json
+        destination: /wi/sitemap.xml
+        hreflang: fr
+        alternate: /wi/fr/{path}

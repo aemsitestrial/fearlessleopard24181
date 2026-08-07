@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
   <title>Page not found</title>
@@ -32,6 +32,7 @@
   </script>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta property="og:title" content="Page not found">
+  <meta name="robots" content="noindex, nofollow">
   <script src="/scripts/scripts.js" type="module"></script>
   <script type="module">
     window.addEventListener('load', () => {
@@ -39,7 +40,7 @@
         const { origin, pathname } = new URL(document.referrer);
         if (origin === window.location.origin) {
           const backBtn = document.createElement('a');
-          backBtn.classList.add('button', 'error-button-back');
+          backBtn.classList.add('button', 'secondary', 'error-button-back');
           backBtn.href = pathname;
           backBtn.textContent = 'Go back';
           backBtn.title = 'Go back';
@@ -59,14 +60,57 @@
       min-height: calc(100vh - var(--header-height));
       display: flex;
       align-items: center;
+      justify-content: center;
+      padding: 48px 24px;
+      box-sizing: border-box;
     }
 
-    main.error .error-number {
+    main.error .section {
       width: 100%;
+      max-width: 640px;
+      margin: 0 auto;
+      text-align: center;
     }
 
-    main.error .error-number text {
-      font-family: var(--fixed-font-family);
+    main.error .error-code {
+      display: block;
+      margin: 0;
+      font-family: var(--heading-font-family);
+      font-weight: 700;
+      font-size: clamp(96px, 22vw, 180px);
+      line-height: 1;
+      letter-spacing: -0.02em;
+      background-image: linear-gradient(120deg, var(--link-color), var(--link-hover-color));
+      /* stylelint-disable-next-line property-no-vendor-prefix */
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    main.error .error-message {
+      margin: 8px 0 0;
+      font-size: var(--heading-font-size-l);
+      font-weight: 600;
+      color: var(--text-color);
+    }
+
+    main.error .error-description {
+      margin: 16px auto 0;
+      max-width: 440px;
+      font-size: var(--body-font-size-s);
+      color: var(--dark-color);
+    }
+
+    main.error .button-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+      margin-top: 32px;
+    }
+
+    main.error .button-container a.button {
+      margin: 0;
     }
   </style>
   <link rel="stylesheet" href="/styles/lazy-styles.css">
@@ -76,12 +120,14 @@
   <header></header>
   <main class="error">
     <div class="section">
-      <svg viewBox="1 0 38 18" class="error-number">
-        <text x="0" y="17">404</text>
-      </svg>
-      <h2 class="error-message">Page Not Found</h2>
+      <span class="error-code">404</span>
+      <h1 class="error-message">This page took a coffee break</h1>
+      <p class="error-description">
+        We couldn't find the page you were looking for. It may have moved, or the link
+        might be out of date. Let's get you back on track.
+      </p>
       <p class="button-container">
-        <a href="/" class="button secondary error-button-home">Go home</a>
+        <a href="/" class="button error-button-home">Back to home</a>
       </p>
     </div>
   </main>

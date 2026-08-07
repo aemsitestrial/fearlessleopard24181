@@ -18,3 +18,36 @@ footer .footer p {
     padding: 40px 32px 24px;
   }
 }
+
+/* state selector link */
+.footer-state-selector {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: #0d1f3c;
+  color: #fff;
+  padding: 0.5rem 0.875rem;
+  border-radius: 0.25rem;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: var(--body-font-size-xs);
+  line-height: 1;
+  transition: background-color 0.15s ease;
+}
+
+.footer-state-selector:hover,
+.footer-state-selector:focus {
+  background-color: #1a3560;
+  color: #fff;
+}
+
+.footer-state-selector-pin,
+.footer-state-selector-arrow {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.footer-state-selector-label {
+  white-space: nowrap;
+}

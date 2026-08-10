@@ -492,26 +492,43 @@ export default async function decorate(block) {
     // A Search block in nav-tools is the canonical way to author sources.
     // Each row = one source: first cell is the query-index URL (link or plain
     // text), second cell (optional) is the group label shown in results.
+    const addSource = (rawHref, rawLabel) => {
+      if (!rawHref) return;
+      let resolved;
+      try {
+        resolved = new URL(rawHref, window.location);
+      } catch {
+        return;
+      }
+      const url = resolved.origin === window.location.origin
+        ? resolved.pathname : resolved.href;
+      if (seenUrls.has(url)) return;
+      seenUrls.add(url);
+      sourceLinks.push({ url, label: rawLabel || null });
+    };
+
     navTools.querySelectorAll('.search').forEach((searchBlock) => {
-      searchBlock.querySelectorAll(':scope > div').forEach((row) => {
-        const cells = [...row.querySelectorAll(':scope > div')];
-        if (!cells.length) return;
-        const link = cells[0].querySelector('a[href]');
-        const rawHref = link ? link.getAttribute('href') : cells[0].textContent.trim();
-        if (!rawHref) return;
-        let resolved;
+      // The Search block's own decoration runs first (during the fragment's
+      // loadSections) and empties its DOM, so prefer the sources it stashed on
+      // the block. Fall back to reading raw rows (e.g. in the editor, where the
+      // block is left un-decorated).
+      const stashed = searchBlock.dataset.searchSources;
+      if (stashed) {
         try {
-          resolved = new URL(rawHref, window.location);
+          JSON.parse(stashed).forEach(({ url, label }) => addSource(url, label));
         } catch {
-          return;
+          // ignore malformed stash and fall through to row reading
         }
-        const url = resolved.origin === window.location.origin
-          ? resolved.pathname : resolved.href;
-        if (seenUrls.has(url)) return;
-        seenUrls.add(url);
-        const label = cells.length > 1 ? cells[1].textContent.trim() || null : null;
-        sourceLinks.push({ url, label });
-      });
+      } else {
+        searchBlock.querySelectorAll(':scope > div').forEach((row) => {
+          const cells = [...row.querySelectorAll(':scope > div')];
+          if (!cells.length) return;
+          const link = cells[0].querySelector('a[href]');
+          const rawHref = link ? link.getAttribute('href') : cells[0].textContent.trim();
+          const label = cells.length > 1 ? cells[1].textContent.trim() : null;
+          addSource(rawHref, label);
+        });
+      }
       wrappersToRemove.add(searchBlock.closest('p, .button-container') || searchBlock);
     });
 

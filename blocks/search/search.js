@@ -342,6 +342,18 @@ export default async function decorate(block) {
 
   // Read all source rows before clearing the block DOM.
   const sources = parseSources(block);
+
+  // Persist the authored sources on the block before we wipe its DOM. When a
+  // Search block is used purely to configure the header search (in nav-tools),
+  // header.js decorates the nav AFTER the fragment's blocks are loaded, by which
+  // point this decorate() has already emptied the block and its source rows are
+  // gone. Stashing them here lets header.js recover them regardless of load order.
+  if (sources.length) {
+    block.dataset.searchSources = JSON.stringify(
+      sources.map(({ url, label }) => ({ url, label })),
+    );
+  }
+
   if (!sources.length) {
     // Fall back to the locale query-index when no sources are authored.
     sources.push({

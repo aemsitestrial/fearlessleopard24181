@@ -6,24 +6,43 @@ const SEARCH_ICON = `<svg aria-hidden="true" xmlns="http://www.w3.org/2000/svg" 
   <path d="M14 2A8 8 0 0 0 7.4 14.5L2.4 19.4a1.5 1.5 0 0 0 2.1 2.1L9.5 16.6A8 8 0 1 0 14 2Zm0 14.1A6.1 6.1 0 1 1 20.1 10 6.1 6.1 0 0 1 14 16.1Z"></path>
 </svg>`;
 
-let indexCache = null;
+const RESULTS_PER_SOURCE = 5;
+
+// Per-URL cache; keyed by the fully-resolved source URL string.
+const indexCacheByUrl = new Map();
 
 /**
- * Fetch and cache the query-index data used as the search corpus.
- * @param {string} source URL of the query-index.json feed
- * @returns {Promise<Array>} the index records
+ * Fetch and cache one query-index feed. Returns [] on any network/parse error
+ * so a failing source never blocks results from other sources.
+ * @param {string} url
+ * @returns {Promise<Array>}
  */
-async function fetchIndex(source) {
-  if (indexCache) return indexCache;
+async function fetchSource(url) {
+  if (indexCacheByUrl.has(url)) return indexCacheByUrl.get(url);
   try {
-    const resp = await fetch(source);
-    if (!resp.ok) return [];
+    const resp = await fetch(url);
+    if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
     const json = await resp.json();
-    indexCache = json.data || [];
-  } catch (e) {
-    indexCache = [];
+    const data = json.data || [];
+    indexCacheByUrl.set(url, data);
+    return data;
+  } catch {
+    // Cache the empty result so we don't hammer a failing source on every keystroke.
+    indexCacheByUrl.set(url, []);
+    return [];
   }
-  return indexCache;
+}
+
+/**
+ * Fetch all sources in parallel. Each resolved entry carries the source label
+ * (used for group headers) and its index records.
+ * @param {Array<{url: string, label: string|null}>} sources
+ * @returns {Promise<Array<{label: string|null, data: Array}>>}
+ */
+async function fetchAllSources(sources) {
+  return Promise.all(
+    sources.map(async ({ url, label }) => ({ label, data: await fetchSource(url) })),
+  );
 }
 
 /**
@@ -175,7 +194,10 @@ function renderResult(result, terms) {
 }
 
 /**
- * Run a search and render its results into the results list.
+ * Run a search and render grouped results into the results list.
+ * Results are grouped by source; each source contributes at most RESULTS_PER_SOURCE
+ * items. A labelled group header is rendered when multiple sources are configured
+ * and the source has a non-null label.
  */
 async function runSearch(value, els, config) {
   const { resultsList } = els;
@@ -188,17 +210,33 @@ async function runSearch(value, els, config) {
   els.input.classList.add('gnav-search-input--isPopulated');
 
   const terms = query.split(/\s+/).filter(Boolean);
-  const data = await fetchIndex(config.source);
-  const results = filterData(terms, data);
+  const groups = await fetchAllSources(config.sources);
+  const multiSource = config.sources.length > 1;
+  let hasAnyResults = false;
 
-  if (!results.length) {
+  groups.forEach(({ label, data }) => {
+    const results = filterData(terms, data).slice(0, RESULTS_PER_SOURCE);
+    if (!results.length) return;
+    hasAnyResults = true;
+
+    // Only show a group header when there are multiple sources and the source
+    // has an explicit label. Unlabelled sources (null) render results inline.
+    if (multiSource && label) {
+      const header = document.createElement('li');
+      header.className = 'gnav-search-group-header';
+      header.textContent = label;
+      resultsList.append(header);
+    }
+
+    results.forEach((result) => resultsList.append(renderResult(result, terms)));
+  });
+
+  if (!hasAnyResults) {
     const li = document.createElement('li');
     li.className = 'gnav-search-no-results';
     li.textContent = config.noResults;
     resultsList.append(li);
-    return;
   }
-  results.forEach((result) => resultsList.append(renderResult(result, terms)));
 }
 
 /**
@@ -218,19 +256,24 @@ function toggleSearch(els, force) {
   }
 }
 
-/**
- * Build the gnav-search component and wire up its behavior.
- * @param {string} source URL of the query-index feed to search against
- * @returns {Promise<HTMLElement>} the search container element
- */
 function getLocaleIndex() {
   return getQueryIndexPath();
 }
 
-export default async function buildGnavSearch(source) {
+/**
+ * Build the gnav-search component and wire up its behavior.
+ * @param {Array<{url: string, label: string|null}>} [sources]
+ *   Search sources to query. Falls back to the locale query-index when empty or omitted.
+ * @returns {Promise<HTMLElement>} the search container element
+ */
+export default async function buildGnavSearch(sources) {
   const placeholders = await fetchPlaceholders(getLocaleRoot() || 'default');
+  const resolvedSources = (sources && sources.length)
+    ? sources
+    : [{ url: getLocaleIndex(), label: null }];
+
   const config = {
-    source: source || getLocaleIndex(),
+    sources: resolvedSources,
     placeholder: placeholders.searchPlaceholder || 'Search',
     noResults: placeholders.searchNoResults || 'No results found.',
   };

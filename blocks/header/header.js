@@ -481,23 +481,41 @@ export default async function decorate(block) {
 
   const navTools = nav.querySelector('.nav-tools');
   if (navTools) {
-    // The nav-tools area may contain an authored search block or a plain link
-    // pointing at the query-index feed. Use it as the search source, then
-    // replace it with the gnav-search toggle + expandable search bar.
-    const authoredSearch = navTools.querySelector(
-      '.search, a[href*="query-index"], a[href*="search"]',
-    );
-    let source;
-    if (authoredSearch) {
-      const link = authoredSearch.matches('a')
-        ? authoredSearch
-        : authoredSearch.querySelector('a[href]');
-      if (link) source = new URL(link.getAttribute('href'), window.location).pathname;
-      // Remove the whole authored wrapper (the <p> or button-container) so no
-      // stray "Search" text link is left behind.
-      (authoredSearch.closest('p, .button-container') || authoredSearch).remove();
-    }
-    const gnavSearch = await buildGnavSearch(source);
+    // Collect all authored search-source definitions from the nav-tools area.
+    // Each matching link becomes one source; its visible text becomes the group
+    // label shown in the search results panel. Multiple links = multi-source search.
+    // .search blocks (backward compat) and bare query-index/search links both work.
+    const sourceLinks = [];
+    const seenUrls = new Set();
+    const wrappersToRemove = new Set();
+
+    navTools.querySelectorAll('.search').forEach((searchBlock) => {
+      const link = searchBlock.querySelector('a[href]');
+      if (link) {
+        const resolved = new URL(link.getAttribute('href'), window.location);
+        const url = resolved.origin === window.location.origin
+          ? resolved.pathname : resolved.href;
+        if (!seenUrls.has(url)) {
+          seenUrls.add(url);
+          sourceLinks.push({ url, label: link.textContent.trim() || null });
+        }
+      }
+      wrappersToRemove.add(searchBlock.closest('p, .button-container') || searchBlock);
+    });
+
+    navTools.querySelectorAll('a[href*="query-index"], a[href*="search"]').forEach((a) => {
+      const resolved = new URL(a.getAttribute('href'), window.location);
+      const url = resolved.origin === window.location.origin
+        ? resolved.pathname : resolved.href;
+      if (!seenUrls.has(url)) {
+        seenUrls.add(url);
+        sourceLinks.push({ url, label: a.textContent.trim() || null });
+      }
+      wrappersToRemove.add(a.closest('p, .button-container, li') || a);
+    });
+
+    wrappersToRemove.forEach((el) => el.remove());
+    const gnavSearch = await buildGnavSearch(sourceLinks);
     // Search sits first in the tools cluster (icon), before Sign In and the logo.
     navTools.prepend(gnavSearch);
 

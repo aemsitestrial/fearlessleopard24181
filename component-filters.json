@@ -32,7 +32,8 @@
       "image-link",
       "rich-text",
       "state-selector",
-      "blog-list"
+      "blog-list",
+      "search-source"
     ]
   },
   {
@@ -78,6 +79,12 @@
     "id": "hero-carousel",
     "components": [
       "hero-carousel-slide"
+    ]
+  },
+  {
+    "id": "search",
+    "components": [
+      "search-source"
     ]
   },
   {

@@ -489,17 +489,29 @@ export default async function decorate(block) {
     const seenUrls = new Set();
     const wrappersToRemove = new Set();
 
+    // A Search block in nav-tools is the canonical way to author sources.
+    // Each row = one source: first cell is the query-index URL (link or plain
+    // text), second cell (optional) is the group label shown in results.
     navTools.querySelectorAll('.search').forEach((searchBlock) => {
-      const link = searchBlock.querySelector('a[href]');
-      if (link) {
-        const resolved = new URL(link.getAttribute('href'), window.location);
+      searchBlock.querySelectorAll(':scope > div').forEach((row) => {
+        const cells = [...row.querySelectorAll(':scope > div')];
+        if (!cells.length) return;
+        const link = cells[0].querySelector('a[href]');
+        const rawHref = link ? link.getAttribute('href') : cells[0].textContent.trim();
+        if (!rawHref) return;
+        let resolved;
+        try {
+          resolved = new URL(rawHref, window.location);
+        } catch {
+          return;
+        }
         const url = resolved.origin === window.location.origin
           ? resolved.pathname : resolved.href;
-        if (!seenUrls.has(url)) {
-          seenUrls.add(url);
-          sourceLinks.push({ url, label: link.textContent.trim() || null });
-        }
-      }
+        if (seenUrls.has(url)) return;
+        seenUrls.add(url);
+        const label = cells.length > 1 ? cells[1].textContent.trim() || null : null;
+        sourceLinks.push({ url, label });
+      });
       wrappersToRemove.add(searchBlock.closest('p, .button-container') || searchBlock);
     });
 
@@ -515,6 +527,18 @@ export default async function decorate(block) {
     });
 
     wrappersToRemove.forEach((el) => el.remove());
+
+    // add external sources from metadata, if any. These are not removed from the nav-tools area.
+    const externalSources = 'https://main--aem-block-xwalk--ariel-s-udtohan.aem.live/query-index.json';
+    if (externalSources) {
+      externalSources.split(',').forEach((src) => {
+        const url = src.trim();
+        if (url && !seenUrls.has(url)) {
+          seenUrls.add(url);
+          sourceLinks.push({ url, label: null });
+        }
+      });
+    }
     const gnavSearch = await buildGnavSearch(sourceLinks);
     // Search sits first in the tools cluster (icon), before Sign In and the logo.
     navTools.prepend(gnavSearch);

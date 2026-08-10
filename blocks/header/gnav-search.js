@@ -41,7 +41,7 @@ async function fetchSource(url) {
  */
 async function fetchAllSources(sources) {
   return Promise.all(
-    sources.map(async ({ url, label }) => ({ label, data: await fetchSource(url) })),
+    sources.map(async ({ url, label }) => ({ label, url, data: await fetchSource(url) })),
   );
 }
 
@@ -138,12 +138,16 @@ function formatDate(value) {
 
 /**
  * Build a single result list item as an article card.
+ * @param {object} result index record
+ * @param {string[]} terms search terms for highlighting
+ * @param {string} [baseUrl] origin of the source (e.g. https://other.com); used to
+ *   resolve result.path for cross-origin sources so the link goes to the right host
  */
-function renderResult(result, terms) {
+function renderResult(result, terms, baseUrl) {
   const li = document.createElement('li');
   const a = document.createElement('a');
   a.className = 'article-card';
-  a.href = result.path;
+  a.href = baseUrl ? new URL(result.path, baseUrl).href : result.path;
 
   if (result.image) {
     const imageWrap = document.createElement('div');
@@ -214,7 +218,7 @@ async function runSearch(value, els, config) {
   const multiSource = config.sources.length > 1;
   let hasAnyResults = false;
 
-  groups.forEach(({ label, data }) => {
+  groups.forEach(({ label, url, data }) => {
     const results = filterData(terms, data).slice(0, RESULTS_PER_SOURCE);
     if (!results.length) return;
     hasAnyResults = true;
@@ -228,7 +232,13 @@ async function runSearch(value, els, config) {
       resultsList.append(header);
     }
 
-    results.forEach((result) => resultsList.append(renderResult(result, terms)));
+    // For cross-origin sources the source URL is absolute; derive the origin so
+    // result.path (a root-relative string from the external index) resolves to
+    // the correct host rather than the current one.
+    const parsed = url && url.startsWith('http') ? new URL(url) : null;
+    const baseUrl = parsed ? parsed.origin : null;
+
+    results.forEach((result) => resultsList.append(renderResult(result, terms, baseUrl)));
   });
 
   if (!hasAnyResults) {
@@ -269,7 +279,7 @@ function getLocaleIndex() {
 export default async function buildGnavSearch(sources) {
   const placeholders = await fetchPlaceholders(getLocaleRoot() || 'default');
   const resolvedSources = (sources && sources.length)
-    ? sources
+    ? [...sources, { url: getLocaleIndex(), label: null }]
     : [{ url: getLocaleIndex(), label: null }];
 
   const config = {

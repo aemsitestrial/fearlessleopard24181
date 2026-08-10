@@ -15,18 +15,29 @@
           }
         }
       }
+    },
+    {
+      "title": "Search Source",
+      "id": "search-source",
+      "plugins": {
+        "xwalk": {
+          "page": {
+            "resourceType": "core/franklin/components/block/v1/block/item",
+            "template": {
+              "name": "Search Source",
+              "model": "search-source",
+              "sourceUrl": "",
+              "sourceLabel": ""
+            }
+          }
+        }
+      }
     }
   ],
   "models": [
     {
       "id": "search",
       "fields": [
-        {
-          "component": "text",
-          "valueType": "string",
-          "name": "index",
-          "label": "Index"
-        },
         {
           "component": "multiselect",
           "name": "classes",
@@ -46,7 +57,32 @@
           ]
         }
       ]
+    },
+    {
+      "id": "search-source",
+      "fields": [
+        {
+          "component": "text",
+          "valueType": "string",
+          "name": "sourceUrl",
+          "label": "Query Index URL",
+          "description": "Full URL or root-relative path to a query-index.json feed (e.g. https://other-site.com/query-index.json or /en/query-index.json).",
+          "required": true
+        },
+        {
+          "component": "text",
+          "valueType": "string",
+          "name": "sourceLabel",
+          "label": "Group Label",
+          "description": "Label shown as a section header above this source's results. Leave blank to show results inline without a header."
+        }
+      ]
     }
   ],
-  "filters": []
+  "filters": [
+    {
+      "id": "search",
+      "components": ["search-source"]
+    }
+  ]
 }

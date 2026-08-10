@@ -7,11 +7,6 @@ import { getLocaleRoot, getQueryIndexPath } from '../../scripts/scripts.js';
 
 const searchParams = new URLSearchParams(window.location.search);
 
-/**
- * Resolve the query-index feed scoped to the current page's state/locale
- * (e.g. /tx/en/query-index.json).
- * @returns {string} pathname of the query-index feed for the active state/locale
- */
 function getLocaleIndex() {
   return getQueryIndexPath();
 }
@@ -75,28 +70,81 @@ function highlightTextElements(terms, elements) {
   });
 }
 
-export async function fetchData(source) {
-  const response = await fetch(source);
-  if (!response.ok) {
-    // eslint-disable-next-line no-console
-    console.error('error loading API response', response);
-    return null;
-  }
+// Per-URL cache; lives for the page lifetime.
+const indexCache = new Map();
 
-  const json = await response.json();
-  if (!json) {
-    // eslint-disable-next-line no-console
-    console.error('empty API response', source);
-    return null;
+/**
+ * Fetch and cache one query-index feed. Returns [] on any error so a failing
+ * source never blocks results from other sources.
+ * @param {string} url
+ * @returns {Promise<Array>}
+ */
+export async function fetchData(url) {
+  if (indexCache.has(url)) return indexCache.get(url);
+  try {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`HTTP ${response.status}`);
+    const json = await response.json();
+    const data = json.data || [];
+    indexCache.set(url, data);
+    return data;
+  } catch {
+    indexCache.set(url, []);
+    return [];
   }
-
-  return json.data;
 }
 
-function renderResult(result, searchTerms, titleTag) {
+/**
+ * Fetch all sources in parallel.
+ * @param {Array<{url: string, label: string|null, baseUrl: string|null}>} sources
+ * @returns {Promise<Array<{label: string|null, baseUrl: string|null, data: Array}>>}
+ */
+async function fetchAllSources(sources) {
+  return Promise.all(
+    sources.map(async ({ url, label, baseUrl }) => ({
+      label,
+      baseUrl,
+      data: await fetchData(url),
+    })),
+  );
+}
+
+/**
+ * Read all rows from the block DOM and return a sources array.
+ * Each row: first cell = URL (link or plain text), second cell (optional) = label.
+ * @param {HTMLElement} block
+ * @returns {Array<{url: string, label: string|null, baseUrl: string|null}>}
+ */
+function parseSources(block) {
+  const sources = [];
+  block.querySelectorAll(':scope > div').forEach((row) => {
+    const cells = [...row.querySelectorAll(':scope > div')];
+    if (!cells.length) return;
+    const link = cells[0].querySelector('a[href]');
+    const rawUrl = link ? link.getAttribute('href') : cells[0].textContent.trim();
+    if (!rawUrl) return;
+    let resolved;
+    try {
+      resolved = new URL(rawUrl, window.location);
+    } catch {
+      return;
+    }
+    const baseUrl = resolved.origin !== window.location.origin ? resolved.origin : null;
+    const label = cells.length > 1 ? cells[1].textContent.trim() || null : null;
+    sources.push({ url: resolved.href, label, baseUrl });
+  });
+  return sources;
+}
+
+/**
+ * Build a single result list item.
+ * @param {string|null} baseUrl origin of external source; null for same-origin
+ */
+function renderResult(result, searchTerms, titleTag, baseUrl) {
+  const href = baseUrl ? new URL(result.path, baseUrl).href : result.path;
   const li = document.createElement('li');
   const a = document.createElement('a');
-  a.href = result.path;
+  a.href = href;
   if (result.image) {
     const wrapper = document.createElement('div');
     wrapper.className = 'search-result-image';
@@ -107,11 +155,11 @@ function renderResult(result, searchTerms, titleTag) {
   if (result.title) {
     const title = document.createElement(titleTag);
     title.className = 'search-result-title';
-    const link = document.createElement('a');
-    link.href = result.path;
-    link.textContent = result.title;
-    highlightTextElements(searchTerms, [link]);
-    title.append(link);
+    const innerLink = document.createElement('a');
+    innerLink.href = href;
+    innerLink.textContent = result.title;
+    highlightTextElements(searchTerms, [innerLink]);
+    title.append(innerLink);
     a.append(title);
   }
   if (result.description) {
@@ -136,25 +184,6 @@ function clearSearch(block) {
     url.search = '';
     searchParams.delete('q');
     window.history.replaceState({}, '', url.toString());
-  }
-}
-
-async function renderResults(block, config, filteredData, searchTerms) {
-  clearSearchResults(block);
-  const searchResults = block.querySelector('.search-results');
-  const headingTag = searchResults.dataset.h;
-
-  if (filteredData.length) {
-    searchResults.classList.remove('no-results');
-    filteredData.forEach((result) => {
-      const li = renderResult(result, searchTerms, headingTag);
-      searchResults.append(li);
-    });
-  } else {
-    const noResultsMessage = document.createElement('li');
-    searchResults.classList.add('no-results');
-    noResultsMessage.textContent = config.placeholders.searchNoResults || 'No results found.';
-    searchResults.append(noResultsMessage);
   }
 }
 
@@ -198,6 +227,44 @@ function filterData(searchTerms, data) {
   ].map((item) => item.result);
 }
 
+/**
+ * Render fetched groups into the results list.
+ * Each group gets a labelled header when multiple sources are active.
+ */
+async function renderResults(block, config, groups, terms) {
+  clearSearchResults(block);
+  const searchResults = block.querySelector('.search-results');
+  const headingTag = searchResults.dataset.h;
+  const multiSource = groups.length > 1;
+  let hasAnyResults = false;
+
+  groups.forEach(({ label, baseUrl, data }) => {
+    const filtered = filterData(terms, data);
+    if (!filtered.length) return;
+    hasAnyResults = true;
+
+    if (multiSource && label) {
+      const groupHeader = document.createElement('li');
+      groupHeader.className = 'search-group-header';
+      groupHeader.textContent = label;
+      searchResults.append(groupHeader);
+    }
+
+    filtered.forEach((result) => {
+      searchResults.append(renderResult(result, terms, headingTag, baseUrl));
+    });
+  });
+
+  if (!hasAnyResults) {
+    const noResultsMessage = document.createElement('li');
+    searchResults.classList.add('no-results');
+    noResultsMessage.textContent = config.placeholders.searchNoResults || 'No results found.';
+    searchResults.append(noResultsMessage);
+  } else {
+    searchResults.classList.remove('no-results');
+  }
+}
+
 async function handleSearch(e, block, config) {
   const searchValue = e.target.value;
   searchParams.set('q', searchValue);
@@ -211,11 +278,9 @@ async function handleSearch(e, block, config) {
     clearSearch(block);
     return;
   }
-  const searchTerms = searchValue.toLowerCase().split(/\s+/).filter((term) => !!term);
-
-  const data = await fetchData(config.source);
-  const filteredData = filterData(searchTerms, data);
-  await renderResults(block, config, filteredData, searchTerms);
+  const terms = searchValue.toLowerCase().split(/\s+/).filter((term) => !!term);
+  const groups = await fetchAllSources(config.sources);
+  await renderResults(block, config, groups, terms);
 }
 
 function searchResultsContainer(block) {
@@ -262,10 +327,21 @@ function searchBox(block, config) {
 
 export default async function decorate(block) {
   const placeholders = await fetchPlaceholders(getLocaleRoot() || 'default');
-  const source = block.querySelector('a[href]')?.href || `${window.hlx.codeBasePath}${getLocaleIndex()}`;
+
+  // Read all source rows before clearing the block DOM.
+  const sources = parseSources(block);
+  if (!sources.length) {
+    // Fall back to the locale query-index when no sources are authored.
+    sources.push({
+      url: `${window.hlx.codeBasePath}${getLocaleIndex()}`,
+      label: null,
+      baseUrl: null,
+    });
+  }
+
   block.innerHTML = '';
   block.append(
-    searchBox(block, { source, placeholders }),
+    searchBox(block, { sources, placeholders }),
     searchResultsContainer(block),
   );
 

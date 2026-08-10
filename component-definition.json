@@ -492,6 +492,23 @@
           }
         },
         {
+          "title": "Search Source",
+          "id": "search-source",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/block/v1/block/item",
+                "template": {
+                  "name": "Search Source",
+                  "model": "search-source",
+                  "sourceUrl": "",
+                  "sourceLabel": ""
+                }
+              }
+            }
+          }
+        },
+        {
           "title": "State Selector",
           "id": "state-selector",
           "plugins": {

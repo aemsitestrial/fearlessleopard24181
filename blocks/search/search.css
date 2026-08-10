@@ -79,6 +79,25 @@
   object-fit: cover;
 }
 
+/* multi-source group header: spans full grid width */
+.search ul.search-results .search-group-header {
+  grid-column: 1 / -1;
+  padding: 16px 0 6px;
+  border-top: 1px solid #dadada;
+  color: var(--dark-color);
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  list-style: none;
+  border-inline: none;
+}
+
+.search ul.search-results .search-group-header:first-child {
+  padding-top: 0;
+  border-top: none;
+}
+
 /* no results */
 .search ul.search-results.no-results {
   display: block;

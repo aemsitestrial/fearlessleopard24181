@@ -326,6 +326,18 @@ function searchBox(block, config) {
 }
 
 export default async function decorate(block) {
+  // In the Universal Editor each authored row carries the data-aue-* instrumentation
+  // that lets authors add, edit and remove "Search Source" items. Rebuilding the
+  // block DOM from scratch (as the runtime path below does) strips that
+  // instrumentation, leaving the editor with no recognizable child items and no way
+  // to add a source. So when authoring, keep the authored source table intact and
+  // skip building the runtime UI; the functional search still renders on the
+  // published/preview site where no instrumentation is present.
+  if (document.querySelector('[data-aue-resource]')) {
+    block.classList.add('search-authoring');
+    return;
+  }
+
   const placeholders = await fetchPlaceholders(getLocaleRoot() || 'default');
 
   // Read all source rows before clearing the block DOM.

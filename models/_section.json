@@ -67,8 +67,7 @@
         "image-link",
         "rich-text",
         "state-selector",
-        "blog-list",
-        "search-source"
+        "blog-list"
       ]
     }
   ]

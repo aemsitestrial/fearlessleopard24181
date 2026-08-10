@@ -545,17 +545,6 @@ export default async function decorate(block) {
 
     wrappersToRemove.forEach((el) => el.remove());
 
-    // add external sources from metadata, if any. These are not removed from the nav-tools area.
-    const externalSources = 'https://main--aem-block-xwalk--ariel-s-udtohan.aem.live/query-index.json';
-    if (externalSources) {
-      externalSources.split(',').forEach((src) => {
-        const url = src.trim();
-        if (url && !seenUrls.has(url)) {
-          seenUrls.add(url);
-          sourceLinks.push({ url, label: null });
-        }
-      });
-    }
     const gnavSearch = await buildGnavSearch(sourceLinks);
     // Search sits first in the tools cluster (icon), before Sign In and the logo.
     navTools.prepend(gnavSearch);

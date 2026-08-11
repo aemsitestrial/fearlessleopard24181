@@ -121,6 +121,16 @@ function parseSources(block) {
     const cells = [...row.querySelectorAll(':scope > div')];
     if (!cells.length) return;
     const link = cells[0].querySelector('a[href]');
+    const isExternal = cells[0].textContent.trim().startsWith('http');
+
+    if (isExternal && link) {
+      // External links are not allowed to be authored as <a> because the block
+      // editor will rewrite them to relative paths. So if we see an authored
+      // <a> with an external URL, ignore it and fall back to the plain text.
+      sources.push({ url: cells[0].textContent.trim(), label: cells.length > 1 ? cells[1].textContent.trim() || null : null, baseUrl: null });
+      return;
+    }
+
     const rawUrl = link ? link.getAttribute('href') : cells[0].textContent.trim();
     if (!rawUrl) return;
     let resolved;

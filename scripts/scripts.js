@@ -208,10 +208,34 @@ export function getLocaleRoot() {
   return locale && locale !== 'en' ? `/${locale}` : '';
 }
 
+function decorateCustomButtons(element) {
+  element.querySelectorAll('.button-container a.button').forEach((a) => {
+    const label = a.textContent.trim();
+    if (!a.title) a.title = label;
+    a.setAttribute('aria-label', label);
+
+    const text = document.createElement('span');
+    text.className = 'button-text';
+    text.textContent = label;
+
+    const arrow = document.createElement('span');
+    arrow.className = 'button-arrow';
+    arrow.setAttribute('aria-hidden', 'true');
+    arrow.textContent = '→';
+
+    const underline = document.createElement('span');
+    underline.className = 'button-underline';
+    underline.setAttribute('aria-hidden', 'true');
+
+    a.replaceChildren(text, arrow, underline);
+  });
+}
+
 // eslint-disable-next-line import/prefer-default-export
 export function decorateMain(main) {
   // hopefully forward compatible button decoration
   decorateButtons(main);
+  decorateCustomButtons(main);
   decorateIcons(main);
   // wrap images that have an authored optional link
   decorateLinkedImages(main);

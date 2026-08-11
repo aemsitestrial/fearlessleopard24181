@@ -1,0 +1,124 @@
+.cta-banner {
+  background: linear-gradient(
+    to right,
+    var(--color-brand-dark, #3a080d),
+    var(--color-brand-darker, #2d0609)
+  );
+  border-top: 1px solid rgb(227 27 35 / 10%);
+  border-bottom: 1px solid rgb(227 27 35 / 10%);
+
+  /* full bleed */
+  width: 100vw;
+  left: 50%;
+  position: relative;
+  transform: translateX(-50%);
+}
+
+.cta-banner-inner {
+  max-width: var(--xcel-max-width, 1280px);
+  margin: 0 auto;
+  padding: 32px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  text-align: center;
+}
+
+@media (width >= 600px) {
+  .cta-banner-inner {
+    flex-direction: row;
+    justify-content: space-between;
+    text-align: left;
+    padding: 40px 32px;
+    gap: 32px;
+  }
+}
+
+/* --- Text side --- */
+.cta-banner-text {
+  display: flex;
+  align-items: center;
+  gap: 0;
+}
+
+.cta-banner-accent {
+  display: none;
+  width: 6px;
+  height: 48px;
+  background: white;
+  border-radius: 3px;
+  flex-shrink: 0;
+  margin-right: 20px;
+}
+
+@media (width >= 600px) {
+  .cta-banner-accent { display: block; }
+}
+
+.cta-banner-text-wrap { flex: 1; }
+
+.cta-banner-heading {
+  color: white;
+  font-size: clamp(1.125rem, 2.5vw, 1.5rem);
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  margin: 0 0 4px;
+}
+
+.cta-banner-subtitle {
+  color: #cbd5e1;
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin: 0;
+}
+
+/* --- Button --- */
+.cta-banner-btn-wrap {
+  flex-shrink: 0;
+  width: 100%;
+}
+
+@media (width >= 600px) {
+  .cta-banner-btn-wrap { width: auto; }
+}
+
+.cta-banner-btn,
+a.cta-banner-btn {
+  display: inline-block;
+  width: 100%;
+  box-sizing: border-box;
+  background: white;
+  color: var(--color-brand-dark, #3a080d);
+  font-size: 0.875rem;
+  font-weight: 800;
+  padding: 14px 32px;
+  border-radius: 4px;
+  text-decoration: none;
+  text-align: center;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 25%);
+  border: 2px solid transparent;
+  transition: background 0.25s ease,
+              box-shadow 0.25s ease,
+              transform 0.2s ease;
+  cursor: pointer;
+}
+
+@media (width >= 600px) {
+  .cta-banner-btn,
+  a.cta-banner-btn {
+    width: auto;
+    white-space: nowrap;
+  }
+}
+
+.cta-banner-btn:hover,
+a.cta-banner-btn:hover,
+.cta-banner-btn:focus-visible,
+a.cta-banner-btn:focus-visible {
+  background: #f8fafc;
+  box-shadow: 0 6px 20px rgb(0 0 0 / 35%);
+  transform: translateY(-2px);
+  text-decoration: none;
+  color: var(--color-brand-dark, #3a080d);
+}

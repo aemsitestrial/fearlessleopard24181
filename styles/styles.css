@@ -20,6 +20,20 @@
   --link-hover-color: #1d3ecf;
   --overlay-background-color:lightgrey;
 
+  /* Xcel Energy brand tokens */
+  --color-brand: #e31b23;
+  --color-brand-hover: #c1141c;
+  --color-brand-dark: #3a080d;
+  --color-brand-darker: #2d0609;
+  --color-brand-warm: #faf6f6;
+  --color-brand-warm-hover: #f6ecec;
+  --color-brand-yellow: #ffd000;
+  --color-brand-slate: #0f172a;
+  --xcel-max-width: 1280px;
+  --xcel-section-padding: 0 24px;
+  --xcel-transition: 0.3s ease;
+  --xcel-radius: 16px;
+
   /* fonts */
   --body-font-family: roboto, roboto-fallback, sans-serif;
   --heading-font-family: roboto-condensed, roboto-condensed-fallback, sans-serif;
@@ -182,7 +196,7 @@ button {
   max-width: 100%;
   margin: 12px 0;
   border: 2px solid transparent;
-  border-radius: 2.4em;
+  /* border-radius: 2.4em; */
   padding: 0.5em 1.2em;
   font-family: var(--body-font-family);
   font-style: normal;
@@ -193,7 +207,7 @@ button {
   background-color: var(--link-color);
   color: var(--background-color);
   cursor: pointer;
-  overflow: hidden;
+  /* overflow: hidden; */
   text-overflow: ellipsis;
   white-space: nowrap;
 }

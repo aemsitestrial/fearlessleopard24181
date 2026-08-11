@@ -1,1 +1,69 @@
 /* add global styles that can be loaded post LCP here */
+.button {
+  /* Layout & Positioning */
+  display: inline-flex;
+  align-items: center;
+  position: relative;
+  gap: 0.25rem; /* Equivalent to space-x-1 */
+  
+  /* Reset button defaults */
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+
+  /* Typography */
+  color: #0f172a; /* Approximate for slate-900 / oklch(0.208 0.042 265.755) */
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-size: 12px; /* text-xs */
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em; /* tracking-widest */
+  
+  /* Transitions */
+  transition: color 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Medium screen font size (md:text-sm) */
+@media (min-width: 768px) {
+  .button {
+    font-size: 14px;
+  }
+}
+
+/* Hover Color State */
+.button:hover {
+  color: #e31b23;
+  background-color: transparent; /* Ensure background remains transparent on hover */
+}
+
+/* Arrow Animation */
+.button-arrow {
+  display: inline-block;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.button:hover .button-arrow {
+  transform: translateX(6px); /* translate-x-1.5 */
+}
+
+/* Animated Underline */
+.button-underline {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 2px;
+  background-color: #e31b23;
+  
+  /* Initial State: hidden to the right */
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.button:hover .button-underline {
+  /* Hover State: grows from the left */
+  transform: scaleX(1);
+  transform-origin: left;
+}

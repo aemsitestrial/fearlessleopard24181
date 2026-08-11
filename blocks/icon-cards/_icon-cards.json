@@ -37,18 +37,11 @@
       "id": "icon-cards",
       "fields": [
         {
-          "component": "reference",
-          "valueType": "string",
-          "name": "icon",
-          "label": "Icon Image",
-          "description": "Small icon image (SVG or PNG, ideally 56×56px) shown at the top of the card"
-        },
-        {
           "component": "text",
           "valueType": "string",
           "name": "title",
-          "label": "Card Title",
-          "description": "Bold heading inside the card",
+          "label": "Header Title",
+          "description": "Bold heading inside the section",
           "required": true
         },
         {
@@ -56,22 +49,7 @@
           "valueType": "string",
           "name": "description",
           "label": "Description",
-          "description": "Short supporting text beneath the card title"
-        },
-        {
-          "component": "aem-content",
-          "valueType": "string",
-          "name": "cta",
-          "label": "CTA Link",
-          "description": "Page or URL the text link at the bottom of the card points to"
-        },
-        {
-          "component": "text",
-          "valueType": "string",
-          "name": "ctaText",
-          "label": "CTA Text",
-          "description": "Label for the text link (e.g. 'Sign Into My Account')",
-          "required": true
+          "description": "Short supporting text beneath the heading title"
         }
       ]
     },

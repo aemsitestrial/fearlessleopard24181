@@ -39,7 +39,7 @@
         {
           "component": "text",
           "valueType": "string",
-          "name": "title",
+          "name": "heading",
           "label": "Header Title",
           "description": "Bold heading inside the section",
           "required": true
@@ -47,7 +47,7 @@
         {
           "component": "richtext",
           "valueType": "string",
-          "name": "description",
+          "name": "headingText",
           "label": "Description",
           "description": "Short supporting text beneath the heading title"
         }

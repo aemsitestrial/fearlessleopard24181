@@ -21,13 +21,6 @@
       "id": "icon-cards",
       "fields": [
         {
-          "component": "text",
-          "valueType": "string",
-          "name": "sectionHeading",
-          "label": "Section Heading",
-          "description": "Optional heading row above the card grid (e.g. 'Personalized Energy')"
-        },
-        {
           "component": "reference",
           "valueType": "string",
           "name": "icon",
@@ -52,7 +45,7 @@
         {
           "component": "aem-content",
           "valueType": "string",
-          "name": "ctaLink",
+          "name": "cta",
           "label": "CTA Link",
           "description": "Page or URL the text link at the bottom of the card points to"
         },

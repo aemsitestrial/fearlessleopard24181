@@ -12,7 +12,7 @@
               "model": "cta-banner",
               "heading": "<h2>Contact Customer Service</h2><p>Have a question or concern? We are here to help.</p>",
               "ctaText": "Contact Us",
-              "ctaLink": "/contact"
+              "cta": "/contact"
             }
           }
         }
@@ -42,7 +42,7 @@
         {
           "component": "aem-content",
           "valueType": "string",
-          "name": "ctaLink",
+          "name": "cta",
           "label": "Button Link",
           "description": "Page or URL the button navigates to",
           "required": true

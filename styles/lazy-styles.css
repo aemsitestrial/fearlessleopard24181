@@ -25,7 +25,7 @@
 }
 
 /* Medium screen font size (md:text-sm) */
-@media (min-width: 768px) {
+@media (width >= 768px) {
   .button {
     font-size: 14px;
   }

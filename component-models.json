@@ -514,6 +514,35 @@
     ]
   },
   {
+    "id": "cta-banner",
+    "fields": [
+      {
+        "component": "richtext",
+        "valueType": "string",
+        "name": "heading",
+        "label": "Heading & Subtitle",
+        "description": "H2 heading and optional subtitle paragraph displayed on the dark banner",
+        "required": true
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "ctaText",
+        "label": "Button Label",
+        "description": "Text shown on the call-to-action button",
+        "required": true
+      },
+      {
+        "component": "aem-content",
+        "valueType": "string",
+        "name": "cta",
+        "label": "Button Link",
+        "description": "Page or URL the button navigates to",
+        "required": true
+      }
+    ]
+  },
+  {
     "id": "embed",
     "fields": [
       {
@@ -651,6 +680,48 @@
     ]
   },
   {
+    "id": "icon-cards",
+    "fields": [
+      {
+        "component": "reference",
+        "valueType": "string",
+        "name": "icon",
+        "label": "Icon Image",
+        "description": "Small icon image (SVG or PNG, ideally 56×56px) shown at the top of the card"
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "title",
+        "label": "Card Title",
+        "description": "Bold heading inside the card",
+        "required": true
+      },
+      {
+        "component": "richtext",
+        "valueType": "string",
+        "name": "description",
+        "label": "Description",
+        "description": "Short supporting text beneath the card title"
+      },
+      {
+        "component": "aem-content",
+        "valueType": "string",
+        "name": "cta",
+        "label": "CTA Link",
+        "description": "Page or URL the text link at the bottom of the card points to"
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "ctaText",
+        "label": "CTA Text",
+        "description": "Label for the text link (e.g. 'Sign Into My Account')",
+        "required": true
+      }
+    ]
+  },
+  {
     "id": "image-link",
     "fields": [
       {
@@ -700,6 +771,34 @@
         "component": "text",
         "name": "linkText",
         "label": "Text"
+      }
+    ]
+  },
+  {
+    "id": "quick-links",
+    "fields": [
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "heading",
+        "label": "Section Heading",
+        "description": "Optional heading displayed above the buttons (e.g. 'Welcome! Get Started Here')"
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "label",
+        "label": "Button Label",
+        "description": "Text shown on the action button",
+        "required": true
+      },
+      {
+        "component": "aem-content",
+        "valueType": "string",
+        "name": "link",
+        "label": "Button Link",
+        "description": "Page or URL the button navigates to",
+        "required": true
       }
     ]
   },
@@ -1067,6 +1166,53 @@
         "name": "textContent_ctaText",
         "label": "CTA label",
         "valueType": "string"
+      }
+    ]
+  },
+  {
+    "id": "video-teaser",
+    "fields": [
+      {
+        "component": "richtext",
+        "valueType": "string",
+        "name": "textContent_text",
+        "label": "Text Content",
+        "description": "Left-column editorial content: heading, body paragraph and CTA link"
+      },
+      {
+        "component": "aem-content",
+        "valueType": "string",
+        "name": "textContent_cta",
+        "label": "CTA Link",
+        "description": "Page or URL the text CTA points to"
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "textContent_ctaText",
+        "label": "CTA Label",
+        "description": "Visible label for the text CTA link"
+      },
+      {
+        "component": "reference",
+        "valueType": "string",
+        "name": "thumbnail",
+        "label": "Video Thumbnail Image",
+        "description": "Background image for the video player area (ideally 16:9 aspect ratio)"
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "video",
+        "label": "Video URL",
+        "description": "Full URL of the YouTube or hosted video to open when the thumbnail is clicked"
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "videoTitle",
+        "label": "Video Title",
+        "description": "Short title displayed on the thumbnail overlay"
       }
     ]
   },

@@ -1,0 +1,109 @@
+.quick-links {
+  background-color: var(--color-brand-dark, #3a080d);
+  border-bottom: 4px solid rgb(227 27 35 / 30%);
+
+  /* full bleed */
+  width: 100vw;
+  left: 50%;
+  position: relative;
+  transform: translateX(-50%);
+}
+
+.quick-links-inner {
+  max-width: var(--xcel-max-width, 1280px);
+  margin: 0 auto;
+  padding: 24px 24px 32px;
+}
+
+@media (width >= 900px) {
+  .quick-links-inner {
+    padding: 32px;
+  }
+}
+
+.quick-links-heading {
+  color: white;
+  font-size: clamp(1.125rem, 2.5vw, 1.5rem);
+  font-weight: 800;
+  margin: 0 0 20px;
+  text-align: center;
+}
+
+@media (width >= 600px) {
+  .quick-links-heading {
+    text-align: left;
+  }
+}
+
+/* --- Grid --- */
+.quick-links-grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+@media (width >= 600px) {
+  .quick-links-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (width >= 900px) {
+  .quick-links-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+  }
+}
+
+/* --- Button --- */
+.quick-links-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 14px 16px;
+  background: white;
+  color: #1e293b;
+  font-size: 0.875rem;
+  font-weight: 700;
+  text-decoration: none;
+  border-radius: 4px;
+  border-bottom: 2px solid #e2e8f0;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 15%);
+  transition: box-shadow var(--xcel-transition, 0.3s ease),
+              background var(--xcel-transition, 0.3s ease);
+  cursor: pointer;
+}
+
+.quick-links-btn:hover,
+.quick-links-btn:focus-visible {
+  background: #f8fafc;
+  box-shadow: 0 6px 20px rgb(0 0 0 / 22%);
+  text-decoration: none;
+  color: #1e293b;
+}
+
+.quick-links-arrow {
+  color: var(--color-brand, #e31b23);
+  font-weight: 900;
+  font-size: 1.1rem;
+  transition: transform var(--xcel-transition, 0.3s ease);
+  flex-shrink: 0;
+  margin-left: 8px;
+}
+
+.quick-links-btn:hover .quick-links-arrow,
+.quick-links-btn:focus-visible .quick-links-arrow {
+  transform: translateX(5px);
+}
+
+@media (width >= 900px) {
+  .quick-links-btn {
+    padding: 16px;
+    font-size: 0.9375rem;
+  }
+}

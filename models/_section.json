@@ -67,7 +67,12 @@
         "image-link",
         "rich-text",
         "state-selector",
-        "blog-list"
+        "blog-list",
+        "icon-cards",
+        "quick-links",
+        "video-teaser",
+        "cta-banner",
+        "button"
       ]
     }
   ]

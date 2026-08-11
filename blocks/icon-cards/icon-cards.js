@@ -34,9 +34,12 @@ export default function decorate(block) {
   const wrapper = document.createElement('div');
   wrapper.className = 'icon-cards-inner';
 
-  // --- Section header row (single cell, no picture/image/link) ---
+  // --- Section header row ---
+  // Doc-authored: 1 cell (heading + optional subtitle paragraph)
+  // UE model:     2 cells (heading field | headingText richtext field)
+  const firstRowCells = rows[0]?.children.length;
   if (
-    rows[0].children.length === 1
+    (firstRowCells === 1 || firstRowCells === 2)
     && !rows[0].querySelector('picture, img, a')
   ) {
     const headerRow = rows.shift();
@@ -53,10 +56,42 @@ export default function decorate(block) {
     }
     header.append(deco);
 
-    // Move heading + paragraphs from the single cell
-    const cell = headerRow.firstElementChild;
-    while (cell?.firstElementChild) {
-      header.append(cell.firstElementChild);
+    moveInstrumentation(headerRow, header);
+
+    if (firstRowCells === 2) {
+      // UE model: cell[0] = heading (text), cell[1] = headingText (richtext)
+      const headingCell = headerRow.children[0];
+      const headingTextCell = headerRow.children[1];
+
+      const h2 = document.createElement('h2');
+      h2.textContent = headingCell.textContent.trim();
+      header.append(h2);
+
+      // Move all children from the richtext cell (preserves <p> tags from richtext)
+      while (headingTextCell?.firstElementChild) {
+        header.append(headingTextCell.firstElementChild);
+      }
+    } else {
+      // Doc-authored: move element children from the single cell into the header
+      const cell = headerRow.firstElementChild;
+      while (cell?.firstElementChild) {
+        header.append(cell.firstElementChild);
+      }
+
+      // Promote the first paragraph to h2 if no heading tag was moved,
+      // or create one from raw text content (plain-text cell edge case)
+      if (!header.querySelector('h1,h2,h3,h4,h5,h6')) {
+        const p = header.querySelector('p');
+        if (p) {
+          const h2 = document.createElement('h2');
+          h2.innerHTML = p.innerHTML;
+          p.replaceWith(h2);
+        } else if (cell?.textContent?.trim()) {
+          const h2 = document.createElement('h2');
+          h2.textContent = cell.textContent.trim();
+          header.append(h2);
+        }
+      }
     }
 
     wrapper.append(header);
@@ -87,16 +122,23 @@ export default function decorate(block) {
     body.className = 'icon-cards-body';
 
     if (cells.length >= 3) {
-      // UE item model: [icon, title, description, cta]
+      // UE item model: [icon, title, description, cta, ctaText]
       const titleCell = cells[1];
       const descCell = cells[2];
       const ctaCell = cells[3];
+      const ctaTextCell = cells[4];
 
-      // Title: use existing heading or wrap text in h3
+      // Title: use existing heading, promote a paragraph, or wrap raw text
       let heading = titleCell?.querySelector('h1,h2,h3,h4,h5,h6');
-      if (!heading && titleCell?.textContent?.trim()) {
-        heading = document.createElement('h3');
-        heading.textContent = titleCell.textContent.trim();
+      if (!heading) {
+        const p = titleCell?.querySelector('p');
+        if (p) {
+          heading = document.createElement('h3');
+          heading.innerHTML = p.innerHTML;
+        } else if (titleCell?.textContent?.trim()) {
+          heading = document.createElement('h3');
+          heading.textContent = titleCell.textContent.trim();
+        }
       }
       if (heading) {
         heading.className = 'icon-cards-title';
@@ -112,7 +154,10 @@ export default function decorate(block) {
 
       li.append(body);
 
-      const cta = buildCta(ctaCell?.querySelector('a'));
+      const anchor = ctaCell?.querySelector('a');
+      const ctaLabel = ctaTextCell?.textContent?.trim();
+      if (anchor && ctaLabel) anchor.textContent = ctaLabel;
+      const cta = buildCta(anchor);
       if (cta) li.append(cta);
     } else {
       // 2-cell Doc-authored: [icon, body(heading + desc p + cta p>a)]

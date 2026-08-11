@@ -86,6 +86,12 @@
     ]
   },
   {
+    "id": "icon-cards",
+    "components": [
+      "icon-card"
+    ]
+  },
+  {
     "id": "search",
     "components": [
       "search-source"

@@ -1,3 +1,5 @@
+import { moveInstrumentation } from '../../scripts/scripts.js';
+
 /**
  * Icon Cards block — 4-up (default) feature cards with an icon, title,
  * description and a text CTA link.
@@ -49,6 +51,7 @@ export default function decorate(block) {
   rows.forEach((row) => {
     const [iconCell, bodyCell] = [...row.children];
     const li = document.createElement('li');
+    moveInstrumentation(row, li);
     li.className = 'icon-cards-card';
 
     // Icon container

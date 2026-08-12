@@ -1,6 +1,21 @@
 {
   "mappings": [
-    "/content/dam/2026/31/fearlessleopard24181/:/assets",
+    "/content/2026/31/fearlessleopard24181/co/en/:/co/en",
+    "/content/2026/31/fearlessleopard24181/co/fr/:/co/fr",
+    "/content/2026/31/fearlessleopard24181/mi/en/:/mi/en",
+    "/content/2026/31/fearlessleopard24181/mi/fr/:/mi/fr",
+    "/content/2026/31/fearlessleopard24181/mn/en/:/mn/en",
+    "/content/2026/31/fearlessleopard24181/mn/fr/:/mn/fr",
+    "/content/2026/31/fearlessleopard24181/nm/en/:/nm/en",
+    "/content/2026/31/fearlessleopard24181/nm/fr/:/nm/fr",
+    "/content/2026/31/fearlessleopard24181/nd/en/:/nd/en",
+    "/content/2026/31/fearlessleopard24181/nd/fr/:/nd/fr",
+    "/content/2026/31/fearlessleopard24181/sd/en/:/sd/en",
+    "/content/2026/31/fearlessleopard24181/sd/fr/:/sd/fr",
+    "/content/2026/31/fearlessleopard24181/tx/en/:/tx/en",
+    "/content/2026/31/fearlessleopard24181/tx/fr/:/tx/fr",
+    "/content/2026/31/fearlessleopard24181/wi/en/:/wi/en",
+    "/content/2026/31/fearlessleopard24181/wi/fr/:/wi/fr",
     "/content/2026/31/fearlessleopard24181/configuration:/.helix/config.json",
     "/content/2026/31/fearlessleopard24181/metadata:/metadata.json",
     "/content/2026/31/fearlessleopard24181/redirects:/redirects.json"

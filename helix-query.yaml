@@ -47,16 +47,13 @@ indices:
   # --- Colorado ---
   co-en:
     include:
-      - /co
-      - /co/**
+      - /co/en/**
     exclude:
-      - /co/fr/**
       - /co/**/snippets/**
-    target: /co/query-index.json
+    target: /co/en/query-index.json
     properties: *props
   co-fr:
     include:
-      - /co/fr
       - /co/fr/**
     exclude:
       - /co/fr/snippets/**
@@ -66,16 +63,13 @@ indices:
   # --- Michigan ---
   mi-en:
     include:
-      - /mi
-      - /mi/**
+      - /mi/en/**
     exclude:
-      - /mi/fr/**
       - /mi/**/snippets/**
-    target: /mi/query-index.json
+    target: /mi/en/query-index.json
     properties: *props
   mi-fr:
     include:
-      - /mi/fr
       - /mi/fr/**
     exclude:
       - /mi/fr/snippets/**
@@ -85,16 +79,13 @@ indices:
   # --- Minnesota ---
   mn-en:
     include:
-      - /mn
-      - /mn/**
+      - /mn/en/**
     exclude:
-      - /mn/fr/**
       - /mn/**/snippets/**
-    target: /mn/query-index.json
+    target: /mn/en/query-index.json
     properties: *props
   mn-fr:
     include:
-      - /mn/fr
       - /mn/fr/**
     exclude:
       - /mn/fr/snippets/**
@@ -104,16 +95,13 @@ indices:
   # --- New Mexico ---
   nm-en:
     include:
-      - /nm
-      - /nm/**
+      - /nm/en/**
     exclude:
-      - /nm/fr/**
       - /nm/**/snippets/**
-    target: /nm/query-index.json
+    target: /nm/en/query-index.json
     properties: *props
   nm-fr:
     include:
-      - /nm/fr
       - /nm/fr/**
     exclude:
       - /nm/fr/snippets/**
@@ -123,16 +111,13 @@ indices:
   # --- North Dakota ---
   nd-en:
     include:
-      - /nd
-      - /nd/**
+      - /nd/en/**
     exclude:
-      - /nd/fr/**
-      - /nd/**/snippets/**
-    target: /nd/query-index.json
+      - /nd/en/**/snippets/**
+    target: /nd/en/query-index.json
     properties: *props
   nd-fr:
     include:
-      - /nd/fr
       - /nd/fr/**
     exclude:
       - /nd/fr/snippets/**
@@ -142,16 +127,13 @@ indices:
   # --- South Dakota ---
   sd-en:
     include:
-      - /sd
-      - /sd/**
+      - /sd/en/**
     exclude:
-      - /sd/fr/**
       - /sd/**/snippets/**
-    target: /sd/query-index.json
+    target: /sd/en/query-index.json
     properties: *props
   sd-fr:
     include:
-      - /sd/fr
       - /sd/fr/**
     exclude:
       - /sd/fr/snippets/**
@@ -161,16 +143,13 @@ indices:
   # --- Texas ---
   tx-en:
     include:
-      - /tx
-      - /tx/**
+      - /tx/en/**
     exclude:
-      - /tx/fr/**
       - /tx/**/snippets/**
-    target: /tx/query-index.json
+    target: /tx/en/query-index.json
     properties: *props
   tx-fr:
     include:
-      - /tx/fr
       - /tx/fr/**
     exclude:
       - /tx/fr/snippets/**
@@ -180,16 +159,13 @@ indices:
   # --- Wisconsin ---
   wi-en:
     include:
-      - /wi
-      - /wi/**
+      - /wi/en/**
     exclude:
-      - /wi/fr/**
       - /wi/**/snippets/**
-    target: /wi/query-index.json
+    target: /wi/en/query-index.json
     properties: *props
   wi-fr:
     include:
-      - /wi/fr
       - /wi/fr/**
     exclude:
       - /wi/fr/snippets/**

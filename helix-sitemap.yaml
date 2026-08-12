@@ -5,8 +5,8 @@ sitemaps:
     default: en
     languages:
       en:
-        source: /co/query-index.json
-        destination: /co/sitemap.xml
+        source: /co/en/query-index.json
+        destination: /co/en/sitemap.xml
         hreflang: en
       fr:
         source: /co/fr/query-index.json
@@ -20,12 +20,12 @@ sitemaps:
     default: en
     languages:
       en:
-        source: /mi/query-index.json
-        destination: /mi/sitemap.xml
+        source: /mi/en/query-index.json
+        destination: /mi/en/sitemap.xml
         hreflang: en
       fr:
         source: /mi/fr/query-index.json
-        destination: /mi/sitemap.xml
+        destination: /mi/fr/sitemap.xml
         hreflang: fr
         alternate: /mi/fr/{path}
 
@@ -35,12 +35,12 @@ sitemaps:
     default: en
     languages:
       en:
-        source: /mn/query-index.json
-        destination: /mn/sitemap.xml
+        source: /mn/en/query-index.json
+        destination: /mn/en/sitemap.xml
         hreflang: en
       fr:
         source: /mn/fr/query-index.json
-        destination: /mn/sitemap.xml
+        destination: /mn/fr/sitemap.xml
         hreflang: fr
         alternate: /mn/fr/{path}
 
@@ -50,12 +50,12 @@ sitemaps:
     default: en
     languages:
       en:
-        source: /nm/query-index.json
-        destination: /nm/sitemap.xml
+        source: /nm/en/query-index.json
+        destination: /nm/en/sitemap.xml
         hreflang: en
       fr:
         source: /nm/fr/query-index.json
-        destination: /nm/sitemap.xml
+        destination: /nm/fr/sitemap.xml
         hreflang: fr
         alternate: /nm/fr/{path}
 
@@ -65,12 +65,12 @@ sitemaps:
     default: en
     languages:
       en:
-        source: /nd/query-index.json
-        destination: /nd/sitemap.xml
+        source: /nd/en/query-index.json
+        destination: /nd/en/sitemap.xml
         hreflang: en
       fr:
         source: /nd/fr/query-index.json
-        destination: /nd/sitemap.xml
+        destination: /nd/fr/sitemap.xml
         hreflang: fr
         alternate: /nd/fr/{path}
 
@@ -80,12 +80,12 @@ sitemaps:
     default: en
     languages:
       en:
-        source: /sd/query-index.json
-        destination: /sd/sitemap.xml
+        source: /sd/en/query-index.json
+        destination: /sd/en/sitemap.xml
         hreflang: en
       fr:
         source: /sd/fr/query-index.json
-        destination: /sd/sitemap.xml
+        destination: /sd/fr/sitemap.xml
         hreflang: fr
         alternate: /sd/fr/{path}
 
@@ -95,12 +95,12 @@ sitemaps:
     default: en
     languages:
       en:
-        source: /tx/query-index.json
-        destination: /tx/sitemap.xml
+        source: /tx/en/query-index.json
+        destination: /tx/en/sitemap.xml
         hreflang: en
       fr:
         source: /tx/fr/query-index.json
-        destination: /tx/sitemap.xml
+        destination: /tx/fr/sitemap.xml
         hreflang: fr
         alternate: /tx/fr/{path}
 
@@ -110,11 +110,11 @@ sitemaps:
     default: en
     languages:
       en:
-        source: /wi/query-index.json
-        destination: /wi/sitemap.xml
+        source: /wi/en/query-index.json
+        destination: /wi/en/sitemap.xml
         hreflang: en
       fr:
         source: /wi/fr/query-index.json
-        destination: /wi/sitemap.xml
+        destination: /wi/fr/sitemap.xml
         hreflang: fr
         alternate: /wi/fr/{path}

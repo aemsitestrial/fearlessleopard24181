@@ -72,7 +72,8 @@
         "quick-links",
         "video-teaser",
         "cta-banner",
-        "button"
+        "button",
+        "blog-filter"
       ]
     }
   ]

@@ -42,6 +42,8 @@
   --body-font-size-m: 22px;
   --body-font-size-s: 19px;
   --body-font-size-xs: 17px;
+  --body-font-size-xxs: 13px;
+  --label-font-size: 11px;
 
   /* heading sizes */
   --heading-font-size-xxl: 55px;

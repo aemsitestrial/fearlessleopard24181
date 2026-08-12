@@ -21,7 +21,10 @@ module.exports = {
     // page-metadata is a page-properties model (title, description, keywords,
     // breadcrumbs, nav-order, ...), not a rendered block, so it legitimately
     // carries more than the default 4 cells.
-    'xwalk/max-cells': ['error', { 'page-metadata': 8 }],
+    // blog-filter-item has 7 authored fields (imageAlt collapses into image via
+    // the 'Alt' suffix rule, yielding 6 logical cells: image, title, description,
+    // category, date, link) — all are necessary for a rich inline card UE model.
+    'xwalk/max-cells': ['error', { 'page-metadata': 8, 'blog-filter-item': 6 }],
   },
   overrides: [
     {

@@ -368,6 +368,81 @@
     ]
   },
   {
+    "id": "blog-filter",
+    "fields": [
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "filterLabel",
+        "label": "Filter Bar Label",
+        "description": "Label displayed above the category chips. Defaults to 'Filter articles:' when left blank."
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "allLabel",
+        "label": "All Chip Label",
+        "description": "Label for the chip that shows all articles. Defaults to 'All' when left blank."
+      }
+    ]
+  },
+  {
+    "id": "blog-filter-item",
+    "fields": [
+      {
+        "component": "reference",
+        "valueType": "string",
+        "name": "image",
+        "label": "Thumbnail Image",
+        "description": "Card thumbnail image (recommended: 750x562 px, 4:3 ratio).",
+        "multi": false
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "imageAlt",
+        "label": "Image Alt Text",
+        "description": "Accessible description of the image. Falls back to the card title when left blank."
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "title",
+        "label": "Article Title",
+        "description": "Headline displayed on the card and used as the link text.",
+        "required": true
+      },
+      {
+        "component": "richtext",
+        "valueType": "string",
+        "name": "description",
+        "label": "Excerpt",
+        "description": "Short summary shown beneath the title (2-3 sentences recommended)."
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "category",
+        "label": "Category",
+        "description": "Single category tag used to filter this card. Must exactly match the category label on all cards in the same category."
+      },
+      {
+        "component": "text",
+        "valueType": "string",
+        "name": "date",
+        "label": "Publication Date",
+        "description": "Human-readable date string (e.g. 'January 15, 2026') displayed at the bottom of the card."
+      },
+      {
+        "component": "aem-content",
+        "valueType": "string",
+        "name": "link",
+        "label": "Card Link",
+        "description": "Destination page or URL when the card title or image is clicked."
+      }
+    ]
+  },
+  {
     "id": "blog-list",
     "fields": [
       {

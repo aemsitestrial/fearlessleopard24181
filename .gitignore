@@ -1,3 +1,4 @@
+.env
 .hlx/*
 coverage/*
 logs/*

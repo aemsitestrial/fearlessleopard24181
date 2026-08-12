@@ -37,7 +37,8 @@
       "quick-links",
       "video-teaser",
       "cta-banner",
-      "button"
+      "button",
+      "blog-filter"
     ]
   },
   {
@@ -50,6 +51,12 @@
     "id": "badge",
     "components": [
       "badge-item"
+    ]
+  },
+  {
+    "id": "blog-filter",
+    "components": [
+      "blog-filter-item"
     ]
   },
   {

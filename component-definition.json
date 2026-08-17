@@ -75,13 +75,7 @@
               }
             }
           }
-        }
-      ]
-    },
-    {
-      "title": "Intent Sections",
-      "id": "intent-sections",
-      "components": [
+        },
         {
           "title": "Intent Section",
           "id": "intent-section",

@@ -24,13 +24,7 @@
       "components": [
         {
           "...": "./_section.json#/definitions"
-        }
-      ]
-    },
-        {
-      "title": "Intent Sections",
-      "id": "intent-sections",
-      "components": [
+        },
         {
           "...": "./_intent-section.json#/definitions"
         }

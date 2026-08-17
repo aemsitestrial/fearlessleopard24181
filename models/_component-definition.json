@@ -27,6 +27,15 @@
         }
       ]
     },
+        {
+      "title": "Intent Sections",
+      "id": "intent-sections",
+      "components": [
+        {
+          "...": "./_intent-section.json#/definitions"
+        }
+      ]
+    },
     {
       "title": "Blocks",
       "id": "blocks",

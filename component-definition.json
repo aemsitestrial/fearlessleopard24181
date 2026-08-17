@@ -79,6 +79,26 @@
       ]
     },
     {
+      "title": "Intent Sections",
+      "id": "intent-sections",
+      "components": [
+        {
+          "title": "Intent Section",
+          "id": "intent-section",
+          "plugins": {
+            "xwalk": {
+              "page": {
+                "resourceType": "core/franklin/components/section/v1/section",
+                "template": {
+                  "model": "intent-section"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
       "title": "Blocks",
       "id": "blocks",
       "components": [

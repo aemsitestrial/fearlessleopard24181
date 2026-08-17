@@ -2,7 +2,8 @@
   {
     "id": "main",
     "components": [
-      "section"
+      "section",
+      "intent-section"
     ]
   },
   {
@@ -39,6 +40,13 @@
       "cta-banner",
       "button",
       "blog-filter"
+    ]
+  },
+  {
+    "id": "intent-section",
+    "components": [
+      "text",
+      "title"
     ]
   },
   {
